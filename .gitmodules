@@ -1,0 +1,9 @@
+[submodule "Framework/Libraries/bgfx"]
+	path = Framework/Libraries/bgfx
+	url = https://github.com/bkaradzic/bgfx.git
+[submodule "Framework/Libraries/bimg"]
+	path = Framework/Libraries/bimg
+	url = https://github.com/bkaradzic/bimg.git
+[submodule "Framework/Libraries/bx"]
+	path = Framework/Libraries/bx
+	url = https://github.com/bkaradzic/bx.git

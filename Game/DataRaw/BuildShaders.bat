@@ -1,8 +1,26 @@
 mkdir ..\Data\Shaders
+mkdir ..\Data\Shaders\dx9
+mkdir ..\Data\Shaders\dx11
+rem mkdir ..\Data\Shaders\pssl
+rem mkdir ..\Data\Shaders\metal
+rem mkdir ..\Data\Shaders\nvn
+mkdir ..\Data\Shaders\glsl
+rem mkdir ..\Data\Shaders\essl
+mkdir ..\Data\Shaders\spirv
 
-rem Hard-coded to only build DX11 shaders.
-shaderc -f Shaders/Basic.vert -o ../Data/Shaders/Basic.vert.bin --type v --platform windows -p vs_4_0 -i ../../Framework/Libraries/bgfx/src
-shaderc -f Shaders/Basic.frag -o ../Data/Shaders/Basic.frag.bin --type f --platform windows -p ps_4_0 -i ../../Framework/Libraries/bgfx/src
+FOR %%G in ("Shaders\*.vert") DO (
+    shaderc -f %%G -o ../Data/Shaders/dx9/%%~nxG.bin   --type v --platform windows -i ../../Framework/Libraries/bgfx/src -p vs_3_0
+    shaderc -f %%G -o ../Data/Shaders/dx11/%%~nxG.bin  --type v --platform windows -i ../../Framework/Libraries/bgfx/src -p vs_4_0
+    shaderc -f %%G -o ../Data/Shaders/glsl/%%~nxG.bin  --type v --platform windows -i ../../Framework/Libraries/bgfx/src -p 440
+    shaderc -f %%G -o ../Data/Shaders/spirv/%%~nxG.bin --type v --platform windows -i ../../Framework/Libraries/bgfx/src -p spirv
+)
+
+FOR %%G in ("Shaders\*.frag") DO (
+    shaderc -f %%G -o ../Data/Shaders/dx9/%%~nxG.bin   --type f --platform windows -i ../../Framework/Libraries/bgfx/src -p ps_3_0
+    shaderc -f %%G -o ../Data/Shaders/dx11/%%~nxG.bin  --type f --platform windows -i ../../Framework/Libraries/bgfx/src -p ps_4_0
+    shaderc -f %%G -o ../Data/Shaders/glsl/%%~nxG.bin  --type f --platform windows -i ../../Framework/Libraries/bgfx/src -p 440
+    shaderc -f %%G -o ../Data/Shaders/spirv/%%~nxG.bin --type f --platform windows -i ../../Framework/Libraries/bgfx/src -p spirv
+)
 
 pause
 exit

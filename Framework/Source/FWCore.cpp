@@ -21,7 +21,7 @@ namespace fw {
 
 // Public methods
 
-FWCore::FWCore(int width, int height)
+FWCore::FWCore(int width, int height, bgfx::RendererType::Enum renderType)
 {
     Init( width, height );
 
@@ -29,12 +29,13 @@ FWCore::FWCore(int width, int height)
     bgfx::Init init;
     
     init.platformData.nwh = GetWindowHandle();
+    init.type = renderType;
 
     init.resolution.width = width;
     init.resolution.height = height;
     init.resolution.reset = BGFX_RESET_VSYNC;
 
-    bool succeeded = bgfx::init(init);
+    bool succeeded = bgfx::init( init );
     assert( succeeded );
 }
 

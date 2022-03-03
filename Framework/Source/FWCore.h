@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "bgfx/platform.h"
+
 namespace fw {
 
 class GameCore;
@@ -16,7 +18,7 @@ class GameCore;
 class FWCore
 {
 public:
-    FWCore(int width, int height);
+    FWCore(int width, int height, bgfx::RendererType::Enum renderType);
     virtual ~FWCore();
 
     bool Init(int width, int height);

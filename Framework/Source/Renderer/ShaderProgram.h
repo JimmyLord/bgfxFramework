@@ -17,7 +17,7 @@ class ShaderProgram
 {
 public:
     ShaderProgram();
-    ShaderProgram(const char* vertFilename, const char* fragFilename);
+    ShaderProgram(const char* shaderFolder, const char* vertFilename, const char* fragFilename);
     virtual ~ShaderProgram();
 
     // Getters.
@@ -26,7 +26,7 @@ public:
 protected:
     void Cleanup();
 
-    bool Init(const char* vertFilename, const char* fragFilename);
+    bool Init(const char* shaderFolder, const char* vertFilename, const char* fragFilename);
     bool Reload();
 
 protected:

@@ -38,7 +38,7 @@ void Game::Init()
     m_pMesh = CreateTriangle();
 
     // Create some shaders.
-    m_pShader = new fw::ShaderProgram( "Data/Shaders/Basic.vert.bin", "Data/Shaders/Basic.frag.bin" );
+    m_pShader = new fw::ShaderProgram( "Data/Shaders/", "Basic.vert.bin", "Basic.frag.bin" );
 }
 
 void Game::StartFrame(float deltaTime)

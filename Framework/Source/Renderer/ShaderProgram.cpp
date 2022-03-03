@@ -19,9 +19,9 @@ ShaderProgram::ShaderProgram()
 {
 }
 
-ShaderProgram::ShaderProgram(const char* vertFilename, const char* fragFilename)
+ShaderProgram::ShaderProgram(const char* shaderFolder, const char* vertFilename, const char* fragFilename)
 {
-    Init( vertFilename, fragFilename );
+    Init( shaderFolder, vertFilename, fragFilename );
 }
 
 ShaderProgram::~ShaderProgram()
@@ -44,10 +44,37 @@ void ShaderProgram::Cleanup()
     m_FragShaderString = nullptr;
 }
 
-bool ShaderProgram::Init(const char* vertFilename, const char* fragFilename)
+bool ShaderProgram::Init(const char* shaderFolder, const char* vertFilename, const char* fragFilename)
 {
-    m_VertShaderString = fw::LoadCompleteFile( vertFilename, &m_VertShaderStringLength );
-    m_FragShaderString = fw::LoadCompleteFile( fragFilename, &m_FragShaderStringLength );
+    char vertFullPath[MAX_PATH];
+    char fragFullPath[MAX_PATH];
+
+    char* rendererPath = nullptr;
+
+    switch( bgfx::getRendererType() )
+    {
+    case bgfx::RendererType::Noop:
+    case bgfx::RendererType::Direct3D9:  rendererPath = "dx9";   break;
+    case bgfx::RendererType::Direct3D11:
+    case bgfx::RendererType::Direct3D12: rendererPath = "dx11";  break;
+    case bgfx::RendererType::Agc:
+    case bgfx::RendererType::Gnm:        rendererPath = "pssl";  break;
+    case bgfx::RendererType::Metal:      rendererPath = "metal"; break;
+    case bgfx::RendererType::Nvn:        rendererPath = "nvn";   break;
+    case bgfx::RendererType::OpenGL:     rendererPath = "glsl";  break;
+    case bgfx::RendererType::OpenGLES:   rendererPath = "essl";  break;
+    case bgfx::RendererType::Vulkan:
+    case bgfx::RendererType::WebGPU:     rendererPath = "spirv"; break;
+    case bgfx::RendererType::Count:
+        assert( false );
+        break;
+    }
+
+    sprintf_s( vertFullPath, MAX_PATH, "%s/%s/%s", shaderFolder, rendererPath, vertFilename );
+    sprintf_s( fragFullPath, MAX_PATH, "%s/%s/%s", shaderFolder, rendererPath, fragFilename );
+
+    m_VertShaderString = fw::LoadCompleteFile( vertFullPath, &m_VertShaderStringLength );
+    m_FragShaderString = fw::LoadCompleteFile( fragFullPath, &m_FragShaderStringLength );
 
     assert( m_VertShaderString != nullptr && m_FragShaderString != nullptr );
     if( m_VertShaderString == nullptr || m_FragShaderString == nullptr )

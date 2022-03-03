@@ -9,6 +9,7 @@
 
 #include "Framework.h"
 
+#include "DataTypes.h"
 #include "Game.h"
 #include "Meshes/Shapes.h"
 #include "Meshes/VertexFormats.h"
@@ -29,7 +30,10 @@ void Game::Init()
 {
     // General renderer settings.
     bgfx::setViewClear( 0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x000030ff, 1.0f, 0 );
-    bgfx::setViewRect( 0, 0, 0, 600, 600 );
+    bgfx::setViewRect( 0, 0, 0, m_FWCore.GetWindowWidth(), m_FWCore.GetWindowHeight() );
+
+    // Create uniforms.
+    m_Uniforms.CreateFrameworkUniforms();
 
     // Create vertex formats.
     VF_PosColor::InitVertexLayout();
@@ -47,13 +51,38 @@ void Game::StartFrame(float deltaTime)
 
 void Game::Update(float deltaTime)
 {
+    float speed = 4.0f;
+
+    if( m_FWCore.IsKeyDown('W') )
+        m_Position.y += speed * deltaTime;
+    if( m_FWCore.IsKeyDown('S') )
+        m_Position.y -= speed * deltaTime;
+    if( m_FWCore.IsKeyDown('A') )
+        m_Position.x -= speed * deltaTime;
+    if( m_FWCore.IsKeyDown('D') )
+        m_Position.x += speed * deltaTime;
 }
 
 void Game::Draw()
 {
     //bgfx::touch( 0 );
 
-    m_pMesh->Draw( m_pShader );
+    // Setup time uniforms.
+    float time = (float)fw::GetSystemTimeSinceGameStart();
+    bgfx::setUniform( m_Uniforms.m_Map["u_Time"], &time );
+
+    // Setup view and projection matrices and uniforms.
+    mat4 viewMat;
+    viewMat.CreateLookAtView( vec3(0,0,-10), vec3(0,1,0), vec3(0,0,0) );
+    mat4 projMat;
+    float aspectRatio = m_FWCore.GetWindowWidth()/(float)m_FWCore.GetWindowHeight();
+    projMat.CreatePerspectiveVFoV( 45.0f, aspectRatio, 0.01f, 100.0f );
+    bgfx::setViewTransform( 0, &viewMat.m11, &projMat.m11 );
+
+    // Draw a single mesh with a unique world transform.
+    mat4 worldMat;
+    worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
+    m_pMesh->Draw( m_pShader, &worldMat );
 
     //// Display debug stats.
     //bgfx::dbgTextClear();

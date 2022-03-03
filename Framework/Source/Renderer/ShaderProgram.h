@@ -21,7 +21,7 @@ public:
     virtual ~ShaderProgram();
 
     // Getters.
-    const bgfx::ProgramHandle& GetProgram() { return m_Program; }
+    const bgfx::ProgramHandle& GetProgram() const { return m_Program; }
 
 protected:
     void Cleanup();

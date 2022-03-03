@@ -9,24 +9,19 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "Math/Vector.h"
+#include "Math/Matrix.h"
+#include "bgfx/platform.h"
 
-class Game : public fw::GameCore
+namespace fw {
+
+class Uniforms
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    ~Uniforms();
+    void CreateFrameworkUniforms();
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
-
-protected:
-    fw::Uniforms m_Uniforms;
-    fw::Mesh* m_pMesh = nullptr;
-    fw::ShaderProgram* m_pShader = nullptr;
-
-    vec3 m_Position = vec3(0,0,0);
+    std::unordered_map<std::string, bgfx::UniformHandle> m_Map;
 };
+
+} // namespace fw

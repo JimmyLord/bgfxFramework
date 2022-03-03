@@ -3,9 +3,15 @@ $output v_color
 
 #include <bgfx_shader.sh>
 
+uniform vec4 u_Time;
+
 void main()
 {
-	gl_Position = vec4( a_position, 1.0 );
+	// Code to test time uniform is working.
+	vec3 objectSpacePos = a_position;
+	objectSpacePos.y += sin(u_Time.x + a_position.x) * 0.1f;
+
+	gl_Position = mul( u_modelViewProj, vec4(objectSpacePos, 1.0) );
 
 	v_color = a_color0;
 }

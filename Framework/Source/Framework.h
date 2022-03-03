@@ -22,4 +22,5 @@
 #include "GameCore.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/ShaderProgram.h"
+#include "Renderer/Uniforms.h"
 #include "Utility/Utility.h"

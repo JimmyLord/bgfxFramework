@@ -7,26 +7,25 @@
 // 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
+#include "CoreHeaders.h"
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "Uniforms.h"
 
-class Game : public fw::GameCore
+namespace fw {
+
+Uniforms::~Uniforms()
 {
-public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    for( auto& uniformPair : m_Map )
+    {
+        bgfx::destroy( uniformPair.second );
+    }
+}
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+void Uniforms::CreateFrameworkUniforms()
+{
+    assert( m_Map.empty() );
 
-protected:
-    fw::Uniforms m_Uniforms;
-    fw::Mesh* m_pMesh = nullptr;
-    fw::ShaderProgram* m_pShader = nullptr;
+    m_Map["u_Time"] = bgfx::createUniform( "u_Time", bgfx::UniformType::Vec4 );
+}
 
-    vec3 m_Position = vec3(0,0,0);
-};
+} // namespace fw

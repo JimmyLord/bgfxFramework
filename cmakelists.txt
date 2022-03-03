@@ -166,7 +166,8 @@ source_group( "CMake PCH Files" FILES ${FrameworkPCHFiles} )
 file( GLOB_RECURSE GameSourceFiles
 	Game/Source/*.cpp
 	Game/Source/*.h
-	Game/DataRaw/Shaders/*.sc
+	Game/DataRaw/Shaders/*.vert
+	Game/DataRaw/Shaders/*.frag
 	Game/DataRaw/*.bat
 	GenerateProjectFiles.bat
 )

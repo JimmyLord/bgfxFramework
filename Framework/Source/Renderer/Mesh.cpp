@@ -11,8 +11,8 @@
 
 #include "Mesh.h"
 #include "ShaderProgram.h"
-#include "Utility/Utility.h"
 #include "Math/Matrix.h"
+#include "Utility/Utility.h"
 #include "bgfx/platform.h"
 
 namespace fw {
@@ -34,7 +34,7 @@ void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uin
     m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
 }
 
-void Mesh::Draw(ShaderProgram* pShader)
+void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat)
 {
     uint64_t state = 0
         | BGFX_STATE_WRITE_RGB
@@ -50,6 +50,11 @@ void Mesh::Draw(ShaderProgram* pShader)
 
     // Set render states.
     bgfx::setState( state );
+
+    if( worldMat )
+    {
+        bgfx::setTransform( &worldMat->m11 );
+    }
 
     // Submit primitive for rendering to view 0.
     bgfx::submit( 0, pShader->GetProgram() );

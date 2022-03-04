@@ -46,6 +46,8 @@ protected:
     static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 protected:
+    GameCore* m_pGame = nullptr;
+
     bool m_EscapeKeyWillQuit = true;
 
     int m_WindowWidth = -1;

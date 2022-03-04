@@ -9,9 +9,10 @@
 
 #include "CoreHeaders.h"
 
+#include "bgfx/platform.h"
+
 #include "ShaderProgram.h"
 #include "Utility/Utility.h"
-#include "bgfx/platform.h"
 
 namespace fw {
 

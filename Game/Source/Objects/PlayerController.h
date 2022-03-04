@@ -9,32 +9,28 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
-
-class Player;
-class PlayerController;
-
-class Game : public fw::GameCore
+class PlayerController
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    enum Mask
+    {
+        Up      = 1<<0,
+        Down    = 1<<1,
+        Left    = 1<<2,
+        Right   = 1<<3,
+    };
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    PlayerController();
+    virtual ~PlayerController();
+
+    void StartFrame();
+    void OnEvent(fw::Event* pEvent);
+
+    bool IsHeld(Mask mask);
+    bool WasPressed(Mask mask);
+    bool WasReleased(Mask mask);
 
 protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
-
-    PlayerController* m_pPlayerController = nullptr;
-
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    unsigned int m_Flags = 0;
+    unsigned int m_OldFlags = 0;
 };

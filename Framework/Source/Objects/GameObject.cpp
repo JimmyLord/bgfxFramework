@@ -7,34 +7,38 @@
 // 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
+#include "CoreHeaders.h"
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "GameObject.h"
+#include "Renderer/Mesh.h"
 
-class Player;
-class PlayerController;
+namespace fw {
 
-class Game : public fw::GameCore
+GameObject::GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, ShaderProgram* pShader)
 {
-public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    m_pGameCore = pGameCore;
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    m_Name = name;
 
-protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
+    m_Position = pos;
 
-    PlayerController* m_pPlayerController = nullptr;
+    m_pMesh = pMesh;
+    m_pShader = pShader;
+}
 
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
-};
+GameObject::~GameObject()
+{
+}
+
+void GameObject::Update(float deltaTime)
+{
+}
+
+void GameObject::Draw()
+{
+    mat4 worldMat;
+    worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
+    m_pMesh->Draw( m_pShader, &worldMat );
+}
+
+} // namespace fw

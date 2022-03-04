@@ -13,3 +13,4 @@
 #include "VertexFormats.h"
 
 fw::Mesh* CreateTriangle();
+fw::Mesh* CreateSquare();

@@ -9,32 +9,31 @@
 
 #pragma once
 
-#include "Framework.h"
 #include "DataTypes.h"
 
-class Player;
 class PlayerController;
 
-class Game : public fw::GameCore
+class Player : public fw::GameObject
 {
-public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    typedef void (Player::*AIStateFunction)(float deltaTime);
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
+public:
+    Player(fw::GameCore* pGameCore, PlayerController* pPlayerController, std::string name, vec3 pos, fw::Mesh* pMesh, fw::ShaderProgram* pShader);
+    virtual ~Player();
+
     virtual void Update(float deltaTime) override;
     virtual void Draw() override;
 
-protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
+    void AIState_Idle(float deltaTime);
+    void AIState_Shaking(float deltaTime);
 
+protected:
     PlayerController* m_pPlayerController = nullptr;
 
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    AIStateFunction m_pCurrentStateFunction = &Player::AIState_Idle;
+
+    float m_IdleTimer = 0.0f;
+    float m_ShakingTimer = 0.0f;
+
+    vec2 m_ShakeOffset = vec2(0,0);
 };

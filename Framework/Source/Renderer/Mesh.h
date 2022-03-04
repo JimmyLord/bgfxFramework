@@ -9,9 +9,10 @@
 
 #pragma once
 
+#include "bgfx/platform.h"
+
 #include "Math/Vector.h"
 #include "Math/Matrix.h"
-#include "bgfx/platform.h"
 
 namespace fw {
 

@@ -9,11 +9,12 @@
 
 #include "CoreHeaders.h"
 
+#include "bgfx/platform.h"
+
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Math/Matrix.h"
 #include "Utility/Utility.h"
-#include "bgfx/platform.h"
 
 namespace fw {
 

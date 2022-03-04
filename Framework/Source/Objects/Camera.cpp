@@ -7,34 +7,38 @@
 // 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
+#include "CoreHeaders.h"
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "bgfx/platform.h"
 
-class Player;
-class PlayerController;
+#include "Camera.h"
 
-class Game : public fw::GameCore
+namespace fw {
+
+Camera::Camera(GameCore* pGameCore, vec3 pos)
+    : GameObject( pGameCore, "Camera", pos, nullptr, nullptr )
 {
-public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+}
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+Camera::~Camera()
+{
+}
 
-protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
+void Camera::Update(float deltaTime)
+{
+    if( m_pObjectWeAreLookingAt )
+    {
+        m_LookAtPosition = m_pObjectWeAreLookingAt->GetPosition();
+    }
 
-    PlayerController* m_pPlayerController = nullptr;
+    m_ViewMatrix.CreateLookAtView( m_Position, vec3(0,1,0), m_LookAtPosition );
+    m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, 1.0f, 0.01f, 100.0f );
+}
 
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
-};
+void Camera::Enable()
+{
+    // Setup view and projection matrices and uniforms.
+    bgfx::setViewTransform( 0, &m_ViewMatrix.m11, &m_ProjectionMatrix.m11 );
+}
+
+} // namespace fw

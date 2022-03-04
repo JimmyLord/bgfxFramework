@@ -9,32 +9,35 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "Math/Matrix.h"
+#include "Objects/GameObject.h"
 
-class Player;
-class PlayerController;
+namespace fw {
 
-class Game : public fw::GameCore
+class Camera : public GameObject
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    Camera(GameCore* pGameCore, vec3 pos);
+    virtual ~Camera();
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
     virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+
+    void Enable();
+
+    // Getters.
+    mat4& GetViewMatrix() { return m_ViewMatrix; }
+    mat4& GetProjectionMatrix() { return m_ProjectionMatrix; }
+
+    // Setters.
+    void SetLookAtPosition(vec3 pos) { m_LookAtPosition = pos; }
+    void SetObjectWeAreLookingAt(GameObject* pObj) { m_pObjectWeAreLookingAt = pObj; }
 
 protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
+    mat4 m_ViewMatrix;
+    mat4 m_ProjectionMatrix;
 
-    PlayerController* m_pPlayerController = nullptr;
-
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    vec3 m_LookAtPosition = vec3(0,0,0);
+    GameObject* m_pObjectWeAreLookingAt = nullptr;
 };
+
+} // namespace fw

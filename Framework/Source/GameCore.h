@@ -11,6 +11,8 @@
 
 namespace fw {
 
+class Event;
+class EventManager;
 class FWCore;
 
 class GameCore
@@ -20,14 +22,18 @@ public:
     virtual ~GameCore() = 0 {}
 
     virtual void StartFrame(float deltaTime) = 0;
+    virtual void OnEvent(Event* pEvent) = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void Draw() = 0;
 
     // Getters.
     FWCore* GetFramework() { return &m_FWCore; }
+    EventManager* GetEventManager() { return m_pEventManager; }
 
 protected:
     FWCore& m_FWCore;
+
+    EventManager* m_pEventManager;
 };
 
 } // namespace fw

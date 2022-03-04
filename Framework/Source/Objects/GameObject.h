@@ -9,32 +9,37 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "Math/Vector.h"
 
-class Player;
-class PlayerController;
+namespace fw {
 
-class Game : public fw::GameCore
+class Camera;
+class GameCore;
+class Mesh;
+class ShaderProgram;
+class Texture;
+
+class GameObject
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, ShaderProgram* pShader);
+    virtual ~GameObject();
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    virtual void Update(float deltaTime);
+    virtual void Draw();
+
+    std::string GetName() { return m_Name; }
+    vec3 GetPosition() { return m_Position; }
 
 protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
+    GameCore* m_pGameCore = nullptr;
 
-    PlayerController* m_pPlayerController = nullptr;
+    std::string m_Name;
 
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    vec3 m_Position;
+
+    Mesh* m_pMesh = nullptr;
+    ShaderProgram* m_pShader = nullptr;
 };
+
+} // namespace fw

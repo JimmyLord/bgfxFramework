@@ -10,20 +10,44 @@
 #include "Framework.h"
 
 #include "VertexFormats.h"
+#include "Shapes.h"
 
+//=======================
+// Triangle
+//=======================
 static const VF_PosColor g_TriangleVerts[] =
 {
     { vec3( 0.0f, 0.5f, 0.0f), 0x000000ff }, // Top
     { vec3(-0.5f,-0.5f, 0.0f), 0x0000ff00 }, // Bottom-left
     { vec3( 0.5f,-0.5f, 0.0f), 0x00ff0000 }, // Bottom-right
 };
-
 static const uint16 g_TriangleIndices[] =
 {
     0, 2, 1,
 };
-
 fw::Mesh* CreateTriangle()
 {
     return new fw::Mesh( VF_PosColor::format, g_TriangleVerts, sizeof(g_TriangleVerts), g_TriangleIndices, sizeof(g_TriangleIndices) );
+}
+
+//=======================
+// Square
+//=======================
+static const VF_PosColor g_SquareVerts[] =
+{
+    { vec3(-0.5f, 0.5f, 0.0f), 0x0000ff00 }, // Top-left
+    { vec3(-0.5f,-0.5f, 0.0f), 0x0000ff00 }, // Bottom-left
+    { vec3( 0.5f,-0.5f, 0.0f), 0x0000ff00 }, // Bottom-right
+
+    { vec3(-0.5f, 0.5f, 0.0f), 0x0000ff00 }, // Top-left
+    { vec3( 0.5f,-0.5f, 0.0f), 0x0000ff00 }, // Bottom-right
+    { vec3( 0.5f, 0.5f, 0.0f), 0x0000ff00 }, // Top-right
+};
+static const uint16 g_SquareIndices[] =
+{
+    0,2,1, 3,5,4
+};
+fw::Mesh* CreateSquare()
+{
+    return new fw::Mesh( VF_PosColor::format, g_SquareVerts, sizeof(g_SquareVerts), g_SquareIndices, sizeof(g_SquareIndices) );
 }

@@ -9,32 +9,20 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
-
-class Player;
-class PlayerController;
-
-class Game : public fw::GameCore
+class RemoveFromGameEvent : public fw::Event
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    RemoveFromGameEvent(fw::GameObject* pObject)
+    {
+        m_pObject = pObject;
+    }
+    virtual ~RemoveFromGameEvent() {}
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    static const char* GetStaticEventType() { return "RemoveFromGameEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+    fw::GameObject* GetGameObject() { return m_pObject; }
 
 protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
-
-    PlayerController* m_pPlayerController = nullptr;
-
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    fw::GameObject* m_pObject;
 };

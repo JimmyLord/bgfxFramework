@@ -9,32 +9,22 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
+namespace fw {
 
-class Player;
-class PlayerController;
+class Event;
+class GameCore;
 
-class Game : public fw::GameCore
+class EventManager
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    EventManager();
+    ~EventManager();
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    void AddEvent(Event* pEvent, float delayBeforeSending = 0.0f);
+    void DispatchAllEvents(float deltaTime, GameCore* pGameCore);
 
 protected:
-    fw::Uniforms m_Uniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
-
-    PlayerController* m_pPlayerController = nullptr;
-
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    std::queue<Event*> m_EventQueue;
 };
+
+} // namespace fw

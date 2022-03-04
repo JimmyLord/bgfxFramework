@@ -11,8 +11,10 @@
 
 #include "DataTypes.h"
 #include "Game.h"
+#include "Events/GameEvents.h"
+#include "Objects/Player.h"
+#include "Objects/PlayerController.h"
 #include "Meshes/Shapes.h"
-#include "Meshes/VertexFormats.h"
 
 Game::Game(fw::FWCore& fwCore)
     : GameCore( fwCore )
@@ -22,8 +24,23 @@ Game::Game(fw::FWCore& fwCore)
 
 Game::~Game()
 {
-    delete m_pMesh;
+    for( auto& meshPair : m_pMeshes )
+    {
+        delete meshPair.second;
+    }
+
     delete m_pShader;
+
+    for( fw::GameObject* pObject : m_Objects )
+    {
+        delete pObject;
+    }
+    
+    delete m_pCamera;
+
+    delete m_pPlayerController;
+
+    delete m_pEventManager;
 }
 
 void Game::Init()
@@ -32,6 +49,8 @@ void Game::Init()
     bgfx::setViewClear( 0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x000030ff, 1.0f, 0 );
     bgfx::setViewRect( 0, 0, 0, m_FWCore.GetWindowWidth(), m_FWCore.GetWindowHeight() );
 
+    m_pEventManager = new fw::EventManager();
+
     // Create uniforms.
     m_Uniforms.CreateFrameworkUniforms();
 
@@ -39,28 +58,61 @@ void Game::Init()
     VF_PosColor::InitVertexLayout();
 
     // Create some meshes.
-    m_pMesh = CreateTriangle();
+    m_pMeshes["Triangle"] = CreateTriangle();
+    m_pMeshes["Square"] = CreateSquare();
 
     // Create some shaders.
     m_pShader = new fw::ShaderProgram( "Data/Shaders/", "Basic.vert.bin", "Basic.frag.bin" );
+
+    // Create a controller.
+    m_pPlayerController = new PlayerController();
+
+    // Create some GameObjects.
+    m_pCamera = new fw::Camera( this, vec3(5,5,-20) );
+    m_pCamera->SetLookAtPosition( vec3(5,5,0) );
+    m_pPlayer = new Player( this, m_pPlayerController, "Player", vec3(6,5,0), m_pMeshes["Triangle"], m_pShader );
+    m_Objects.push_back( m_pPlayer );
+
+    m_Objects.push_back( new fw::GameObject( this, "Enemy 1", vec3(0,0,0), m_pMeshes["Square"], m_pShader ) );
+    m_Objects.push_back( new fw::GameObject( this, "Enemy 2", vec3(10,10,0), m_pMeshes["Square"], m_pShader ) );
+    m_Objects.push_back( new fw::GameObject( this, "Enemy 3", vec3(5,5,0), m_pMeshes["Square"], m_pShader ) );
+    m_Objects.push_back( new fw::GameObject( this, "Enemy 4", vec3(1,1,0), m_pMeshes["Square"], m_pShader ) );
+    m_Objects.push_back( new fw::GameObject( this, "Enemy 5", vec3(1,9,0), m_pMeshes["Square"], m_pShader ) );
 }
 
 void Game::StartFrame(float deltaTime)
 {
+    // Reset the controller.
+    m_pPlayerController->StartFrame();
+
+    // Process our events.
+    m_pEventManager->DispatchAllEvents( deltaTime, this );
+}
+
+void Game::OnEvent(fw::Event* pEvent)
+{
+    m_pPlayerController->OnEvent( pEvent );
+
+    if( pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType() )
+    {
+        RemoveFromGameEvent* pRemoveFromGameEvent = static_cast<RemoveFromGameEvent*>( pEvent );
+        fw::GameObject* pObject = pRemoveFromGameEvent->GetGameObject();
+
+        auto it = std::find( m_Objects.begin(), m_Objects.end(), pObject );
+        m_Objects.erase( it );
+
+        delete pObject;
+    }
 }
 
 void Game::Update(float deltaTime)
 {
-    float speed = 4.0f;
+    for( fw::GameObject* pObject : m_Objects )
+    {
+        pObject->Update( deltaTime );
+    }
 
-    if( m_FWCore.IsKeyDown('W') )
-        m_Position.y += speed * deltaTime;
-    if( m_FWCore.IsKeyDown('S') )
-        m_Position.y -= speed * deltaTime;
-    if( m_FWCore.IsKeyDown('A') )
-        m_Position.x -= speed * deltaTime;
-    if( m_FWCore.IsKeyDown('D') )
-        m_Position.x += speed * deltaTime;
+    m_pCamera->Update( deltaTime );
 }
 
 void Game::Draw()
@@ -71,18 +123,13 @@ void Game::Draw()
     float time = (float)fw::GetSystemTimeSinceGameStart();
     bgfx::setUniform( m_Uniforms.m_Map["u_Time"], &time );
 
-    // Setup view and projection matrices and uniforms.
-    mat4 viewMat;
-    viewMat.CreateLookAtView( vec3(0,0,-10), vec3(0,1,0), vec3(0,0,0) );
-    mat4 projMat;
-    float aspectRatio = m_FWCore.GetWindowWidth()/(float)m_FWCore.GetWindowHeight();
-    projMat.CreatePerspectiveVFoV( 45.0f, aspectRatio, 0.01f, 100.0f );
-    bgfx::setViewTransform( 0, &viewMat.m11, &projMat.m11 );
+    m_pCamera->Enable();
 
-    // Draw a single mesh with a unique world transform.
-    mat4 worldMat;
-    worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
-    m_pMesh->Draw( m_pShader, &worldMat );
+    // Draw all objects.
+    for( fw::GameObject* pObject : m_Objects )
+    {
+        pObject->Draw();
+    }
 
     //// Display debug stats.
     //bgfx::dbgTextClear();

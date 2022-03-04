@@ -20,6 +20,10 @@
 
 #include "FWCore.h"
 #include "GameCore.h"
+#include "EventSystem/Events.h"
+#include "EventSystem/EventManager.h"
+#include "Objects/Camera.h"
+#include "Objects/GameObject.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/ShaderProgram.h"
 #include "Renderer/Uniforms.h"

@@ -586,35 +586,35 @@ public:
     MyType y = 0;
 };
 
-class Color4f
+class color4f
 {
 public:
-    Color4f() {}
-    Color4f(float nr, float ng, float nb, float na) { r = nr; g = ng; b = nb; a = na; }
+    color4f() {}
+    color4f(float nr, float ng, float nb, float na) { r = nr; g = ng; b = nb; a = na; }
 
     // Primary.
-    static const Color4f Red()              { return Color4f(1.0f, 0.0f, 0.0f, 1.0f); }
-    static const Color4f Green()            { return Color4f(0.0f, 1.0f, 0.0f, 1.0f); }
-    static const Color4f Yellow()           { return Color4f(1.0f, 1.0f, 0.0f, 1.0f); }
-    static const Color4f Blue()             { return Color4f(0.0f, 0.0f, 1.0f, 1.0f); }
-    static const Color4f White()            { return Color4f(1.0f, 1.0f, 1.0f, 1.0f); }
-    static const Color4f Black()            { return Color4f(0.0f, 0.0f, 0.0f, 1.0f); }
-    static const Color4f Grey()             { return Color4f(0.5f, 0.5f, 0.5f, 1.0f); }
+    static const color4f Red()              { return color4f(1.0f, 0.0f, 0.0f, 1.0f); }
+    static const color4f Green()            { return color4f(0.0f, 1.0f, 0.0f, 1.0f); }
+    static const color4f Yellow()           { return color4f(1.0f, 1.0f, 0.0f, 1.0f); }
+    static const color4f Blue()             { return color4f(0.0f, 0.0f, 1.0f, 1.0f); }
+    static const color4f White()            { return color4f(1.0f, 1.0f, 1.0f, 1.0f); }
+    static const color4f Black()            { return color4f(0.0f, 0.0f, 0.0f, 1.0f); }
+    static const color4f Grey()             { return color4f(0.5f, 0.5f, 0.5f, 1.0f); }
 
     // Red Shades.
-    static const Color4f Maroon()           { return Color4f(0.3f, 0.0f, 0.0f, 1.0f); }
-    static const Color4f Orange()           { return Color4f(1.0f, 0.6471f, 0.0f, 1.0f); }
-    static const Color4f FireRed()          { return Color4f(0.8f, 0.12f, 0.16f, 1.0f); }
+    static const color4f Maroon()           { return color4f(0.3f, 0.0f, 0.0f, 1.0f); }
+    static const color4f Orange()           { return color4f(1.0f, 0.6471f, 0.0f, 1.0f); }
+    static const color4f FireRed()          { return color4f(0.8f, 0.12f, 0.16f, 1.0f); }
 
     // Green Shades.
-    static const Color4f Forest()           { return Color4f(0.0f, 0.3f, 0.0f, 1.0f); }
-    static const Color4f AppleGreen()       { return Color4f(0.5f, 0.7f, 0.0f, 1.0f); }
-    static const Color4f LimeGreen()        { return Color4f(0.74f, 1.0f, 0.0f, 1.0f); }
+    static const color4f Forest()           { return color4f(0.0f, 0.3f, 0.0f, 1.0f); }
+    static const color4f AppleGreen()       { return color4f(0.5f, 0.7f, 0.0f, 1.0f); }
+    static const color4f LimeGreen()        { return color4f(0.74f, 1.0f, 0.0f, 1.0f); }
 
     // Blue Shades.
-    static const Color4f DarkBlue()         { return Color4f(0.0f, 0.0f, 0.3f, 1.0f); }
-    static const Color4f Cyan()             { return Color4f(0.0f, 1.0f, 1.0f, 1.0f); }
-    static const Color4f CornflowerBlue()   { return Color4f(0.39f, 0.05f, 0.92f, 1.0f); }
+    static const color4f DarkBlue()         { return color4f(0.0f, 0.0f, 0.3f, 1.0f); }
+    static const color4f Cyan()             { return color4f(0.0f, 1.0f, 1.0f, 1.0f); }
+    static const color4f CornflowerBlue()   { return color4f(0.39f, 0.05f, 0.92f, 1.0f); }
 
 public:
     float r = 1.0f;

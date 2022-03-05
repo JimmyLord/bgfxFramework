@@ -7,36 +7,34 @@
 // 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#pragma once
+#include "CoreHeaders.h"
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "Material.h"
+#include "Renderer/Uniforms.h"
+#include "Renderer/Texture.h"
 
-class Player;
-class PlayerController;
+namespace fw {
 
-class Game : public fw::GameCore
+Material::Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha)
+    : m_pShader( pShader )
+    , m_pTexture( pTexture )
+    , m_Color( color )
+    , m_HasAlpha( hasAlpha )
 {
-public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+}
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+Material::~Material()
+{
+}
 
-protected:
-    fw::Uniforms* m_pUniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    std::map<std::string, fw::ShaderProgram*> m_pShaders;
-    std::map<std::string, fw::Texture*> m_pTextures;
-    std::map<std::string, fw::Material*> m_pMaterials;
+void Material::Enable(const Uniforms* pUniforms) const
+{
+    if( m_pTexture )
+    {
+        bgfx::setTexture( 0, pUniforms->m_Map.at("u_TextureColor"), m_pTexture->GetHandle() );
+    }
 
-    PlayerController* m_pPlayerController = nullptr;
+    bgfx::setUniform( pUniforms->m_Map.at( "u_DiffuseColor" ), &m_Color.r );
+}
 
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
-};
+} // namespace fw

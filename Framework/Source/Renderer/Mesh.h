@@ -16,7 +16,9 @@
 
 namespace fw {
 
+class Material;
 class ShaderProgram;
+class Uniforms;
 
 class Mesh
 {
@@ -26,7 +28,7 @@ public:
 
     void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32_t vertsSize, const void* indices, uint32_t indicesSize);
 
-    void Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend);
+    void Draw(const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat);
 
 protected:
     bgfx::VertexBufferHandle m_VBO;

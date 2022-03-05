@@ -19,6 +19,7 @@ namespace fw {
 class Uniforms
 {
 public:
+    Uniforms();
     ~Uniforms();
     void CreateFrameworkUniforms();
 

@@ -13,8 +13,8 @@
 #include "Objects/PlayerController.h"
 #include "Game.h"
 
-Player::Player(fw::GameCore* pGameCore, PlayerController* pPlayerController, std::string name, vec3 pos, fw::Mesh* pMesh, fw::ShaderProgram* pShader)
-    : fw::GameObject( pGameCore, name, pos, pMesh, pShader )
+Player::Player(fw::GameCore* pGameCore, PlayerController* pPlayerController, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial)
+    : fw::GameObject( pGameCore, name, pos, pMesh, pMaterial )
     , m_pPlayerController( pPlayerController )
 {
 }
@@ -77,11 +77,11 @@ void Player::AIState_Shaking(float deltaTime)
     }
 }
 
-void Player::Draw()
+void Player::Draw(const fw::Uniforms* pUniforms)
 {
     vec3 pos = m_Position + m_ShakeOffset;
 
     mat4 worldMat;
     worldMat.CreateSRT( vec3(1), vec3(0), pos );
-    m_pMesh->Draw( m_pShader, &worldMat, m_HasAlpha );
+    m_pMesh->Draw( pUniforms, m_pMaterial, &worldMat );
 }

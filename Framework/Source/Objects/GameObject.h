@@ -15,26 +15,29 @@ namespace fw {
 
 class Camera;
 class GameCore;
+class Material;
 class Mesh;
 class ShaderProgram;
 class Texture;
+class Uniforms;
 
 class GameObject
 {
 public:
-    GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, ShaderProgram* pShader);
+    GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial);
     virtual ~GameObject();
 
     virtual void Update(float deltaTime);
-    virtual void Draw();
+    virtual void Draw(const Uniforms* pUniforms);
 
     // Getters.
     std::string GetName() { return m_Name; }
     vec3 GetPosition() { return m_Position; }
+    Material* GetMaterial() { return m_pMaterial; }
 
     // Setters.
     void SetPosition(vec3 pos) { m_Position = pos; }
-    void SetHasAlpha(bool hasAlpha) { m_HasAlpha = hasAlpha; }
+    void SetMaterial(Material* pMaterial) { m_pMaterial = pMaterial; }
 
 protected:
     GameCore* m_pGameCore = nullptr;
@@ -44,8 +47,7 @@ protected:
     vec3 m_Position;
 
     Mesh* m_pMesh = nullptr;
-    ShaderProgram* m_pShader = nullptr;
-    bool m_HasAlpha = false;
+    Material* m_pMaterial = nullptr;
 };
 
 } // namespace fw

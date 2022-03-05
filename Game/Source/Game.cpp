@@ -29,7 +29,15 @@ Game::~Game()
         delete meshPair.second;
     }
 
-    delete m_pTexture;
+    for( auto& materialPair : m_pMaterials )
+    {
+        delete materialPair.second;
+    }
+
+    for( auto& texturePair : m_pTextures )
+    {
+        delete texturePair.second;
+    }
 
     for( auto& shaderPair : m_pShaders )
     {
@@ -57,7 +65,7 @@ void Game::Init()
     m_pEventManager = new fw::EventManager();
 
     // Create uniforms.
-    m_Uniforms.CreateFrameworkUniforms();
+    m_pUniforms = new fw::Uniforms();
 
     // Create vertex formats.
     InitTextureFormats();
@@ -67,12 +75,18 @@ void Game::Init()
     m_pMeshes["Square"] = CreateSquareMesh();
     m_pMeshes["Sprite"] = CreateSpriteMesh();
 
-    // Create some shaders.
-    m_pShaders["Color"] = new fw::ShaderProgram( "Data/Shaders/", "Color.vert.bin", "Color.frag.bin" );
+    // Load some shaders.
+    m_pShaders["SolidColor"] = new fw::ShaderProgram( "Data/Shaders/", "SolidColor.vert.bin", "SolidColor.frag.bin" );
+    m_pShaders["VertexColor"] = new fw::ShaderProgram( "Data/Shaders/", "VertexColor.vert.bin", "VertexColor.frag.bin" );
     m_pShaders["Texture"] = new fw::ShaderProgram( "Data/Shaders/", "Texture.vert.bin", "Texture.frag.bin" );
 
     // Load some textures.
-    m_pTexture = new fw::Texture( "Data/Textures/Sokoban.png" );
+    m_pTextures["Sokoban"] = new fw::Texture( "Data/Textures/Sokoban.png" );
+
+    // Create some materials.
+    m_pMaterials["Blue"] = new fw::Material( m_pShaders["SolidColor"], nullptr, fw::color4f::Blue(), false );
+    m_pMaterials["VertexColor"] = new fw::Material( m_pShaders["VertexColor"], nullptr, fw::color4f::White(), false );
+    m_pMaterials["Sokoban"] = new fw::Material( m_pShaders["Texture"], m_pTextures["Sokoban"], fw::color4f::White(), true );
 
     // Create a controller.
     m_pPlayerController = new PlayerController();
@@ -80,15 +94,14 @@ void Game::Init()
     // Create some GameObjects.
     m_pCamera = new fw::Camera( this, vec3(5,5,-20) );
     m_pCamera->SetLookAtPosition( vec3(5,5,0) );
-    m_pPlayer = new Player( this, m_pPlayerController, "Player", vec3(6,5,-0.1f), m_pMeshes["Sprite"], m_pShaders["Texture"] );
-    m_pPlayer->SetHasAlpha( true );
+    m_pPlayer = new Player( this, m_pPlayerController, "Player", vec3(6,5,-0.1f), m_pMeshes["Sprite"], m_pMaterials["Sokoban"] );
     m_Objects.push_back( m_pPlayer );
 
-    m_Objects.push_back( new fw::GameObject( this, "Enemy 1", vec3(0,0,0), m_pMeshes["Triangle"], m_pShaders["Color"] ) );
-    m_Objects.push_back( new fw::GameObject( this, "Enemy 2", vec3(10,10,0), m_pMeshes["Triangle"], m_pShaders["Color"] ) );
-    m_Objects.push_back( new fw::GameObject( this, "Enemy 3", vec3(5,5,0), m_pMeshes["Square"], m_pShaders["Color"] ) );
-    m_Objects.push_back( new fw::GameObject( this, "Enemy 4", vec3(1,1,0), m_pMeshes["Square"], m_pShaders["Color"] ) );
-    m_Objects.push_back( new fw::GameObject( this, "Enemy 5", vec3(1,9,0), m_pMeshes["Square"], m_pShaders["Color"] ) );
+    m_Objects.push_back( new fw::GameObject( this, "Object 1", vec3(0,0,0), m_pMeshes["Triangle"], m_pMaterials["VertexColor"] ) );
+    m_Objects.push_back( new fw::GameObject( this, "Object 2", vec3(10,10,0), m_pMeshes["Triangle"], m_pMaterials["Blue"] ) );
+    m_Objects.push_back( new fw::GameObject( this, "Object 3", vec3(5,5,0), m_pMeshes["Square"], m_pMaterials["VertexColor"] ) );
+    m_Objects.push_back( new fw::GameObject( this, "Object 4", vec3(1,1,0), m_pMeshes["Square"], m_pMaterials["VertexColor"] ) );
+    m_Objects.push_back( new fw::GameObject( this, "Object 5", vec3(1,9,0), m_pMeshes["Square"], m_pMaterials["Blue"] ) );
 }
 
 void Game::StartFrame(float deltaTime)
@@ -132,12 +145,11 @@ void Game::Draw()
 
     // Setup time uniforms.
     float time = (float)fw::GetSystemTimeSinceGameStart();
-    bgfx::setUniform( m_Uniforms.m_Map["u_Time"], &time );
+    bgfx::setUniform( m_pUniforms->m_Map["u_Time"], &time );
 
     // Hard-coded Texture and UV scale and offset for the sokoban player image.
-    bgfx::setTexture( 0, m_Uniforms.m_Map["u_TextureColor"], m_pTexture->GetHandle() );
     vec4 uvScaleOffset( 64/1024.0f, 64/512.0f, 780/1024.0f, 383/512.0f );
-    bgfx::setUniform( m_Uniforms.m_Map["u_UVScaleOffset"], &uvScaleOffset );
+    bgfx::setUniform( m_pUniforms->m_Map["u_UVScaleOffset"], &uvScaleOffset );
 
     // Program the view and proj uniforms from the camera.
     m_pCamera->Enable();
@@ -145,7 +157,7 @@ void Game::Draw()
     // Draw all objects.
     for( fw::GameObject* pObject : m_Objects )
     {
-        pObject->Draw();
+        pObject->Draw( m_pUniforms );
     }
 
     //// Display debug stats.

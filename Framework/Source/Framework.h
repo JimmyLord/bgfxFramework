@@ -25,6 +25,7 @@
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/Material.h"
 #include "Renderer/ShaderProgram.h"
 #include "Renderer/Texture.h"
 #include "Renderer/Uniforms.h"

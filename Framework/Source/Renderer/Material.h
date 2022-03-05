@@ -9,34 +9,39 @@
 
 #pragma once
 
-#include "Framework.h"
-#include "DataTypes.h"
+#include "Math/Vector.h"
 
-class Player;
-class PlayerController;
+namespace fw {
 
-class Game : public fw::GameCore
+class ShaderProgram;
+class Texture;
+class Uniforms;
+
+class Material
 {
 public:
-    Game(fw::FWCore& fwCore);
-    virtual ~Game() override;
+    Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha);
+    virtual ~Material();
 
-    void Init();
-    virtual void StartFrame(float deltaTime) override;
-    virtual void OnEvent(fw::Event* pEvent) override;
-    virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    void Enable(const Uniforms* pUniforms) const;
+
+    // Getters.
+    ShaderProgram* GetShader() const { return m_pShader; }
+    Texture* GetTexture() const { return m_pTexture; }
+    color4f GetColor() const { return m_Color; }
+    bool GetHasAlpha() const { return m_HasAlpha; }
+
+    // Setters.
+    void SetShader(ShaderProgram* pShader) { m_pShader = pShader; }
+    void SetTexture(Texture* pTexture) { m_pTexture = pTexture; }
+    void SetColor(color4f color) { m_Color = color; }
+    void SetHasAlpha(bool hasAlpha) { m_HasAlpha = hasAlpha; }
 
 protected:
-    fw::Uniforms* m_pUniforms;
-    std::map<std::string, fw::Mesh*> m_pMeshes;
-    std::map<std::string, fw::ShaderProgram*> m_pShaders;
-    std::map<std::string, fw::Texture*> m_pTextures;
-    std::map<std::string, fw::Material*> m_pMaterials;
-
-    PlayerController* m_pPlayerController = nullptr;
-
-    fw::Camera* m_pCamera = nullptr;
-    Player* m_pPlayer = nullptr;
-    std::vector<fw::GameObject*> m_Objects;
+    ShaderProgram* m_pShader;
+    Texture* m_pTexture;
+    color4f m_Color;
+    bool m_HasAlpha;
 };
+
+} // namespace fw

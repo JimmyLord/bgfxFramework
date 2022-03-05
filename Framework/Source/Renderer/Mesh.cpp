@@ -14,6 +14,7 @@
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Math/Matrix.h"
+#include "Renderer/Material.h"
 #include "Utility/Utility.h"
 
 namespace fw {
@@ -35,8 +36,16 @@ void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uin
     m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
 }
 
-void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend)
+void Mesh::Draw(const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)
 {
+    // Set vertex and index buffer.
+    bgfx::setVertexBuffer( 0, m_VBO );
+    bgfx::setIndexBuffer( m_IBO );
+
+    // Setup the material's uniforms.
+    pMaterial->Enable( pUniforms );
+
+    // Set render states.
     uint64_t state = 0
         | BGFX_STATE_WRITE_RGB
         | BGFX_STATE_WRITE_Z
@@ -45,7 +54,7 @@ void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend)
         | BGFX_STATE_MSAA
         ;
 
-    if( blend )
+    if( pMaterial->GetHasAlpha() )
     {
         state = state
             | BGFX_STATE_BLEND_EQUATION_ADD
@@ -53,11 +62,6 @@ void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend)
             ;
     }
 
-    // Set vertex and index buffer.
-    bgfx::setVertexBuffer( 0, m_VBO );
-    bgfx::setIndexBuffer( m_IBO );
-
-    // Set render states.
     bgfx::setState( state );
 
     if( worldMat )
@@ -66,7 +70,7 @@ void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend)
     }
 
     // Submit primitive for rendering to view 0.
-    bgfx::submit( 0, pShader->GetProgram() );
+    bgfx::submit( 0, pMaterial->GetShader()->GetProgram() );
 }
 
 } // namespace fw

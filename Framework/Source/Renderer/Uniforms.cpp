@@ -13,6 +13,11 @@
 
 namespace fw {
 
+Uniforms::Uniforms()
+{
+    CreateFrameworkUniforms();
+}
+
 Uniforms::~Uniforms()
 {
     for( auto& uniformPair : m_Map )
@@ -28,6 +33,7 @@ void Uniforms::CreateFrameworkUniforms()
     m_Map["u_Time"] = bgfx::createUniform( "u_Time", bgfx::UniformType::Vec4 );
     m_Map["u_TextureColor"] = bgfx::createUniform( "u_TextureColor", bgfx::UniformType::Sampler );
     m_Map["u_UVScaleOffset"] = bgfx::createUniform( "u_UVScaleOffset", bgfx::UniformType::Vec4 );
+    m_Map["u_DiffuseColor"] = bgfx::createUniform( "u_DiffuseColor", bgfx::UniformType::Vec4 );
 }
 
 } // namespace fw

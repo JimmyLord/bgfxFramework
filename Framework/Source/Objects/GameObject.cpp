@@ -14,16 +14,13 @@
 
 namespace fw {
 
-GameObject::GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, ShaderProgram* pShader)
+GameObject::GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
+    : m_pGameCore( pGameCore )
+    , m_Name( name )
+    , m_Position( pos )
+    , m_pMesh( pMesh )
+    , m_pMaterial( pMaterial )
 {
-    m_pGameCore = pGameCore;
-
-    m_Name = name;
-
-    m_Position = pos;
-
-    m_pMesh = pMesh;
-    m_pShader = pShader;
 }
 
 GameObject::~GameObject()
@@ -34,11 +31,11 @@ void GameObject::Update(float deltaTime)
 {
 }
 
-void GameObject::Draw()
+void GameObject::Draw(const Uniforms* pUniforms)
 {
     mat4 worldMat;
     worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
-    m_pMesh->Draw( m_pShader, &worldMat, m_HasAlpha );
+    m_pMesh->Draw( pUniforms, m_pMaterial, &worldMat );
 }
 
 } // namespace fw

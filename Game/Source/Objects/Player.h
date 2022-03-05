@@ -18,11 +18,11 @@ class Player : public fw::GameObject
     typedef void (Player::*AIStateFunction)(float deltaTime);
 
 public:
-    Player(fw::GameCore* pGameCore, PlayerController* pPlayerController, std::string name, vec3 pos, fw::Mesh* pMesh, fw::ShaderProgram* pShader);
+    Player(fw::GameCore* pGameCore, PlayerController* pPlayerController, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial);
     virtual ~Player();
 
     virtual void Update(float deltaTime) override;
-    virtual void Draw() override;
+    virtual void Draw(const fw::Uniforms* pUniforms) override;
 
     void AIState_Idle(float deltaTime);
     void AIState_Shaking(float deltaTime);

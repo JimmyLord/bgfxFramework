@@ -13,6 +13,7 @@
 
 typedef fw::vec2            vec2;
 typedef fw::vec3            vec3;
+typedef fw::vec4            vec4;
 typedef fw::ivec2           ivec2;
 typedef fw::mat4            mat4;
 

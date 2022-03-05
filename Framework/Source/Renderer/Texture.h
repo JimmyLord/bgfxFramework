@@ -7,27 +7,29 @@
 // 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#include "CoreHeaders.h"
+#pragma once
 
-#include "Uniforms.h"
+#include "bimg/bimg.h"
+#include "bgfx/platform.h"
 
 namespace fw {
 
-Uniforms::~Uniforms()
+class Texture
 {
-    for( auto& uniformPair : m_Map )
-    {
-        bgfx::destroy( uniformPair.second );
-    }
-}
+public:
+    Texture(const char* filename);
+    virtual ~Texture();
 
-void Uniforms::CreateFrameworkUniforms()
-{
-    assert( m_Map.empty() );
+    bgfx::TextureHandle GetHandle() { return m_TextureHandle; }
 
-    m_Map["u_Time"] = bgfx::createUniform( "u_Time", bgfx::UniformType::Vec4 );
-    m_Map["u_TextureColor"] = bgfx::createUniform( "u_TextureColor", bgfx::UniformType::Sampler );
-    m_Map["u_UVScaleOffset"] = bgfx::createUniform( "u_UVScaleOffset", bgfx::UniformType::Vec4 );
-}
+protected:
+    bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;
+
+private:
+    static void ReleasePixelData(void* _ptr, void* _userData);
+
+    unsigned char* m_pPixels = nullptr;
+    bimg::ImageContainer* m_pImageContainer = nullptr;
+};
 
 } // namespace fw

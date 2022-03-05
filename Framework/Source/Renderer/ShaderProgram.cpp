@@ -74,8 +74,8 @@ bool ShaderProgram::Init(const char* shaderFolder, const char* vertFilename, con
     sprintf_s( vertFullPath, MAX_PATH, "%s/%s/%s", shaderFolder, rendererPath, vertFilename );
     sprintf_s( fragFullPath, MAX_PATH, "%s/%s/%s", shaderFolder, rendererPath, fragFilename );
 
-    m_VertShaderString = fw::LoadCompleteFile( vertFullPath, &m_VertShaderStringLength );
-    m_FragShaderString = fw::LoadCompleteFile( fragFullPath, &m_FragShaderStringLength );
+    m_VertShaderString = LoadCompleteFile( vertFullPath, &m_VertShaderStringLength );
+    m_FragShaderString = LoadCompleteFile( fragFullPath, &m_FragShaderStringLength );
 
     assert( m_VertShaderString != nullptr && m_FragShaderString != nullptr );
     if( m_VertShaderString == nullptr || m_FragShaderString == nullptr )

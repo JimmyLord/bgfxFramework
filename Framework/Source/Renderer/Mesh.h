@@ -26,7 +26,7 @@ public:
 
     void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32_t vertsSize, const void* indices, uint32_t indicesSize);
 
-    void Draw(const ShaderProgram* pShader, const mat4* worldMat);
+    void Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend);
 
 protected:
     bgfx::VertexBufferHandle m_VBO;

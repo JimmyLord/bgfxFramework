@@ -26,5 +26,6 @@
 #include "Objects/GameObject.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/ShaderProgram.h"
+#include "Renderer/Texture.h"
 #include "Renderer/Uniforms.h"
 #include "Utility/Utility.h"

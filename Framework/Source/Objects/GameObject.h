@@ -28,8 +28,13 @@ public:
     virtual void Update(float deltaTime);
     virtual void Draw();
 
+    // Getters.
     std::string GetName() { return m_Name; }
     vec3 GetPosition() { return m_Position; }
+
+    // Setters.
+    void SetPosition(vec3 pos) { m_Position = pos; }
+    void SetHasAlpha(bool hasAlpha) { m_HasAlpha = hasAlpha; }
 
 protected:
     GameCore* m_pGameCore = nullptr;
@@ -40,6 +45,7 @@ protected:
 
     Mesh* m_pMesh = nullptr;
     ShaderProgram* m_pShader = nullptr;
+    bool m_HasAlpha = false;
 };
 
 } // namespace fw

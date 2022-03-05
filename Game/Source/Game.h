@@ -30,7 +30,8 @@ public:
 protected:
     fw::Uniforms m_Uniforms;
     std::map<std::string, fw::Mesh*> m_pMeshes;
-    fw::ShaderProgram* m_pShader = nullptr;
+    std::map<std::string, fw::ShaderProgram*> m_pShaders;
+    fw::Texture* m_pTexture = nullptr;
 
     PlayerController* m_pPlayerController = nullptr;
 

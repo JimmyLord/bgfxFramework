@@ -168,6 +168,7 @@ file( GLOB_RECURSE GameSourceFiles
 	Game/Source/*.h
 	Game/DataRaw/Shaders/*.vert
 	Game/DataRaw/Shaders/*.frag
+	Game/DataRaw/Shaders/*.sc
 	Game/DataRaw/*.bat
 	GenerateProjectFiles.bat
 )

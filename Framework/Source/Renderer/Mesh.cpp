@@ -35,7 +35,7 @@ void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uin
     m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
 }
 
-void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat)
+void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat, bool blend)
 {
     uint64_t state = 0
         | BGFX_STATE_WRITE_RGB
@@ -44,6 +44,14 @@ void Mesh::Draw(const ShaderProgram* pShader, const mat4* worldMat)
         | BGFX_STATE_CULL_CCW
         | BGFX_STATE_MSAA
         ;
+
+    if( blend )
+    {
+        state = state
+            | BGFX_STATE_BLEND_EQUATION_ADD
+            | BGFX_STATE_BLEND_FUNC( BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA )
+            ;
+    }
 
     // Set vertex and index buffer.
     bgfx::setVertexBuffer( 0, m_VBO );

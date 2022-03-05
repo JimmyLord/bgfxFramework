@@ -1,5 +1,5 @@
 build/
 .vs/
 out/
-Game/Data/Shaders
+Game/Data/Shaders/
 Game/DataRaw/shaderc.exe

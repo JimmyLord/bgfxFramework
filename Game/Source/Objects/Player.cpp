@@ -83,5 +83,5 @@ void Player::Draw()
 
     mat4 worldMat;
     worldMat.CreateSRT( vec3(1), vec3(0), pos );
-    m_pMesh->Draw( m_pShader, &worldMat );
+    m_pMesh->Draw( m_pShader, &worldMat, m_HasAlpha );
 }

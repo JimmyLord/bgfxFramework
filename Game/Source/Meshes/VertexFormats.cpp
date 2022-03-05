@@ -12,4 +12,11 @@
 #include "VertexFormats.h"
 
 // Storage for the vertex layout structures.
-bgfx::VertexLayout VF_PosColor::format;
+bgfx::VertexLayout VertexFormat_PosColor::format;
+bgfx::VertexLayout VertexFormat_PosUV::format;
+
+void InitTextureFormats()
+{
+    VertexFormat_PosColor::InitVertexLayout();
+    VertexFormat_PosUV::InitVertexLayout();
+}

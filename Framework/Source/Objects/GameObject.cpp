@@ -38,7 +38,7 @@ void GameObject::Draw()
 {
     mat4 worldMat;
     worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
-    m_pMesh->Draw( m_pShader, &worldMat );
+    m_pMesh->Draw( m_pShader, &worldMat, m_HasAlpha );
 }
 
 } // namespace fw

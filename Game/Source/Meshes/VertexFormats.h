@@ -11,7 +11,9 @@
 
 #include "DataTypes.h"
 
-struct VF_PosColor
+void InitTextureFormats();
+
+struct VertexFormat_PosColor
 {
     vec3 pos;
     uint32 color;
@@ -20,8 +22,25 @@ struct VF_PosColor
     {
         format
             .begin()
-            .add(bgfx::Attrib::Position, 3, bgfx::AttribType::Float)
-            .add(bgfx::Attrib::Color0,   4, bgfx::AttribType::Uint8, true)
+            .add( bgfx::Attrib::Position, 3, bgfx::AttribType::Float )
+            .add( bgfx::Attrib::Color0,   4, bgfx::AttribType::Uint8, true )
+            .end();
+    };
+
+    static bgfx::VertexLayout format;
+};
+
+struct VertexFormat_PosUV
+{
+    vec3 pos;
+    vec2 uv;
+
+    static void InitVertexLayout()
+    {
+        format
+            .begin()
+            .add( bgfx::Attrib::Position,  3, bgfx::AttribType::Float )
+            .add( bgfx::Attrib::TexCoord0, 2, bgfx::AttribType::Float )
             .end();
     };
 

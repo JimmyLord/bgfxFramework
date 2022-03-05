@@ -9,11 +9,15 @@
 
 #pragma once
 
+#include "bx/allocator.h"
 #include "bgfx/platform.h"
 
 namespace fw {
 
 class GameCore;
+
+extern bx::DefaultAllocator g_BGFXAllocator;
+extern bx::DefaultAllocator* g_pBGFXAllocator;
 
 class FWCore
 {

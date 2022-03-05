@@ -35,9 +35,9 @@ protected:
     long m_VertShaderStringLength = 0;
     long m_FragShaderStringLength = 0;
 
-    bgfx::ShaderHandle m_VertShader;
-    bgfx::ShaderHandle m_FragShader;
-    bgfx::ProgramHandle m_Program;
+    bgfx::ShaderHandle m_VertShader = BGFX_INVALID_HANDLE;
+    bgfx::ShaderHandle m_FragShader = BGFX_INVALID_HANDLE;
+    bgfx::ProgramHandle m_Program = BGFX_INVALID_HANDLE;
 };
 
 } // namespace fw

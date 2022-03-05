@@ -7,3 +7,6 @@
 [submodule "Framework/Libraries/bx"]
 	path = Framework/Libraries/bx
 	url = https://github.com/bkaradzic/bx.git
+[submodule "Framework/Libraries/stb"]
+	path = Framework/Libraries/stb
+	url = https://github.com/nothings/stb

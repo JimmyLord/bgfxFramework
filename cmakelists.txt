@@ -37,6 +37,8 @@ source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Libraries/bimg FILES ${
 # Project Creation
 add_library( bimg ${bimgSourceFiles} )
 
+set_target_properties( bimg PROPERTIES FOLDER "bgfx" )
+
 target_include_directories( bimg PUBLIC
 	Framework/Libraries/bimg/include
 	Framework/Libraries/bimg/3rdparty
@@ -70,6 +72,8 @@ source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Libraries/bx FILES ${bx
 # Project Creation
 add_library( bx ${bxSourceFiles} )
 
+set_target_properties( bx PROPERTIES FOLDER "bgfx" )
+
 target_include_directories( bx PUBLIC
 	Framework/Libraries/bx/include
 	Framework/Libraries/bx/include/compat/msvc
@@ -99,6 +103,8 @@ source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Libraries/bgfx FILES ${
 
 # Project Creation
 add_library( bgfx ${bgfxSourceFiles} )
+
+set_target_properties( bgfx PROPERTIES FOLDER "bgfx" )
 
 target_include_directories( bgfx PUBLIC
 	Framework/Libraries/bgfx/include
@@ -170,6 +176,7 @@ file( GLOB_RECURSE GameSourceFiles
 	Game/DataRaw/Shaders/*.frag
 	Game/DataRaw/Shaders/*.sc
 	Game/DataRaw/*.bat
+	BuildShaders.bat
 	GenerateProjectFiles.bat
 )
 source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GameSourceFiles} )

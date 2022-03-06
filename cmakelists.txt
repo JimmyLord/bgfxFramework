@@ -135,6 +135,8 @@ file( GLOB_RECURSE FrameworkSourceFiles
 	Framework/Source/*.cpp
 	Framework/Source/*.h
 	Framework/Libraries/stb/*.h
+	Framework/Libraries/rapidjson/include/*.h
+	Framework/Libraries/pcg-cpp/include/*.hpp
 )
 file( GLOB FrameworkSourceFilesNonRecursive
 	Framework/Libraries/imgui/*.cpp

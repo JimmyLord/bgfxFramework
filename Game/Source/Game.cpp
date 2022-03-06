@@ -34,6 +34,11 @@ Game::~Game()
         delete materialPair.second;
     }
 
+    for( auto& spriteSheetPair : m_pSpriteSheets )
+    {
+        delete spriteSheetPair.second;
+    }
+
     for( auto& texturePair : m_pTextures )
     {
         delete texturePair.second;
@@ -87,10 +92,16 @@ void Game::Init()
     // Load some textures.
     m_pTextures["Sokoban"] = new fw::Texture( "Data/Textures/Sokoban.png" );
 
+    // Load some spritesheets.
+    m_pSpriteSheets["Sokoban"] = new fw::SpriteSheet( "Data/Textures/Sokoban.json", m_pTextures["Sokoban"] );
+
+    // UV scale and offset for the sokoban player image.
+    fw::SpriteSheet::SpriteInfo info = m_pSpriteSheets["Sokoban"]->GetSpriteByName( "Player/player_01" );
+
     // Create some materials.
     m_pMaterials["Blue"] = new fw::Material( m_pShaders["SolidColor"], nullptr, fw::color4f::Blue(), false );
     m_pMaterials["VertexColor"] = new fw::Material( m_pShaders["VertexColor"], nullptr, fw::color4f::White(), false );
-    m_pMaterials["Sokoban"] = new fw::Material( m_pShaders["Texture"], m_pTextures["Sokoban"], fw::color4f::White(), true );
+    m_pMaterials["SokobanPlayer01"] = new fw::Material( m_pShaders["Texture"], m_pTextures["Sokoban"], fw::color4f::White(), true, info.asVec4() );
 
     // Create a controller.
     m_pPlayerController = new PlayerController();
@@ -98,7 +109,7 @@ void Game::Init()
     // Create some GameObjects.
     m_pCamera = new fw::Camera( this, vec3(5,5,-20) );
     m_pCamera->SetLookAtPosition( vec3(5,5,0) );
-    m_pPlayer = new Player( this, m_pPlayerController, "Player", vec3(6,5,-0.1f), m_pMeshes["Sprite"], m_pMaterials["Sokoban"] );
+    m_pPlayer = new Player( this, m_pPlayerController, "Player", vec3(6,5,-0.1f), m_pMeshes["Sprite"], m_pMaterials["SokobanPlayer01"] );
     m_Objects.push_back( m_pPlayer );
 
     m_Objects.push_back( new fw::GameObject( this, "Object 1", vec3(0,0,0), m_pMeshes["Triangle"], m_pMaterials["VertexColor"] ) );
@@ -161,10 +172,6 @@ void Game::Draw()
     // Setup time uniforms.
     float time = (float)fw::GetSystemTimeSinceGameStart();
     bgfx::setUniform( m_pUniforms->m_Map["u_Time"], &time );
-
-    // Hard-coded Texture and UV scale and offset for the sokoban player image.
-    vec4 uvScaleOffset( 64/1024.0f, 64/512.0f, 780/1024.0f, 383/512.0f );
-    bgfx::setUniform( m_pUniforms->m_Map["u_UVScaleOffset"], &uvScaleOffset );
 
     // Program the view and proj uniforms from the camera.
     m_pCamera->Enable();

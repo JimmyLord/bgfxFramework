@@ -15,11 +15,17 @@
 
 namespace fw {
 
-Material::Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha)
+Material::Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha, vec4 uvScaleOffset)
     : m_pShader( pShader )
     , m_pTexture( pTexture )
+    , m_UVScaleOffset( uvScaleOffset )
     , m_Color( color )
     , m_HasAlpha( hasAlpha )
+{
+}
+
+Material::Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha)
+    : Material( pShader, pTexture, color, hasAlpha, vec4(1,1,0,0) )
 {
 }
 
@@ -29,11 +35,16 @@ Material::~Material()
 
 void Material::Enable(const Uniforms* pUniforms) const
 {
+    // Textures.
     if( m_pTexture )
     {
         bgfx::setTexture( 0, pUniforms->m_Map.at("u_TextureColor"), m_pTexture->GetHandle() );
     }
 
+    // UV scale and offset.
+    bgfx::setUniform( pUniforms->m_Map.at( "u_UVScaleOffset" ), &m_UVScaleOffset.x );
+
+    // Vertex Colors.
     bgfx::setUniform( pUniforms->m_Map.at( "u_DiffuseColor" ), &m_Color.r );
 }
 

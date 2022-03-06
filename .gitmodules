@@ -13,3 +13,9 @@
 [submodule "Framework/Libraries/imgui"]
 	path = Framework/Libraries/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "Framework/Libraries/rapidjson"]
+	path = Framework/Libraries/rapidjson
+	url = https://github.com/Tencent/rapidjson.git
+[submodule "Framework/Libraries/pcg-cpp"]
+	path = Framework/Libraries/pcg-cpp
+	url = https://github.com/imneme/pcg-cpp.git

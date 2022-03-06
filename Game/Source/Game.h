@@ -34,6 +34,7 @@ protected:
     std::map<std::string, fw::Mesh*> m_pMeshes;
     std::map<std::string, fw::ShaderProgram*> m_pShaders;
     std::map<std::string, fw::Texture*> m_pTextures;
+    std::map<std::string, fw::SpriteSheet*> m_pSpriteSheets;
     std::map<std::string, fw::Material*> m_pMaterials;
 
     PlayerController* m_pPlayerController = nullptr;

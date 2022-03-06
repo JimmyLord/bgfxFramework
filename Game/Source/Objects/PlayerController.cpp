@@ -38,6 +38,7 @@ void PlayerController::OnEvent(fw::Event* pEvent)
                 if( pInputEvent->GetKeyCode() == 'S' ) { m_Flags |= Mask::Down; }
                 if( pInputEvent->GetKeyCode() == 'A' ) { m_Flags |= Mask::Left; }
                 if( pInputEvent->GetKeyCode() == 'D' ) { m_Flags |= Mask::Right; }
+                if( pInputEvent->GetKeyCode() == 'Z' ) { m_Flags |= Mask::Action; }
             }
 
             if( pInputEvent->GetDeviceState() == fw::InputEvent::DeviceState::Released )
@@ -46,6 +47,7 @@ void PlayerController::OnEvent(fw::Event* pEvent)
                 if( pInputEvent->GetKeyCode() == 'S' ) { m_Flags &= ~Mask::Down; }
                 if( pInputEvent->GetKeyCode() == 'A' ) { m_Flags &= ~Mask::Left; }
                 if( pInputEvent->GetKeyCode() == 'D' ) { m_Flags &= ~Mask::Right; }
+                if( pInputEvent->GetKeyCode() == 'Z' ) { m_Flags &= ~Mask::Action; }
             }
         }
     }

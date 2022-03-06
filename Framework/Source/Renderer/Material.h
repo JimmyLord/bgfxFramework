@@ -21,6 +21,7 @@ class Material
 {
 public:
     Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha);
+    Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha, vec4 uvScaleOffset);
     virtual ~Material();
 
     void Enable(const Uniforms* pUniforms) const;
@@ -40,6 +41,7 @@ public:
 protected:
     ShaderProgram* m_pShader;
     Texture* m_pTexture;
+    vec4 m_UVScaleOffset;
     color4f m_Color;
     bool m_HasAlpha;
 };

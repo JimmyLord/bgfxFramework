@@ -46,6 +46,12 @@ void Player::Update(float deltaTime)
         dir.x += 1;
     }
 
+    if( m_pPlayerController->WasPressed( PlayerController::Mask::Action ) )
+    {
+        m_Position.x = fw::Random::GetFloat( 0.0f, 10.0f );
+        m_Position.y = fw::Random::GetFloat( 0.0f, 10.0f );
+    }
+
     dir.Normalize();
 
     m_Position += dir * speed * deltaTime;

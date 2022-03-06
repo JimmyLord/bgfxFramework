@@ -10,3 +10,6 @@
 [submodule "Framework/Libraries/stb"]
 	path = Framework/Libraries/stb
 	url = https://github.com/nothings/stb
+[submodule "Framework/Libraries/imgui"]
+	path = Framework/Libraries/imgui
+	url = https://github.com/ocornut/imgui.git

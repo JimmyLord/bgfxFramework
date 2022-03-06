@@ -32,7 +32,7 @@ void Camera::Update(float deltaTime)
     }
 
     m_ViewMatrix.CreateLookAtView( m_Position, vec3(0,1,0), m_LookAtPosition );
-    m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, 1.0f, 0.01f, 100.0f );
+    m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, m_AspectRatio, 0.01f, 100.0f );
 }
 
 void Camera::Enable()

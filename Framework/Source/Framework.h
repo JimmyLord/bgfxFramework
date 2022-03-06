@@ -16,12 +16,15 @@
 
 #include "CoreHeaders.h"
 
+#include "../Libraries/imgui/imgui.h"
+
 #include "bgfx/platform.h"
 
 #include "FWCore.h"
 #include "GameCore.h"
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
+#include "Imgui/ImGuiManager.h"
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
 #include "Renderer/Mesh.h"

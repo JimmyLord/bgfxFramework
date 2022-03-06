@@ -28,6 +28,8 @@ public:
     virtual void Draw() override;
 
 protected:
+    fw::ImGuiManager* m_pImGuiManager = nullptr;
+
     fw::Uniforms* m_pUniforms;
     std::map<std::string, fw::Mesh*> m_pMeshes;
     std::map<std::string, fw::ShaderProgram*> m_pShaders;
@@ -39,4 +41,6 @@ protected:
     fw::Camera* m_pCamera = nullptr;
     Player* m_pPlayer = nullptr;
     std::vector<fw::GameObject*> m_Objects;
+
+    bool m_ShowDebugStats = false;
 };

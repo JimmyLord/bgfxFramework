@@ -54,10 +54,14 @@ Game::~Game()
     delete m_pPlayerController;
 
     delete m_pEventManager;
+
+    delete m_pImGuiManager;
 }
 
 void Game::Init()
 {
+    m_pImGuiManager = new fw::ImGuiManager( &m_FWCore, 1 );
+
     // General renderer settings.
     bgfx::setViewClear( 0, BGFX_CLEAR_COLOR|BGFX_CLEAR_DEPTH, 0x000030ff, 1.0f, 0 );
     bgfx::setViewRect( 0, 0, 0, m_FWCore.GetWindowWidth(), m_FWCore.GetWindowHeight() );
@@ -106,15 +110,18 @@ void Game::Init()
 
 void Game::StartFrame(float deltaTime)
 {
+    m_pImGuiManager->StartFrame( deltaTime );
+
     // Reset the controller.
     m_pPlayerController->StartFrame();
 
-    // Process our events.
+    // Dispatch events.
     m_pEventManager->DispatchAllEvents( deltaTime, this );
 }
 
 void Game::OnEvent(fw::Event* pEvent)
 {
+    // Process events.
     m_pPlayerController->OnEvent( pEvent );
 
     if( pEvent->GetType() == RemoveFromGameEvent::GetStaticEventType() )
@@ -126,6 +133,14 @@ void Game::OnEvent(fw::Event* pEvent)
         m_Objects.erase( it );
 
         delete pObject;
+    }
+
+    if( pEvent->GetType() == fw::WindowResizeEvent::GetStaticEventType() )
+    {
+        int width = m_FWCore.GetWindowWidth();
+        int height = m_FWCore.GetWindowHeight();
+
+        m_pCamera->SetAspectRatio( (float)width/height );
     }
 }
 
@@ -160,7 +175,17 @@ void Game::Draw()
         pObject->Draw( m_pUniforms );
     }
 
-    //// Display debug stats.
-    //bgfx::dbgTextClear();
-    //bgfx::setDebug( BGFX_DEBUG_STATS );
+    // Show bgfx debug stats.
+    ImGui::Checkbox( "Show Debug Stats", &m_ShowDebugStats );
+    bgfx::dbgTextClear();
+    if( m_ShowDebugStats )
+    {
+        bgfx::setDebug( BGFX_DEBUG_STATS );
+    }
+    else
+    {
+        bgfx::setDebug( BGFX_DEBUG_NONE );
+    }
+
+    m_pImGuiManager->EndFrame();
 }

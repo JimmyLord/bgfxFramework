@@ -25,7 +25,7 @@ Player::~Player()
 
 void Player::Update(float deltaTime)
 {
-    float speed = 2.0f;
+    float speed = 4.0f;
 
     vec2 dir;
 
@@ -49,39 +49,11 @@ void Player::Update(float deltaTime)
     dir.Normalize();
 
     m_Position += dir * speed * deltaTime;
-
-    (this->*m_pCurrentStateFunction)( deltaTime );
-}
-
-void Player::AIState_Idle(float deltaTime)
-{
-    m_IdleTimer += deltaTime;
-    if( m_IdleTimer > 1 )
-    {
-        m_pCurrentStateFunction = &Player::AIState_Shaking;
-        m_IdleTimer = 0;
-    }
-}
-
-void Player::AIState_Shaking(float deltaTime)
-{
-    m_ShakeOffset.x += (((rand()%RAND_MAX)/(float)RAND_MAX) * 2 - 1) * 0.05f;
-    m_ShakeOffset.y += (((rand()%RAND_MAX)/(float)RAND_MAX) * 2 - 1) * 0.05f;
-
-    m_ShakingTimer += deltaTime;
-    if( m_ShakingTimer > 1 )
-    {
-        m_pCurrentStateFunction = &Player::AIState_Idle;
-        m_ShakingTimer = 0;
-        m_ShakeOffset.Set(0,0);
-    }
 }
 
 void Player::Draw(const fw::Uniforms* pUniforms)
 {
-    vec3 pos = m_Position + m_ShakeOffset;
-
     mat4 worldMat;
-    worldMat.CreateSRT( vec3(1), vec3(0), pos );
+    worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
     m_pMesh->Draw( pUniforms, m_pMaterial, &worldMat );
 }

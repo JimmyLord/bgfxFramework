@@ -9,7 +9,6 @@
 
 #include "CoreHeaders.h"
 
-#include "bx/allocator.h"
 #include "bgfx/platform.h"
 
 #include "FWCore.h"
@@ -19,9 +18,6 @@
 #include "Utility/Utility.h"
 
 namespace fw {
-
-bx::DefaultAllocator g_BGFXAllocator;
-bx::DefaultAllocator* g_pBGFXAllocator = &g_BGFXAllocator;
 
 // Initialize window on windows, huge chunks taken from nehe
 //    http://nehe.gamedev.net/tutorial/creating_an_opengl_window_%28win32%29/13001/
@@ -191,6 +187,15 @@ void FWCore::ResizeWindow(int width, int height)
 
     m_WindowWidth = width;
     m_WindowHeight = height;
+
+    if( m_pGame )
+    {
+        bgfx::reset( width, height, BGFX_RESET_VSYNC );
+        bgfx::setViewRect( 0, 0, 0, width, height );
+
+        WindowResizeEvent* pEvent = new WindowResizeEvent( width, height );
+        m_pGame->GetEventManager()->AddEvent( pEvent );
+    }
 }
 
 bool FWCore::CreateRenderWindow(char* title, int width, int height, unsigned char colorBits, bool fullscreenflag)

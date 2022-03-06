@@ -134,12 +134,13 @@ target_compile_definitions( bgfx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
 file( GLOB_RECURSE FrameworkSourceFiles
 	Framework/Source/*.cpp
 	Framework/Source/*.h
+	Framework/Libraries/stb/*.h
+)
+file( GLOB FrameworkSourceFilesNonRecursive
 	Framework/Libraries/imgui/*.cpp
 	Framework/Libraries/imgui/*.h
-	Framework/Libraries/stb/*.h
-	Framework/Libraries/rapidjson/*.h
-	Framework/Libraries/pcg-cpp/include/*.hpp
 )
+list( APPEND FrameworkSourceFiles ${FrameworkSourceFilesNonRecursive} )
 source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework FILES ${FrameworkSourceFiles} )
 
 # Project Creation

@@ -24,17 +24,6 @@
 
 namespace fw {
 
-void Texture::ReleasePixelData(void* _ptr, void* _userData)
-{
-    Texture* pTexture = static_cast<Texture*>( _userData );
-	
-    stbi_image_free( pTexture->m_pPixels );
-    pTexture->m_pPixels = nullptr;
-
-    imageFree( pTexture->m_pImageContainer );
-    pTexture->m_pImageContainer = nullptr;
-}
-
 Texture::Texture(const char* filename)
 {
     // Load the file contents.
@@ -46,28 +35,15 @@ Texture::Texture(const char* filename)
     int height;
     int channels;
     stbi_set_flip_vertically_on_load( true );
-    m_pPixels = stbi_load_from_memory( (unsigned char*)fileContents, length, &width, &height, &channels, 4 );
-    assert( m_pPixels != nullptr );
-
-    delete[] fileContents;
-
-    // Create an image container and load the texture.
-    // TODO: Is this copy necessary?
-    bimg::ImageContainer* image = bimg::imageAlloc( g_pBGFXAllocator, bimg::TextureFormat::RGBA8, width, height, 0, 1, false, false, m_pPixels );
-
-    m_pImageContainer = image;
-	uint64_t flags = BGFX_TEXTURE_NONE|BGFX_SAMPLER_NONE;
-	bgfx::TextureFormat::Enum format = bgfx::TextureFormat::Enum( image->m_format );
+    unsigned char* pixels = stbi_load_from_memory( (unsigned char*)fileContents, length, &width, &height, &channels, 4 );
+    assert( pixels != nullptr );
 
     // Create the texture.
-    bool valid = bgfx::isTextureValid( 0, false, image->m_numLayers, format, flags );
-    assert( valid );
-	if( valid )
-	{
-        // Create a bgfx memory block, which will free the memory via the ReleaseSTBPixels callback.
-        const bgfx::Memory* mem = bgfx::makeRef( image->m_data, image->m_size, ReleasePixelData, this );
-		m_TextureHandle = bgfx::createTexture2D( image->m_width, image->m_height, image->m_numMips > 1, image->m_numLayers, format, flags, mem );
-    }
+    m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfx::TextureFormat::RGBA8,
+                                             0, bgfx::copy(pixels, width*height*4));
+
+    delete[] fileContents;
+    stbi_image_free( pixels );
 }
 
 Texture::~Texture()

@@ -24,12 +24,6 @@ public:
 
 protected:
     bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;
-
-private:
-    static void ReleasePixelData(void* _ptr, void* _userData);
-
-    unsigned char* m_pPixels = nullptr;
-    bimg::ImageContainer* m_pImageContainer = nullptr;
 };
 
 } // namespace fw

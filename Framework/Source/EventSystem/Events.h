@@ -68,4 +68,28 @@ protected:
     unsigned int m_KeyCode;
 };
 
+//==========================
+// WindowResize event class
+//==========================
+class WindowResizeEvent : public Event
+{
+public:
+    WindowResizeEvent(int width, int height)
+    {
+        m_Width = width;
+        m_Height = height;
+    }
+    virtual ~WindowResizeEvent() {}
+
+    static const char* GetStaticEventType() { return "WindowResizeEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+    int GetWidth() { return m_Width; }
+    int GetHeight() { return m_Height; }
+
+protected:
+    int m_Width;
+    int m_Height;
+};
+
 } // namespace fw

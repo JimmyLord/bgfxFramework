@@ -99,7 +99,9 @@ void Game::Init()
     fw::SpriteSheet::SpriteInfo info = m_pSpriteSheets["Sokoban"]->GetSpriteByName( "Player/player_01" );
 
     // Create some materials.
+    m_pMaterials["Red"] = new fw::Material( m_pShaders["SolidColor"], nullptr, fw::color4f::Red(), false );
     m_pMaterials["Blue"] = new fw::Material( m_pShaders["SolidColor"], nullptr, fw::color4f::Blue(), false );
+    m_pMaterials["Green"] = new fw::Material( m_pShaders["SolidColor"], nullptr, fw::color4f::Green(), false );
     m_pMaterials["VertexColor"] = new fw::Material( m_pShaders["VertexColor"], nullptr, fw::color4f::White(), false );
     m_pMaterials["SokobanPlayer01"] = new fw::Material( m_pShaders["Texture"], m_pTextures["Sokoban"], fw::color4f::White(), true, info.asVec4() );
 
@@ -112,11 +114,21 @@ void Game::Init()
     m_pPlayer = new Player( this, m_pPlayerController, "Player", vec3(6,5,-0.1f), m_pMeshes["Sprite"], m_pMaterials["SokobanPlayer01"] );
     m_Objects.push_back( m_pPlayer );
 
+    fw::GameObject* pTestObjectToDelete = new fw::GameObject( this, "delete me", vec3(1,9,0), m_pMeshes["Square"], m_pMaterials["Blue"] );
+
     m_Objects.push_back( new fw::GameObject( this, "Object 1", vec3(0,0,0), m_pMeshes["Triangle"], m_pMaterials["VertexColor"] ) );
     m_Objects.push_back( new fw::GameObject( this, "Object 2", vec3(10,10,0), m_pMeshes["Triangle"], m_pMaterials["Blue"] ) );
     m_Objects.push_back( new fw::GameObject( this, "Object 3", vec3(5,5,0), m_pMeshes["Square"], m_pMaterials["VertexColor"] ) );
     m_Objects.push_back( new fw::GameObject( this, "Object 4", vec3(1,1,0), m_pMeshes["Square"], m_pMaterials["VertexColor"] ) );
     m_Objects.push_back( new fw::GameObject( this, "Object 5", vec3(1,9,0), m_pMeshes["Square"], m_pMaterials["Blue"] ) );
+
+    delete pTestObjectToDelete;
+
+    // Create an entity without a GameObject class.
+    entt::entity entityID = CreateEntity();
+    m_ECSRegistry.emplace<fw::TransformData>( entityID, vec3(3,7,0), vec3(0), vec3(1) );
+    m_ECSRegistry.emplace<fw::NameData>( entityID, "Headless Object" );
+    m_ECSRegistry.emplace<fw::MeshData>( entityID, m_pMeshes["Square"], m_pMaterials["Red"] );
 }
 
 void Game::StartFrame(float deltaTime)
@@ -157,6 +169,8 @@ void Game::OnEvent(fw::Event* pEvent)
 
 void Game::Update(float deltaTime)
 {
+    Editor_DisplayObjectList();
+
     for( fw::GameObject* pObject : m_Objects )
     {
         pObject->Update( deltaTime );
@@ -177,10 +191,7 @@ void Game::Draw()
     m_pCamera->Enable();
 
     // Draw all objects.
-    for( fw::GameObject* pObject : m_Objects )
-    {
-        pObject->Draw( m_pUniforms );
-    }
+    GameCore::Draw();
 
     // Show bgfx debug stats.
     ImGui::Checkbox( "Show Debug Stats", &m_ShowDebugStats );
@@ -195,4 +206,19 @@ void Game::Draw()
     }
 
     m_pImGuiManager->EndFrame();
+}
+
+void Game::Editor_DisplayObjectList()
+{
+    ImGui::Begin( "Object List" );
+
+    auto view = m_ECSRegistry.view<fw::NameData>();
+    for( auto entity : view )
+    {
+        auto& nameData = view.get<fw::NameData>( entity );
+
+        ImGui::Text( "%s", nameData.m_Name );
+    }
+
+    ImGui::End(); // "Object List"
 }

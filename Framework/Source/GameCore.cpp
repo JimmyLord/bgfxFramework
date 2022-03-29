@@ -8,7 +8,31 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include "CoreHeaders.h"
+#include "GameCore.h"
+#include "Components/CoreComponents.h"
+#include "Math/Vector.h"
+#include "Math/Matrix.h"
+#include "Renderer/Mesh.h"
+#include "Renderer/Material.h"
 
 namespace fw {
+
+void GameCore::Draw()
+{
+    auto group = m_ECSRegistry.group<fw::TransformData>( entt::get<fw::MeshData> );
+    for( auto entity : group )
+    {
+        auto& [transformData, meshData] = group.get<fw::TransformData, fw::MeshData>( entity );
+
+        mat4 worldMat;
+        worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
+        meshData.pMesh->Draw( m_pUniforms, meshData.pMaterial, &worldMat );
+    }
+}
+
+entt::entity GameCore::CreateEntity()
+{
+    return m_ECSRegistry.create();
+}
 
 } // namespace fw

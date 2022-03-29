@@ -28,15 +28,18 @@ public:
     virtual void Draw() override;
 
 protected:
+    // Interface.
     fw::ImGuiManager* m_pImGuiManager = nullptr;
+    void Editor_DisplayObjectList();
 
-    fw::Uniforms* m_pUniforms;
+    // Resources.
     std::map<std::string, fw::Mesh*> m_pMeshes;
     std::map<std::string, fw::ShaderProgram*> m_pShaders;
     std::map<std::string, fw::Texture*> m_pTextures;
     std::map<std::string, fw::SpriteSheet*> m_pSpriteSheets;
     std::map<std::string, fw::Material*> m_pMaterials;
 
+    // GameObjects and Helpers.
     PlayerController* m_pPlayerController = nullptr;
 
     fw::Camera* m_pCamera = nullptr;

@@ -9,11 +9,14 @@
 
 #pragma once
 
+#include "entt/src/entt/entt.hpp"
+
 namespace fw {
 
 class Event;
 class EventManager;
 class FWCore;
+class Uniforms;
 
 class GameCore
 {
@@ -24,16 +27,27 @@ public:
     virtual void StartFrame(float deltaTime) = 0;
     virtual void OnEvent(Event* pEvent) = 0;
     virtual void Update(float deltaTime) = 0;
-    virtual void Draw() = 0;
+    virtual void Draw();
 
     // Getters.
     FWCore* GetFramework() { return &m_FWCore; }
     EventManager* GetEventManager() { return m_pEventManager; }
+    entt::registry& GetECSRegistry() { return m_ECSRegistry; }
+
+    // ECS.
+    entt::entity CreateEntity();
 
 protected:
     FWCore& m_FWCore;
 
-    EventManager* m_pEventManager;
+    // Resources.
+    Uniforms* m_pUniforms = nullptr;
+
+    // Events.
+    EventManager* m_pEventManager = nullptr;
+
+    // ECS.
+    entt::registry m_ECSRegistry;
 };
 
 } // namespace fw

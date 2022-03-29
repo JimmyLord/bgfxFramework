@@ -12,6 +12,8 @@
 #include "bgfx/platform.h"
 
 #include "Camera.h"
+#include "GameCore.h"
+#include "Components/CoreComponents.h"
 
 namespace fw {
 
@@ -28,10 +30,13 @@ void Camera::Update(float deltaTime)
 {
     if( m_pObjectWeAreLookingAt )
     {
-        m_LookAtPosition = m_pObjectWeAreLookingAt->GetPosition();
+        entt::entity entityID = m_pObjectWeAreLookingAt->GetEntityID();
+        const TransformData& transformData = m_pGameCore->GetECSRegistry().get<TransformData>( entityID );
+        m_LookAtPosition = transformData.position;
     }
 
-    m_ViewMatrix.CreateLookAtView( m_Position, vec3(0,1,0), m_LookAtPosition );
+    const TransformData& transformData = m_pGameCore->GetECSRegistry().get<TransformData>( m_EntityID );
+    m_ViewMatrix.CreateLookAtView( transformData.position, vec3(0,1,0), m_LookAtPosition );
     m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, m_AspectRatio, 0.01f, 100.0f );
 }
 

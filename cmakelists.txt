@@ -150,6 +150,7 @@ add_library( Framework ${FrameworkSourceFiles} )
 
 target_include_directories( Framework PUBLIC
 	Framework/Source
+	Framework/Libraries
 	Framework/Libraries/bgfx/include
 	Framework/Libraries/bgfx/3rdParty
 	Framework/Libraries/bgfx/3rdParty/dxsdk/include
@@ -160,6 +161,7 @@ target_include_directories( Framework PUBLIC
 	Framework/Libraries/bimg/3rdParty
 )
 
+target_compile_features( Framework PRIVATE cxx_std_17 )
 target_compile_definitions( Framework PUBLIC "BX_CONFIG_DEBUG=1" )
 
 # PCH Files
@@ -191,6 +193,8 @@ target_include_directories( GameProject PUBLIC
 	Game/Source
 	Framework/Source
 )
+
+target_compile_features( GameProject PRIVATE cxx_std_17 )
 
 # PCH Files
 target_precompile_headers( GameProject PRIVATE Framework/Source/Framework.h )

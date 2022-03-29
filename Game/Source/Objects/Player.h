@@ -20,7 +20,6 @@ public:
     virtual ~Player();
 
     virtual void Update(float deltaTime) override;
-    virtual void Draw(const fw::Uniforms* pUniforms) override;
 
 protected:
     PlayerController* m_pPlayerController = nullptr;

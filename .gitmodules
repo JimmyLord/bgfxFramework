@@ -19,3 +19,6 @@
 [submodule "Framework/Libraries/pcg-cpp"]
 	path = Framework/Libraries/pcg-cpp
 	url = https://github.com/imneme/pcg-cpp.git
+[submodule "Framework/Libraries/entt"]
+	path = Framework/Libraries/entt
+	url = https://github.com/skypjack/entt.git

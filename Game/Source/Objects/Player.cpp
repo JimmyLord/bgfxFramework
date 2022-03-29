@@ -9,9 +9,11 @@
 
 #include "Framework.h"
 
+#include "Game.h"
+#include "GameCore.h"
+#include "Components/CoreComponents.h"
 #include "Objects/Player.h"
 #include "Objects/PlayerController.h"
-#include "Game.h"
 
 Player::Player(fw::GameCore* pGameCore, PlayerController* pPlayerController, std::string name, vec3 pos, fw::Mesh* pMesh, fw::Material* pMaterial)
     : fw::GameObject( pGameCore, name, pos, pMesh, pMaterial )
@@ -46,20 +48,15 @@ void Player::Update(float deltaTime)
         dir.x += 1;
     }
 
+    fw::TransformData& transformData = m_pGameCore->GetECSRegistry().get<fw::TransformData>( m_EntityID );
+
     if( m_pPlayerController->WasPressed( PlayerController::Mask::Action ) )
     {
-        m_Position.x = fw::Random::GetFloat( 0.0f, 10.0f );
-        m_Position.y = fw::Random::GetFloat( 0.0f, 10.0f );
+        transformData.position.x = fw::Random::GetFloat( 0.0f, 10.0f );
+        transformData.position.y = fw::Random::GetFloat( 0.0f, 10.0f );
     }
 
     dir.Normalize();
 
-    m_Position += dir * speed * deltaTime;
-}
-
-void Player::Draw(const fw::Uniforms* pUniforms)
-{
-    mat4 worldMat;
-    worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
-    m_pMesh->Draw( pUniforms, m_pMaterial, &worldMat );
+    transformData.position += dir * speed * deltaTime;
 }

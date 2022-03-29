@@ -17,11 +17,13 @@
 #include "CoreHeaders.h"
 
 #include "../Libraries/imgui/imgui.h"
+#include "../Libraries/entt/src/entt/entt.hpp"
 
 #include "bgfx/platform.h"
 
 #include "FWCore.h"
 #include "GameCore.h"
+#include "Components/CoreComponents.h"
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
 #include "Imgui/ImGuiManager.h"

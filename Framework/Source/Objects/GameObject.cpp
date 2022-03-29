@@ -9,33 +9,32 @@
 
 #include "CoreHeaders.h"
 
+#include "GameCore.h"
 #include "GameObject.h"
+#include "Components/CoreComponents.h"
 #include "Renderer/Mesh.h"
 
 namespace fw {
 
 GameObject::GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
     : m_pGameCore( pGameCore )
-    , m_Name( name )
-    , m_Position( pos )
-    , m_pMesh( pMesh )
-    , m_pMaterial( pMaterial )
 {
+    m_EntityID = pGameCore->GetECSRegistry().create();
+    pGameCore->GetECSRegistry().emplace<TransformData>( m_EntityID, pos, vec3(0), vec3(1) );
+    pGameCore->GetECSRegistry().emplace<NameData>( m_EntityID, name.c_str() );
+    if( pMesh != nullptr )
+    {
+        pGameCore->GetECSRegistry().emplace<MeshData>( m_EntityID, pMesh, pMaterial );
+    }
 }
 
 GameObject::~GameObject()
 {
+    m_pGameCore->GetECSRegistry().destroy( m_EntityID );
 }
 
 void GameObject::Update(float deltaTime)
 {
-}
-
-void GameObject::Draw(const Uniforms* pUniforms)
-{
-    mat4 worldMat;
-    worldMat.CreateSRT( vec3(1), vec3(0), m_Position );
-    m_pMesh->Draw( pUniforms, m_pMaterial, &worldMat );
 }
 
 } // namespace fw

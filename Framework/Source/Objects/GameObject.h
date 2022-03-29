@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Math/Vector.h"
+#include "../Libraries/entt/src/entt/entt.hpp"
 
 namespace fw {
 
@@ -28,26 +29,14 @@ public:
     virtual ~GameObject();
 
     virtual void Update(float deltaTime);
-    virtual void Draw(const Uniforms* pUniforms);
 
     // Getters.
-    std::string GetName() { return m_Name; }
-    vec3 GetPosition() { return m_Position; }
-    Material* GetMaterial() { return m_pMaterial; }
-
-    // Setters.
-    void SetPosition(vec3 pos) { m_Position = pos; }
-    void SetMaterial(Material* pMaterial) { m_pMaterial = pMaterial; }
+    entt::entity GetEntityID() { return m_EntityID; }
 
 protected:
     GameCore* m_pGameCore = nullptr;
 
-    std::string m_Name;
-
-    vec3 m_Position;
-
-    Mesh* m_pMesh = nullptr;
-    Material* m_pMaterial = nullptr;
+    entt::entity m_EntityID = entt::null;
 };
 
 } // namespace fw

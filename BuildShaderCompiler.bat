@@ -1,4 +1,4 @@
-@cd Framework\Libraries\bgfx
+@cd Libraries\bgfx
 @..\bx\tools\bin\windows\genie --with-tools vs2017
 
 @rem Attempted to build from command line, but fails due to windows SDK version.
@@ -20,5 +20,5 @@
 @echo ---
 @echo Copying ".build\win64_vs2017\bin\shadercRelease.exe" to "Game/DataRaw/shaderc.exe"
 @echo ---
-@copy .build\win64_vs2017\bin\shadercRelease.exe ..\..\..\Game\DataRaw\shaderc.exe
+@copy .build\win64_vs2017\bin\shadercRelease.exe ..\..\..\..\Game\DataRaw\shaderc.exe
 @pause

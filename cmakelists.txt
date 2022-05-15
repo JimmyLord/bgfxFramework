@@ -77,6 +77,10 @@ target_compile_definitions( bx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
 # bgfx Library
 ###################
 
+add_compile_options(/wd4244) # 'argument': conversion from 'double' to 'btScalar', possible loss of data
+add_compile_options(/wd4267) # '=': conversion from 'size_t' to 'long', possible loss of data
+add_compile_options(/wd4305) # 'initializing': truncation from 'double' to 'btScalar'
+
 # File Setup
 file( GLOB_RECURSE bgfxSourceFiles
 	Libraries/bgfx/src/amalgamated.cpp
@@ -104,6 +108,10 @@ target_include_directories( bgfx PUBLIC
 target_compile_definitions( bgfx PUBLIC "BX_CONFIG_DEBUG=1" )
 target_compile_definitions( bgfx PUBLIC "__STDC_FORMAT_MACROS" )
 target_compile_definitions( bgfx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
+
+add_compile_options(/w44244)
+add_compile_options(/w44267)
+add_compile_options(/w44305)
 
 # PCH Files
 #target_precompile_headers( bgfx PRIVATE Source/CoreHeaders.h )

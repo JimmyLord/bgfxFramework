@@ -1,38 +1,22 @@
 cmake_minimum_required( VERSION 3.10 )
 
-# Global Settings
-set_property( GLOBAL PROPERTY USE_FOLDERS ON )
-#set_property( GLOBAL PROPERTY CMAKE_SKIP_INSTALL_ALL_DEPENDENCY TRUE )
-#set_property( GLOBAL PROPERTY CMAKE_SKIP_PACKAGE_ALL_DEPENDENCY TRUE )
-
-# Solution
-project( GameSolution VERSION 0.0.1 )
-
-# Visual Studio Settings
-if( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
-	# Program Database for Edit and Continue
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /ZI" )
-#	set( CMAKE_SHARED_LINKER_FLAGS "/SAFESEH:NO" )
-#	set( CMAKE_EXE_LINKER_FLAGS "/SAFESEH:NO" )
-endif()
-
 ###################
 # bimg Library
 ###################
 
 # File Setup
 file( GLOB_RECURSE bimgSourceFiles
-	Framework/Libraries/bimg/src/*.cpp
-	Framework/Libraries/bimg/src/*.h
-	Framework/Libraries/bimg/include/bimg/*.h
-	Framework/Libraries/bimg/3rdparty/src/decoder/*.cc
-	Framework/Libraries/bimg/3rdparty/src/include/*.h
+	Libraries/bimg/src/*.cpp
+	Libraries/bimg/src/*.h
+	Libraries/bimg/include/bimg/*.h
+	Libraries/bimg/3rdparty/src/decoder/*.cc
+	Libraries/bimg/3rdparty/src/include/*.h
 )
 file( GLOB bimgSourceFilesNonRecursive
-	Framework/Libraries/bimg/3rdparty/astc-codec/src/decoder/*.cc
+	Libraries/bimg/3rdparty/astc-codec/src/decoder/*.cc
 )
 list( APPEND bimgSourceFiles ${bimgSourceFilesNonRecursive} )
-source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Libraries/bimg FILES ${bimgSourceFiles} )
+source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/bimg FILES ${bimgSourceFiles} )
 
 # Project Creation
 add_library( bimg ${bimgSourceFiles} )
@@ -40,20 +24,20 @@ add_library( bimg ${bimgSourceFiles} )
 set_target_properties( bimg PROPERTIES FOLDER "bgfx" )
 
 target_include_directories( bimg PUBLIC
-	Framework/Libraries/bimg/include
-	Framework/Libraries/bimg/3rdparty
-	Framework/Libraries/bimg/3rdparty/astc-codec/include
-	Framework/Libraries/bimg/3rdparty/astc-codec
-	Framework/Libraries/bimg/3rdparty/tinyexr/deps/miniz
-	Framework/Libraries/bimg/3rdparty/iqa/include
-	Framework/Libraries/bx/include
-	Framework/Libraries/bx/include/compat/msvc
+	Libraries/bimg/include
+	Libraries/bimg/3rdparty
+	Libraries/bimg/3rdparty/astc-codec/include
+	Libraries/bimg/3rdparty/astc-codec
+	Libraries/bimg/3rdparty/tinyexr/deps/miniz
+	Libraries/bimg/3rdparty/iqa/include
+	Libraries/bx/include
+	Libraries/bx/include/compat/msvc
 )
 
 target_compile_definitions( bimg PUBLIC "BX_CONFIG_DEBUG=1" )
 
 # PCH Files
-#target_precompile_headers( bimg PRIVATE Framework/Source/CoreHeaders.h )
+#target_precompile_headers( bimg PRIVATE Source/CoreHeaders.h )
 #file( GLOB_RECURSE bimgPCHFiles ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.* )
 #source_group( "CMake PCH Files" FILES ${bimgPCHFiles} )
 
@@ -63,11 +47,11 @@ target_compile_definitions( bimg PUBLIC "BX_CONFIG_DEBUG=1" )
 
 # File Setup
 file( GLOB_RECURSE bxSourceFiles
-	Framework/Libraries/bx/src/amalgamated.cpp
-	Framework/Libraries/bx/include/bx/*.h
-	Framework/Libraries/bx/include/compat/msvc/*.h
+	Libraries/bx/src/amalgamated.cpp
+	Libraries/bx/include/bx/*.h
+	Libraries/bx/include/compat/msvc/*.h
 )
-source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Libraries/bx FILES ${bxSourceFiles} )
+source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/bx FILES ${bxSourceFiles} )
 
 # Project Creation
 add_library( bx ${bxSourceFiles} )
@@ -75,9 +59,9 @@ add_library( bx ${bxSourceFiles} )
 set_target_properties( bx PROPERTIES FOLDER "bgfx" )
 
 target_include_directories( bx PUBLIC
-	Framework/Libraries/bx/include
-	Framework/Libraries/bx/include/compat/msvc
-	Framework/Libraries/bx/3rdparty
+	Libraries/bx/include
+	Libraries/bx/include/compat/msvc
+	Libraries/bx/3rdparty
 )
 
 target_compile_definitions( bx PUBLIC "BX_CONFIG_DEBUG=1" )
@@ -85,7 +69,7 @@ target_compile_definitions( bx PUBLIC "__STDC_FORMAT_MACROS" )
 target_compile_definitions( bx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
 
 # PCH Files
-#target_precompile_headers( bx PRIVATE Framework/Source/CoreHeaders.h )
+#target_precompile_headers( bx PRIVATE Source/CoreHeaders.h )
 #file( GLOB_RECURSE bxPCHFiles ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.* )
 #source_group( "CMake PCH Files" FILES ${bxPCHFiles} )
 
@@ -95,11 +79,11 @@ target_compile_definitions( bx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
 
 # File Setup
 file( GLOB_RECURSE bgfxSourceFiles
-	Framework/Libraries/bgfx/src/amalgamated.cpp
-	Framework/Libraries/bgfx/src/*.h
-	Framework/Libraries/bgfx/include/bgfx/*.h
+	Libraries/bgfx/src/amalgamated.cpp
+	Libraries/bgfx/src/*.h
+	Libraries/bgfx/include/bgfx/*.h
 )
-source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework/Libraries/bgfx FILES ${bgfxSourceFiles} )
+source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/bgfx FILES ${bgfxSourceFiles} )
 
 # Project Creation
 add_library( bgfx ${bgfxSourceFiles} )
@@ -107,14 +91,14 @@ add_library( bgfx ${bgfxSourceFiles} )
 set_target_properties( bgfx PROPERTIES FOLDER "bgfx" )
 
 target_include_directories( bgfx PUBLIC
-	Framework/Libraries/bgfx/include
-	Framework/Libraries/bgfx/3rdParty
-	Framework/Libraries/bgfx/3rdParty/dxsdk/include
-	Framework/Libraries/bgfx/3rdParty/khronos
-	Framework/Libraries/bx/include
-	Framework/Libraries/bx/include/compat/msvc
-	Framework/Libraries/bimg/include
-	Framework/Libraries/bimg/3rdParty
+	Libraries/bgfx/include
+	Libraries/bgfx/3rdParty
+	Libraries/bgfx/3rdParty/dxsdk/include
+	Libraries/bgfx/3rdParty/khronos
+	Libraries/bx/include
+	Libraries/bx/include/compat/msvc
+	Libraries/bimg/include
+	Libraries/bimg/3rdParty
 )
 
 target_compile_definitions( bgfx PUBLIC "BX_CONFIG_DEBUG=1" )
@@ -122,7 +106,7 @@ target_compile_definitions( bgfx PUBLIC "__STDC_FORMAT_MACROS" )
 target_compile_definitions( bgfx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
 
 # PCH Files
-#target_precompile_headers( bgfx PRIVATE Framework/Source/CoreHeaders.h )
+#target_precompile_headers( bgfx PRIVATE Source/CoreHeaders.h )
 #file( GLOB_RECURSE bgfxPCHFiles ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.* )
 #source_group( "CMake PCH Files" FILES ${bgfxPCHFiles} )
 
@@ -132,86 +116,39 @@ target_compile_definitions( bgfx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
 
 # File Setup
 file( GLOB_RECURSE FrameworkSourceFiles
-	Framework/Source/*.cpp
-	Framework/Source/*.h
-	Framework/Libraries/stb/*.h
-	Framework/Libraries/rapidjson/include/*.h
-	Framework/Libraries/pcg-cpp/include/*.hpp
+	Source/*.cpp
+	Source/*.h
+	Libraries/stb/*.h
+	Libraries/rapidjson/include/*.h
+	Libraries/pcg-cpp/include/*.hpp
 )
 file( GLOB FrameworkSourceFilesNonRecursive
-	Framework/Libraries/imgui/*.cpp
-	Framework/Libraries/imgui/*.h
+	Libraries/imgui/*.cpp
+	Libraries/imgui/*.h
 )
 list( APPEND FrameworkSourceFiles ${FrameworkSourceFilesNonRecursive} )
-source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR}/Framework FILES ${FrameworkSourceFiles} )
+source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${FrameworkSourceFiles} )
 
 # Project Creation
 add_library( Framework ${FrameworkSourceFiles} )
 
 target_include_directories( Framework PUBLIC
-	Framework/Source
-	Framework/Libraries
-	Framework/Libraries/bgfx/include
-	Framework/Libraries/bgfx/3rdParty
-	Framework/Libraries/bgfx/3rdParty/dxsdk/include
-	Framework/Libraries/bgfx/3rdParty/khronos
-	Framework/Libraries/bx/include
-	Framework/Libraries/bx/include/compat/msvc
-	Framework/Libraries/bimg/include
-	Framework/Libraries/bimg/3rdParty
+	Source
+	Libraries
+	Libraries/bgfx/include
+	Libraries/bgfx/3rdParty
+	Libraries/bgfx/3rdParty/dxsdk/include
+	Libraries/bgfx/3rdParty/khronos
+	Libraries/bx/include
+	Libraries/bx/include/compat/msvc
+	Libraries/bimg/include
+	Libraries/bimg/3rdParty
 )
 
 target_compile_features( Framework PRIVATE cxx_std_17 )
 target_compile_definitions( Framework PUBLIC "BX_CONFIG_DEBUG=1" )
 
 # PCH Files
-target_precompile_headers( Framework PRIVATE Framework/Source/CoreHeaders.h )
+target_precompile_headers( Framework PRIVATE Source/CoreHeaders.h )
 file( GLOB_RECURSE FrameworkPCHFiles ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.* )
 source_group( "CMake PCH Files" FILES ${FrameworkPCHFiles} )
-
-###################
-# Game Project
-###################
-
-# File Setup
-file( GLOB_RECURSE GameSourceFiles
-	Game/Source/*.cpp
-	Game/Source/*.h
-	Game/DataRaw/Shaders/*.vert
-	Game/DataRaw/Shaders/*.frag
-	Game/DataRaw/Shaders/*.sc
-	Game/DataRaw/*.bat
-	BuildShaders.bat
-	GenerateProjectFiles.bat
-)
-source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GameSourceFiles} )
-
-# Project Creation
-add_executable( GameProject WIN32 ${GameSourceFiles} )
-
-target_include_directories( GameProject PUBLIC
-	Game/Source
-	Framework/Source
-)
-
-target_compile_features( GameProject PRIVATE cxx_std_17 )
-
-# PCH Files
-target_precompile_headers( GameProject PRIVATE Framework/Source/Framework.h )
-file( GLOB_RECURSE GamePCHFiles ${CMAKE_CURRENT_BINARY_DIR}${CMAKE_FILES_DIRECTORY}/cmake_pch.* )
-source_group( "CMake PCH Files" FILES ${GamePCHFiles} )
-
-# Libraries to Link
-target_link_libraries( GameProject
-	Framework
-	bgfx
-	bx
-	bimg
-)
-
-# Visual Studio Settings
-if( CMAKE_CXX_COMPILER_ID MATCHES "MSVC" )
-	# Debug working directory and Startup Project
-	set_property( TARGET GameProject PROPERTY VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/Game" )
-	set_property( DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT GameProject )
-endif()

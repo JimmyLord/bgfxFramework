@@ -1,24 +1,24 @@
 [submodule "Framework/Libraries/bgfx"]
-	path = Framework/Libraries/bgfx
+	path = Libraries/bgfx
 	url = https://github.com/bkaradzic/bgfx.git
 [submodule "Framework/Libraries/bimg"]
-	path = Framework/Libraries/bimg
+	path = Libraries/bimg
 	url = https://github.com/bkaradzic/bimg.git
 [submodule "Framework/Libraries/bx"]
-	path = Framework/Libraries/bx
+	path = Libraries/bx
 	url = https://github.com/bkaradzic/bx.git
 [submodule "Framework/Libraries/stb"]
-	path = Framework/Libraries/stb
+	path = Libraries/stb
 	url = https://github.com/nothings/stb
 [submodule "Framework/Libraries/imgui"]
-	path = Framework/Libraries/imgui
+	path = Libraries/imgui
 	url = https://github.com/ocornut/imgui.git
 [submodule "Framework/Libraries/rapidjson"]
-	path = Framework/Libraries/rapidjson
+	path = Libraries/rapidjson
 	url = https://github.com/Tencent/rapidjson.git
 [submodule "Framework/Libraries/pcg-cpp"]
-	path = Framework/Libraries/pcg-cpp
+	path = Libraries/pcg-cpp
 	url = https://github.com/imneme/pcg-cpp.git
 [submodule "Framework/Libraries/entt"]
-	path = Framework/Libraries/entt
+	path = Libraries/entt
 	url = https://github.com/skypjack/entt.git

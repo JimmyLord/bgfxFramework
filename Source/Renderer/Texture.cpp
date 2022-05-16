@@ -24,6 +24,10 @@
 
 namespace fw {
 
+Texture::Texture()
+{
+}
+
 Texture::Texture(const char* filename)
 {
     // Load the file contents.
@@ -39,8 +43,7 @@ Texture::Texture(const char* filename)
     assert( pixels != nullptr );
 
     // Create the texture.
-    m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfx::TextureFormat::RGBA8,
-                                             0, bgfx::copy(pixels, width*height*4));
+    Rebuild( width, height, fw::Texture::Format::RGBA8, pixels );
 
     delete[] fileContents;
     stbi_image_free( pixels );
@@ -49,6 +52,39 @@ Texture::Texture(const char* filename)
 Texture::~Texture()
 {
     bgfx::destroy( m_TextureHandle );
+}
+
+void Texture::Rebuild(int width, int height, Format format, void* pixels)
+{
+    if( bgfx::isValid( m_TextureHandle ) )
+    {
+        bgfx::destroy( m_TextureHandle );
+    }
+
+    bgfx::TextureFormat::Enum bgfxFormat = bgfx::TextureFormat::Unknown;
+    unsigned int bufferSize = 0;
+
+    switch( format )
+    {
+    case Format::RGB8:
+        {
+            bgfxFormat = bgfx::TextureFormat::RGB8;
+            bufferSize = width*height*3;
+        }
+        break;
+    case Format::RGBA8:
+        {
+            bgfxFormat = bgfx::TextureFormat::RGBA8;
+            bufferSize = width*height*4;
+        }
+        break;
+    }
+
+    assert( bgfxFormat != bgfx::TextureFormat::Unknown );
+
+    m_TextureHandle = bgfx::createTexture2D(
+        width, height, false, 1, bgfxFormat,
+        0, bgfx::copy(pixels, bufferSize));
 }
 
 } // namespace fw

@@ -26,14 +26,16 @@ public:
     void Shutdown();
 
     void SetWindowSize(int width, int height);
+    void SetClientPositionAndSize(int x, int y, int width, int height, bool maximized);
+    void SetWindowPositionAndSize(int x, int y, int width, int height, bool maximized);
 
     bool IsKeyDown(int value);
     bool IsMouseButtonDown(int id);
     void GetMouseCoordinates(int* mx, int* my);
 
     HWND GetWindowHandle() { return m_hWnd; }
-    unsigned int GetWindowWidth() { return m_WindowWidth; }
-    unsigned int GetWindowHeight() { return m_WindowHeight; }
+    unsigned int GetWindowClientWidth() { return m_WindowClientWidth; }
+    unsigned int GetWindowClientHeight() { return m_WindowClientHeight; }
 
     void SetEscapeKeyWillQuit(bool value) { m_EscapeKeyWillQuit = value; }
 
@@ -50,8 +52,8 @@ protected:
 
     bool m_EscapeKeyWillQuit = true;
 
-    int m_WindowWidth = -1;
-    int m_WindowHeight = -1;
+    int m_WindowClientWidth = -1;
+    int m_WindowClientHeight = -1;
 
     HWND m_hWnd = nullptr;
     HINSTANCE m_hInstance = nullptr;

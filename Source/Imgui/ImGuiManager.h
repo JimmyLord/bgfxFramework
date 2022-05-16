@@ -1,10 +1,33 @@
 #pragma once
 
+#include "Renderer/Texture.h"
+#include "../Libraries/imgui/imgui.h"
+
 struct ImDrawData;
 
 namespace fw {
 
 class FWCore;
+class Texture;
+
+inline ImTextureID imguiTexture(fw::Texture* pTexture, uint8_t flags = 0, uint8_t mip = 0)
+{
+    union
+    {
+        struct
+        {
+            bgfx::TextureHandle handle;
+            uint8_t flags;
+            uint8_t mip;
+        } s;
+        ImTextureID id;
+    } tex;
+
+    tex.s.handle = pTexture->GetHandle();
+    tex.s.flags  = flags;
+    tex.s.mip    = mip;
+    return tex.id;
+}
 
 class ImGuiManager
 {

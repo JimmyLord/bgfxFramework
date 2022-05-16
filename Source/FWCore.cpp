@@ -40,6 +40,12 @@ FWCore::FWCore(int width, int height, bgfx::RendererType::Enum renderType)
 
     bool succeeded = bgfx::init( init );
     assert( succeeded );
+
+    // Show the window.
+    ShowWindow( m_hWnd, SW_SHOW );   // Show the window.
+    SetForegroundWindow( m_hWnd );   // Slightly higher priority.
+    SetFocus( m_hWnd );              // Sets keyboard focus to the window.
+    ResizeWindow( width, height );   // Set up our screen.
 }
 
 FWCore::~FWCore()
@@ -49,8 +55,8 @@ FWCore::~FWCore()
 
 bool FWCore::Init(int width, int height)
 {
-    m_WindowWidth = width;
-    m_WindowHeight = height;
+    m_WindowClientWidth = width;
+    m_WindowClientHeight = height;
 
     // Create our render window.
     if( !FWCore::CreateRenderWindow( "My Window", width, height, 32, m_FullscreenMode ) )
@@ -114,11 +120,29 @@ int FWCore::Run(GameCore& game)
 
 void FWCore::Shutdown()
 {
+    m_pGame->OnShutdown();
     DestroyRenderWindow( true );
     PostQuitMessage(0);
 }
 
 void FWCore::SetWindowSize(int width, int height)
+{
+    SetWindowPositionAndSize( 0, 0, width, height, false );
+}
+
+void FWCore::SetWindowPositionAndSize(int x, int y, int width, int height, bool maximized)
+{
+    SetWindowPos( m_hWnd, nullptr, x, y, width, height, 0 );
+    if( maximized )
+    {
+        ShowWindow( m_hWnd, SW_MAXIMIZE );
+    }
+    RECT clientRect;
+    GetClientRect( m_hWnd, &clientRect );
+    ResizeWindow( clientRect.right - clientRect.left, clientRect.bottom - clientRect.top );
+}
+
+void FWCore::SetClientPositionAndSize(int x, int y, int width, int height, bool maximized)
 {
     int maxWidth = GetSystemMetrics( SM_CXFULLSCREEN );
     int maxHeight = GetSystemMetrics( SM_CYFULLSCREEN );
@@ -148,8 +172,11 @@ void FWCore::SetWindowSize(int width, int height)
     int windowWidth = WindowRect.right - WindowRect.left;
     int windowHeight = WindowRect.bottom - WindowRect.top;
 
-    SetWindowPos( m_hWnd, 0, 0, 0, windowWidth, windowHeight, SWP_NOZORDER | SWP_NOMOVE );
-
+    SetWindowPos( m_hWnd, 0, x, y, windowWidth, windowHeight, 0 );
+    if( maximized )
+    {
+        ShowWindow( m_hWnd, SW_MAXIMIZE );
+    }
     ResizeWindow( width, height );
 }
 
@@ -185,14 +212,14 @@ void FWCore::ResizeWindow(int width, int height)
     if( height <= 0 ) height = 1;
     if( width <= 0 ) width = 1;
 
-    m_WindowWidth = width;
-    m_WindowHeight = height;
+    m_WindowClientWidth = width;
+    m_WindowClientHeight = height;
+
+    bgfx::reset( width, height, BGFX_RESET_VSYNC );
+    bgfx::setViewRect( 0, 0, 0, width, height );
 
     if( m_pGame )
     {
-        bgfx::reset( width, height, BGFX_RESET_VSYNC );
-        bgfx::setViewRect( 0, 0, 0, width, height );
-
         WindowResizeEvent* pEvent = new WindowResizeEvent( width, height );
         m_pGame->GetEventManager()->AddEvent( pEvent );
     }
@@ -297,11 +324,6 @@ bool FWCore::CreateRenderWindow(char* title, int width, int height, unsigned cha
             return FailAndCleanup( "Window Creation Error." );
         }
     }
-
-    ShowWindow( m_hWnd, SW_SHOW );   // Show the window.
-    SetForegroundWindow( m_hWnd );   // Slightly higher priority.
-    SetFocus( m_hWnd );              // Sets keyboard focus to the window.
-    ResizeWindow( width, height );   // Set up our screen.
 
     return true;
 }
@@ -473,6 +495,38 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
             int x = GET_X_LPARAM( lParam );
             int y = GET_Y_LPARAM( lParam );
+        }
+        return 0;
+
+    case WM_RBUTTONDOWN:
+        {
+            SetCapture( pFWCore->m_hWnd );
+
+            pFWCore->m_MouseButtonStates[1] = true;
+        }
+        return 0;
+
+    case WM_RBUTTONUP:
+        {
+            ReleaseCapture();
+
+            pFWCore->m_MouseButtonStates[1] = false;
+        }
+        return 0;
+
+    case WM_MBUTTONDOWN:
+        {
+            SetCapture( pFWCore->m_hWnd );
+
+            pFWCore->m_MouseButtonStates[2] = true;
+        }
+        return 0;
+
+    case WM_MBUTTONUP:
+        {
+            ReleaseCapture();
+
+            pFWCore->m_MouseButtonStates[2] = false;
         }
         return 0;
 

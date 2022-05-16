@@ -34,6 +34,7 @@ public:
 
     inline vec2 GetNormalized() const { float len = Length(); if(fequal(len, 0)) return vec2(x, y); len = 1.0f / len; return vec2(x * len, y * len); }
     inline vec2 Normalize() { float len = Length(); if(!fequal(len, 0)) { x /= len; y /= len; } return *this; }
+    inline float Cross(const vec2& o) const { return x*o.y - y*o.x; }
     inline void Absolute() { if(x < 0) x *= -1; if(y < 0) y *= -1; }
     inline vec2 GetAbsolute() const { return vec2(x < 0 ? -x : x, y < 0 ? -y : y); }
     inline float Dot(const vec2& o) const { return x * o.x + y * o.y; }
@@ -66,8 +67,8 @@ public:
     inline vec2 operator +=(const vec2& o) { this->x += o.x; this->y += o.y; return *this; }
     inline vec2 operator -=(const vec2& o) { this->x -= o.x; this->y -= o.y; return *this; }
 
-    bool vec2::operator<(const vec2& aVector2) const { return (x == aVector2.x) ? (y < aVector2.y) : (x < aVector2.x); }
-    bool vec2::operator>(const vec2& aVector2) const { return (x == aVector2.x) ? (y > aVector2.y) : (x > aVector2.x); }
+    bool vec2::operator<(const vec2& o) const { return (x == o.x) ? (y < o.y) : (x < o.x); }
+    bool vec2::operator>(const vec2& o) const { return (x == o.x) ? (y > o.y) : (x > o.x); }
 
     float& operator[] (int i) { assert(i >= 0 && i < 2); return *(&x + i); }
 

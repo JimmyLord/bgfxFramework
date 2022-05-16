@@ -16,6 +16,8 @@
 
 #include "CoreHeaders.h"
 
+#include "Math/Vector.h"
+#include "Imgui/ImGuiConfig.h"
 #include "../Libraries/imgui/imgui.h"
 #include "../Libraries/entt/src/entt/entt.hpp"
 
@@ -30,7 +32,6 @@
 #include "Math/MathHelpers.h"
 #include "Math/Matrix.h"
 #include "Math/Random.h"
-#include "Math/Vector.h"
 #include "Objects/Camera.h"
 #include "Objects/GameObject.h"
 #include "Objects/SpriteSheet.h"

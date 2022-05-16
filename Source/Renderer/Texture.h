@@ -17,10 +17,19 @@ namespace fw {
 class Texture
 {
 public:
+    enum class Format
+    {
+        RGB8,
+        RGBA8,
+    };
+
+public:
+    Texture();
     Texture(const char* filename);
     virtual ~Texture();
 
     bgfx::TextureHandle GetHandle() { return m_TextureHandle; }
+    void Rebuild(int width, int height, Format format, void* pixels);
 
 protected:
     bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;

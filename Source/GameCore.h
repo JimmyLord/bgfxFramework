@@ -28,6 +28,7 @@ public:
     virtual void OnEvent(Event* pEvent) = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void Draw();
+    virtual void OnShutdown() = 0;
 
     // Getters.
     FWCore* GetFramework() { return &m_FWCore; }

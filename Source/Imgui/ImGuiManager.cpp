@@ -35,11 +35,11 @@ void ImGuiManager::Init(int viewID)
     CreateDeviceObjects();
 
     ImGuiIO& io = ImGui::GetIO();
-    io.DisplaySize.x = (float)m_pFramework->GetWindowWidth();
-    io.DisplaySize.y = (float)m_pFramework->GetWindowHeight();
+    io.DisplaySize.x = (float)m_pFramework->GetWindowClientWidth();
+    io.DisplaySize.y = (float)m_pFramework->GetWindowClientHeight();
     io.IniFilename = "imgui.ini";
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-        
+
     // Keyboard mapping.  ImGui will use those indices to peek into the io.KeyDown[] array.
     io.KeyMap[ImGuiKey_Tab] = VK_TAB;
     io.KeyMap[ImGuiKey_LeftArrow] = VK_LEFT;
@@ -101,8 +101,8 @@ void ImGuiManager::StartFrame(float deltaTime)
 {
     ImGuiIO& io = ImGui::GetIO();
     io.DeltaTime = deltaTime;
-    io.DisplaySize.x = (float)m_pFramework->GetWindowWidth();
-    io.DisplaySize.y = (float)m_pFramework->GetWindowHeight();
+    io.DisplaySize.x = (float)m_pFramework->GetWindowClientWidth();
+    io.DisplaySize.y = (float)m_pFramework->GetWindowClientHeight();
 
     io.KeyCtrl = io.KeysDown[VK_CONTROL] || io.KeysDown[VK_LCONTROL] || io.KeysDown[VK_RCONTROL];
     io.KeyShift = io.KeysDown[VK_SHIFT] || io.KeysDown[VK_LSHIFT] || io.KeysDown[VK_RSHIFT];
@@ -114,6 +114,8 @@ void ImGuiManager::StartFrame(float deltaTime)
     io.MousePos.x = (float)mx;
     io.MousePos.y = (float)my;
     io.MouseDown[0] = m_pFramework->IsMouseButtonDown( 0 );
+    io.MouseDown[1] = m_pFramework->IsMouseButtonDown( 1 );
+    io.MouseDown[2] = m_pFramework->IsMouseButtonDown( 2 );
 
     for( int i=0; i<256; i++ )
     {

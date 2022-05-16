@@ -26,7 +26,8 @@ void GameCore::Draw()
 
         mat4 worldMat;
         worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
-        meshData.pMesh->Draw( m_pUniforms, meshData.pMaterial, &worldMat );
+		bgfx::ViewId viewID = 0; // TODO: unhardcode this.
+        meshData.pMesh->Draw( viewID, m_pUniforms, meshData.pMaterial, &worldMat );
     }
 }
 

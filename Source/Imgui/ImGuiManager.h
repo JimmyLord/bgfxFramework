@@ -10,7 +10,7 @@ namespace fw {
 class FWCore;
 class Texture;
 
-inline ImTextureID imguiTexture(fw::Texture* pTexture, uint8_t flags = 0, uint8_t mip = 0)
+inline ImTextureID imguiTexture(bgfx::TextureHandle handle, uint8_t flags = 0, uint8_t mip = 0)
 {
     union
     {
@@ -23,10 +23,15 @@ inline ImTextureID imguiTexture(fw::Texture* pTexture, uint8_t flags = 0, uint8_
         ImTextureID id;
     } tex;
 
-    tex.s.handle = pTexture->GetHandle();
+    tex.s.handle = handle;
     tex.s.flags  = flags;
     tex.s.mip    = mip;
     return tex.id;
+}
+
+inline ImTextureID imguiTexture(fw::Texture* pTexture, uint8_t flags = 0, uint8_t mip = 0)
+{
+    imguiTexture( pTexture->GetHandle(), flags, mip );
 }
 
 class ImGuiManager

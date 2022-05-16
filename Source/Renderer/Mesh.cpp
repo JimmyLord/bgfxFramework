@@ -36,7 +36,7 @@ void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uin
     m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
 }
 
-void Mesh::Draw(const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)
+void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)
 {
     // Set vertex and index buffer.
     bgfx::setVertexBuffer( 0, m_VBO );
@@ -70,7 +70,7 @@ void Mesh::Draw(const Uniforms* pUniforms, const Material* pMaterial, const mat4
     }
 
     // Submit primitive for rendering to view 0.
-    bgfx::submit( 0, pMaterial->GetShader()->GetProgram() );
+    bgfx::submit( viewID, pMaterial->GetShader()->GetProgram() );
 }
 
 } // namespace fw

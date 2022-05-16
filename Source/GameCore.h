@@ -34,6 +34,7 @@ public:
     FWCore* GetFramework() { return &m_FWCore; }
     EventManager* GetEventManager() { return m_pEventManager; }
     entt::registry& GetECSRegistry() { return m_ECSRegistry; }
+    Uniforms* GetUniforms() { return m_pUniforms; }
 
     // ECS.
     entt::entity CreateEntity();

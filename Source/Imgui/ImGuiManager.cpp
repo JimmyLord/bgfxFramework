@@ -72,6 +72,12 @@ void ImGuiManager::Shutdown()
     ImGui::DestroyContext();
 }
 
+void ImGuiManager::AddInputCharacter(unsigned int value)
+{
+    ImGuiIO& io = ImGui::GetIO();
+    io.AddInputCharacter( value );
+}
+
 void ImGuiManager::ClearInput()
 {
     ImGuiIO& io = ImGui::GetIO();

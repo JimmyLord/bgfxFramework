@@ -433,6 +433,14 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         }
         return 0;
 
+    case WM_CHAR:
+        {
+            // Send a char event to the event manager.
+            OnCharEvent* pEvent = new OnCharEvent( (unsigned int)wParam );
+            pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
+        }
+        return 0;
+
     case WM_KEYDOWN:
         {
             bool keyWasPressedLastTimeMessageArrived = lParam & (1 << 30);

@@ -69,6 +69,27 @@ protected:
 };
 
 //==========================
+// OnChar event class
+//==========================
+class OnCharEvent : public Event
+{
+public:
+    OnCharEvent(unsigned int value)
+    {
+        m_Value = value;
+    }
+    virtual ~OnCharEvent() {}
+
+    static const char* GetStaticEventType() { return "OnCharEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+    unsigned int GetValue() { return m_Value; }
+
+protected:
+    unsigned int m_Value;
+};
+
+//==========================
 // WindowResize event class
 //==========================
 class WindowResizeEvent : public Event

@@ -43,6 +43,8 @@ public:
     void Init(int viewID);
     void Shutdown();
 
+    void AddInputCharacter(unsigned int value);
+
     void OnFocusLost();
 
     void StartFrame(float deltaTime);

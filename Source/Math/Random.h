@@ -8,10 +8,10 @@ namespace Random {
 
 // Get values from a global generator.
 void SetSeed(unsigned int seed);
-int GetInt(int min, int max);
-int GetInt(int max);
-float GetFloat(float min, float max);
-float GetFloat(float max);
+int Int(int min, int max);
+int Int(int max);
+float Float(float min, float max);
+float Float(float max);
 
 class Generator
 {
@@ -21,10 +21,10 @@ public:
 
     void SetSeed(unsigned int seed);
 
-    int GetInt(int min, int max);
-    int GetInt(int max);
-    float GetFloat(float min, float max);
-    float GetFloat(float max);
+    int Int(int min, int max);
+    int Int(int max);
+    float Float(float min, float max);
+    float Float(float max);
 
 protected:
     pcg32 m_RNGEngine;

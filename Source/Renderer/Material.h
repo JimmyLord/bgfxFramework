@@ -29,21 +29,24 @@ public:
     // Getters.
     ShaderProgram* GetShader() const { return m_pShader; }
     Texture* GetTexture() const { return m_pTexture; }
+    vec4 GetUVScaleOffset() { return m_UVScaleOffset; }
     color4f GetColor() const { return m_Color; }
-    bool GetHasAlpha() const { return m_HasAlpha; }
+    uint64_t GetAlphaState() const { return m_AlphaState; }
 
     // Setters.
     void SetShader(ShaderProgram* pShader) { m_pShader = pShader; }
     void SetTexture(Texture* pTexture) { m_pTexture = pTexture; }
+    void SetUVScaleOffset(vec2 uvScale, vec2 uvOffset) { m_UVScaleOffset.Set( uvScale, uvOffset ); }
     void SetColor(color4f color) { m_Color = color; }
-    void SetHasAlpha(bool hasAlpha) { m_HasAlpha = hasAlpha; }
+    void SetAlphaState(uint64_t alphaState) { m_AlphaState = alphaState; }
 
 protected:
     ShaderProgram* m_pShader;
     Texture* m_pTexture;
     vec4 m_UVScaleOffset;
     color4f m_Color;
-    bool m_HasAlpha;
+
+    uint64_t m_AlphaState = 0;
 };
 
 } // namespace fw

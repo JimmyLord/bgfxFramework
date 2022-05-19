@@ -89,24 +89,9 @@ public:
     vec3(float nxyz) { x = nxyz; y = nxyz; z = nxyz; }
     vec3(float nx, float ny) { x = nx; y = ny; z = 0; }
     vec3(float nx, float ny, float nz) { x = nx; y = ny; z = nz; }
-    vec3(vec2 v2) { x = v2.x; y = v2.y; z = 0; }
-    vec3(vec2 v2, float nz) { x = v2.x; y = v2.y; z = nz; }
-    vec3(float nx, vec2 v2) { x = nx; y = v2.x; z = v2.y; }
-
-    vec3(int nxyz) { x = (float)nxyz; y = (float)nxyz; z = (float)nxyz; }
-    vec3(int nx, int ny) { x = (float)nx; y = (float)ny; z = 0; }
-    vec3(int nx, int ny, int nz) { x = (float)nx; y = (float)ny; z = (float)nz; }
-    //vec3(ivec2 v2) { x = v2.x; y = v2.y; z = 0; }
-    //vec3(ivec2 v2, int nz) { x = v2.x; y = v2.y; z = (float)nz; }
-    //vec3(int nx, ivec2 v2) { x = (float)nx; y = v2.x; z = v2.y; }
-
-    vec3(float nx, int ny) { x = nx; y = (float)ny; z = 0; }
-    vec3(int nx, float ny) { x = (float)nx; y = ny; z = 0; }
-    vec3(float nx, int ny, int nz) { x = nx; y = (float)ny; z = (float)nz; }
-    vec3(int nx, float ny, int nz) { x = (float)nx; y = ny; z = (float)nz; }
-    vec3(int nx, int ny, float nz) { x = (float)nx; y = (float)ny; z = nz; }
-    vec3(float nx, float ny, int nz) { x = nx; y = ny; z = (float)nz; }
-    vec3(float nx, int ny, float nz) { x = nx; y = (float)ny; z = nz; }
+    vec3(vec2 nxy) { x = nxy.x; y = nxy.y; z = 0; }
+    vec3(vec2 nxy, float nz) { x = nxy.x; y = nxy.y; z = nz; }
+    vec3(float nx, vec2 nyz) { x = nx; y = nyz.x; z = nyz.y; }
     //virtual ~vec3() {}
 
     static const vec3 Right() { return vec3(1.0f, 0.0f, 0.0f); }
@@ -180,56 +165,18 @@ public:
     vec4(float nx, float ny) { x = nx; y = ny; z = 0; w = 0; }
     vec4(float nx, float ny, float nz) { x = nx; y = ny; z = nz; w = 0; }
     vec4(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
-    vec4(vec2 vec, float nz, float nw) { x = vec.x; y = vec.y; z = nz; w = nw; }
-    vec4(float nx, float ny, vec2 vec) { x = nx; y = ny; z = vec.x; w = vec.y; }
+    vec4(vec2 nxy, float nz, float nw) { x = nxy.x; y = nxy.y; z = nz; w = nw; }
+    vec4(float nx, float ny, vec2 nzw) { x = nx; y = ny; z = nzw.x; w = nzw.y; }
     vec4(float nx, vec2 vec, float nw) { x = nx; y = vec.x; z = vec.y; w = nw; }
-    vec4(vec2 vec_1, vec2 vec_2) { x = vec_1.x; y = vec_1.y; z = vec_2.x; w = vec_2.y; }
-    vec4(vec3 vec, float nw) { x = vec.x; y = vec.y; z = vec.z; w = nw; }
-    vec4(float nx, vec3 vec) { x = nx; y = vec.x; z = vec.y; w = vec.z; }
-
-    vec4(int nxyzw) { x = (float)nxyzw; y = (float)nxyzw; z = (float)nxyzw; w = (float)nxyzw; }
-    vec4(int nx, int ny) { x = (float)nx; y = (float)ny; z = 0; w = 0; }
-    vec4(int nx, int ny, int nz) { x = (float)nx; y = (float)ny; z = (float)nz; w = 0; }
-    vec4(int nx, int ny, int nz, int nw) { x = (float)nx; y = (float)ny; z = (float)nz; w = (float)nw; }
-    //vec4(ivec2 vec, int nz, int nw) { x = vec.x; y = vec.y; z = (float)nz; w = (float)nw; }
-    //vec4(int nx, int ny, ivec2 vec) { x = (float)nx; y = (float)ny; z = vec.x; w = vec.y; }
-    //vec4(int nx, ivec2 vec, int nw) { x = (float)nx; y = vec.x; z = vec.y; w = (float)nw; }
-    //vec4(ivec2 vec_1, ivec2 vec_2) { x = vec_1.x; y = vec_1.y; z = vec_2.x; w = vec_2.y; }
-    //vec4(ivec3 vec, int nw) { x = vec.x; y = vec.y; z = vec.z; w = (float)nw; }
-    //vec4(int nx, ivec3 vec) { x = (float)nx; y = vec.x; z = vec.y; w = vec.z; }
-
-    vec4(float nx, int ny) { x = nx; y = (float)ny; z = 0; w = 0; }
-    vec4(int nx, float ny) { x = (float)nx; y = ny; z = 0; w = 0; }
-    vec4(float nx, int ny, int nz) { x = nx; y = (float)ny; z = (float)nz; w = 0; }
-    vec4(int nx, float ny, int nz) { x = (float)nx; y = ny; z = (float)nz; w = 0; }
-    vec4(int nx, int ny, float nz) { x = (float)nx; y = (float)ny; z = nz; w = 0; }
-    vec4(float nx, float ny, int nz) { x = nx; y = ny; z = (float)nz; w = 0; }
-    vec4(float nx, int ny, float nz) { x = nx; y = (float)ny; z = nz; w = 0; }
-    vec4(float nx, int ny, int nz, int nw) { x = nx; y = (float)ny; z = (float)nz; w = (float)nw; }
-    vec4(int nx, float ny, int nz, int nw) { x = (float)nx; y = ny; z = (float)nz; w = (float)nw; }
-    vec4(int nx, int ny, float nz, int nw) { x = (float)nx; y = (float)ny; z = nz; w = (float)nw; }
-    vec4(int nx, int ny, int nz, float nw) { x = (float)nx; y = (float)ny; z = (float)nz; w = nw; }
-    vec4(float nx, float ny, int nz, int nw) { x = nx; y = ny; z = (float)nz; w = (float)nw; }
-    vec4(float nx, int ny, float nz, int nw) { x = nx; y = (float)ny; z = nz; w = (float)nw; }
-    vec4(float nx, int ny, int nz, float nw) { x = nx; y = (float)ny; z = (float)nz; w = nw; }
-    vec4(int nx, float ny, float nz, int nw) { x = (float)nx; y = ny; z = nz; w = (float)nw; }
-    vec4(int nx, float ny, int nz, float nw) { x = (float)nx; y = ny; z = (float)nz; w = nw; }
-    vec4(int nx, int ny, float nz, float nw) { x = (float)nx; y = (float)ny; z = nz; w = nw; }
-    vec4(float nx, float ny, float nz, int nw) { x = nx; y = ny; z = nz; w = (float)nw; }
-    vec4(float nx, float ny, int nz, float nw) { x = nx; y = ny; z = (float)nz; w = nw; }
-    vec4(float nx, int ny, float nz, float nw) { x = nx; y = (float)ny; z = nz; w = nw; }
-    vec4(int nx, float ny, float nz, float nw) { x = (float)nx; y = ny; z = nz; w = nw; }
-    //vec4(ivec2 vec, float nz, int nw) { x = vec.x; y = vec.y; z = nz; w = (float)nw; }
-    //vec4(ivec2 vec, int nz, float nw) { x = vec.x; y = vec.y; z = (float)nz; w = nw; }
-    //vec4(float nx, int ny, ivec2 vec) { x = nx; y = (float)ny; z = vec.x; w = vec.y; }
-    //vec4(int nx, float ny, ivec2 vec) { x = (float)nx; y = ny; z = vec.x; w = vec.y; }
-    //vec4(float nx, ivec2 vec, int nw) { x = nx; y = vec.x; z = vec.y; w = (float)nw; }
-    //vec4(int nx, ivec2 vec, float nw) { x = (float)nx; y = vec.x; z = vec.y; w = nw; }
+    vec4(vec2 nxy, vec2 nzw) { x = nxy.x; y = nxy.y; z = nzw.x; w = nzw.y; }
+    vec4(vec3 nxyz, float nw) { x = nxyz.x; y = nxyz.y; z = nxyz.z; w = nw; }
+    vec4(float nx, vec3 nyzw) { x = nx; y = nyzw.x; z = nyzw.y; w = nyzw.z; }
     //virtual ~vec4() {}
 
     inline vec3 XYZ() { return vec3(x, y, z); }
 
     inline void Set(float nx, float ny, float nz, float nw) { x = nx; y = ny; z = nz; w = nw; }
+    inline void Set(vec2 nxy, vec2 nzw) { x = nxy.x; y = nxy.y; z = nzw.x; w = nzw.y; }
     inline float LengthSquared() const { return x * x + y * y + z * z + w * w; }
     inline float Length() const { return sqrtf(x * x + y * y + z * z + w * w); }
     inline float DistanceFrom(const vec4 o) const { return sqrtf((x - o.x) * (x - o.x) + (y - o.y) * (y - o.y) + (z - o.z) * (z - o.z) + (w - o.w) * (w - o.w)); }
@@ -361,24 +308,9 @@ public:
     ivec3(int nxyz) { x = nxyz; y = nxyz; z = nxyz; }
     ivec3(int nx, int ny) { x = nx; y = ny; z = 0; }
     ivec3(int nx, int ny, int nz) { x = nx; y = ny; z = nz; }
-    ivec3(ivec2 v2) { x = v2.x; y = v2.y; z = 0; }
-    ivec3(ivec2 v2, int nz) { x = v2.x; y = v2.y; z = nz; }
-    ivec3(int nx, ivec2 v2) { x = nx; y = v2.x; z = v2.y; }
-
-    ivec3(float nxyz) { x = (int)nxyz; y = (int)nxyz; z = (int)nxyz; }
-    ivec3(float nx, float ny) { x = (int)nx; y = (int)ny; z = 0; }
-    ivec3(float nx, float ny, float nz) { x = (int)nx; y = (int)ny; z = (int)nz; }
-    ivec3(vec2 v2) { x = (int)v2.x; y = (int)v2.y; z = 0; }
-    ivec3(vec2 v2, float nz) { x = (int)v2.x; y = (int)v2.y; z = (int)nz; }
-    ivec3(float nx, vec2 v2) { x = (int)nx; y = (int)v2.x; z = (int)v2.y; }
-
-    ivec3(float nx, int ny) { x = (int)nx; y = ny; z = 0; }
-    ivec3(int nx, float ny) { x = nx; y = (int)ny; z = 0; }
-    ivec3(float nx, int ny, int nz) { x = (int)nx; y = ny; z = nz; }
-    ivec3(int nx, float ny, int nz) { x = nx; y = (int)ny; z = nz; }
-    ivec3(int nx, int ny, float nz) { x = nx; y = ny; z = (int)nz; }
-    ivec3(float nx, float ny, int nz) { x = (int)nx; y = (int)ny; z = nz; }
-    ivec3(float nx, int ny, float nz) { x = (int)nx; y = ny; z = (int)nz; }
+    ivec3(ivec2 nxy) { x = nxy.x; y = nxy.y; z = 0; }
+    ivec3(ivec2 nxy, int nz) { x = nxy.x; y = nxy.y; z = nz; }
+    ivec3(int nx, ivec2 nyz) { x = nx; y = nyz.x; z = nyz.y; }
     //virtual ~ivec3() {}
 
     inline void Set(int nx, int ny, int nz) { x = nx; y = ny; z = nz; }
@@ -452,51 +384,12 @@ public:
     ivec4(int nx, int ny) { x = nx; y = ny; z = 0; w = 0; }
     ivec4(int nx, int ny, int nz) { x = nx; y = ny; z = nz; w = 0; }
     ivec4(int nx, int ny, int nz, int nw) { x = nx; y = ny; z = nz; w = nw; }
-    ivec4(ivec2 vec, int nz, int nw) { x = vec.x; y = vec.y; z = nz; w = nw; }
-    ivec4(int nx, int ny, ivec2 vec) { x = nx; y = ny; z = vec.x; w = vec.y; }
-    ivec4(int nx, ivec2 vec, int nw) { x = nx; y = vec.x; z = vec.y; w = nw; }
-    ivec4(ivec2 vec_1, ivec2 vec_2) { x = vec_1.x; y = vec_1.y; z = vec_2.x; w = vec_2.y; }
-    ivec4(ivec3 vec, int nw) { x = vec.x; y = vec.y; z = vec.z; w = nw; }
-    ivec4(int nx, ivec3 vec) { x = nx; y = vec.x; z = vec.y; w = vec.z; }
-
-    ivec4(float nxyzw) { x = (int)nxyzw; y = (int)nxyzw; z = (int)nxyzw; w = (int)nxyzw; }
-    ivec4(float nx, float ny) { x = (int)nx; y = (int)ny; z = 0; w = 0; }
-    ivec4(float nx, float ny, float nz) { x = (int)nx; y = (int)ny; z = (int)nz; w = 0; }
-    ivec4(float nx, float ny, float nz, float nw) { x = (int)nx; y = (int)ny; z = (int)nz; w = (int)nw; }
-    ivec4(vec2 vec, float nz, float nw) { x = (int)vec.x; y = (int)vec.y; z = (int)nz; w = (int)nw; }
-    ivec4(float nx, float ny, vec2 vec) { x = (int)nx; y = (int)ny; z = (int)vec.x; w = (int)vec.y; }
-    ivec4(float nx, vec2 vec, float nw) { x = (int)nx; y = (int)vec.x; z = (int)vec.y; w = (int)nw; }
-    ivec4(vec2 vec_1, vec2 vec_2) { x = (int)vec_1.x; y = (int)vec_1.y; z = (int)vec_2.x; w = (int)vec_2.y; }
-    ivec4(vec3 vec, float nw) { x = (int)vec.x; y = (int)vec.y; z = (int)vec.z; w = (int)nw; }
-    ivec4(float nx, vec3 vec) { x = (int)nx; y = (int)vec.x; z = (int)vec.y; w = (int)vec.z; }
-
-    ivec4(float nx, int ny) { x = (int)nx; y = ny; z = 0; w = 0; }
-    ivec4(int nx, float ny) { x = nx; y = (int)ny; z = 0; w = 0; }
-    ivec4(float nx, int ny, int nz) { x = (int)nx; y = ny; z = nz; w = 0; }
-    ivec4(int nx, float ny, int nz) { x = nx; y = (int)ny; z = nz; w = 0; }
-    ivec4(int nx, int ny, float nz) { x = nx; y = ny; z = (int)nz; w = 0; }
-    ivec4(float nx, float ny, int nz) { x = (int)nx; y = (int)ny; z = nz; w = 0; }
-    ivec4(float nx, int ny, float nz) { x = (int)nx; y = ny; z = (int)nz; w = 0; }
-    ivec4(float nx, int ny, int nz, int nw) { x = (int)nx; y = ny; z = nz; w = nw; }
-    ivec4(int nx, float ny, int nz, int nw) { x = nx; y = (int)ny; z = nz; w = nw; }
-    ivec4(int nx, int ny, float nz, int nw) { x = nx; y = ny; z = (int)nz; w = nw; }
-    ivec4(int nx, int ny, int nz, float nw) { x = nx; y = ny; z = nz; w = (int)nw; }
-    ivec4(float nx, float ny, int nz, int nw) { x = (int)nx; y = (int)ny; z = nz; w = nw; }
-    ivec4(float nx, int ny, float nz, int nw) { x = (int)nx; y = ny; z = (int)nz; w = nw; }
-    ivec4(float nx, int ny, int nz, float nw) { x = (int)nx; y = ny; z = nz; w = (int)nw; }
-    ivec4(int nx, float ny, float nz, int nw) { x = nx; y = (int)ny; z = (int)nz; w = nw; }
-    ivec4(int nx, float ny, int nz, float nw) { x = nx; y = (int)ny; z = nz; w = (int)nw; }
-    ivec4(int nx, int ny, float nz, float nw) { x = nx; y = ny; z = (int)nz; w = (int)nw; }
-    ivec4(float nx, float ny, float nz, int nw) { x = (int)nx; y = (int)ny; z = (int)nz; w = nw; }
-    ivec4(float nx, float ny, int nz, float nw) { x = (int)nx; y = (int)ny; z = nz; w = (int)nw; }
-    ivec4(float nx, int ny, float nz, float nw) { x = (int)nx; y = ny; z = (int)nz; w = (int)nw; }
-    ivec4(int nx, float ny, float nz, float nw) { x = nx; y = (int)ny; z = (int)nz; w = (int)nw; }
-    ivec4(ivec2 vec, float nz, int nw) { x = vec.x; y = vec.y; z = (int)nz; w = nw; }
-    ivec4(ivec2 vec, int nz, float nw) { x = vec.x; y = vec.y; z = nz; w = (int)nw; }
-    ivec4(float nx, int ny, ivec2 vec) { x = (int)nx; y = ny; z = vec.x; w = vec.y; }
-    ivec4(int nx, float ny, ivec2 vec) { x = nx; y = (int)ny; z = vec.x; w = vec.y; }
-    ivec4(float nx, ivec2 vec, int nw) { x = (int)nx; y = vec.x; z = vec.y; w = nw; }
-    ivec4(int nx, ivec2 vec, float nw) { x = nx; y = vec.x; z = vec.y; w = (int)nw; }
+    ivec4(ivec2 nxy, int nz, int nw) { x = nxy.x; y = nxy.y; z = nz; w = nw; }
+    ivec4(int nx, ivec2 nyz, int nw) { x = nx; y = nyz.x; z = nyz.y; w = nw; }
+    ivec4(int nx, int ny, ivec2 nzw) { x = nx; y = ny; z = nzw.x; w = nzw.y; }
+    ivec4(ivec2 nxy, ivec2 nzw) { x = nxy.x; y = nxy.y; z = nzw.x; w = nzw.y; }
+    ivec4(ivec3 nxyz, int nw) { x = nxyz.x; y = nxyz.y; z = nxyz.z; w = nw; }
+    ivec4(int nx, ivec3 nyzw) { x = nx; y = nyzw.x; z = nyzw.y; w = nyzw.z; }
     //virtual ~ivec4() {}
 
     inline void Set(int nx, int ny, int nz, int nw) { x = nx; y = ny; z = nz; w = nw; }

@@ -48,19 +48,13 @@ void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* 
     // Set render states.
     uint64_t state = 0
         | BGFX_STATE_WRITE_RGB
+        | BGFX_STATE_WRITE_A
         | BGFX_STATE_WRITE_Z
         | BGFX_STATE_DEPTH_TEST_LESS
         | BGFX_STATE_CULL_CCW
         | BGFX_STATE_MSAA
+        | pMaterial->GetAlphaState()
         ;
-
-    if( pMaterial->GetHasAlpha() )
-    {
-        state = state
-            | BGFX_STATE_BLEND_EQUATION_ADD
-            | BGFX_STATE_BLEND_FUNC( BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA )
-            ;
-    }
 
     bgfx::setState( state );
 

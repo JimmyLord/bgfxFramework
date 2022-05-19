@@ -20,8 +20,11 @@ Material::Material(ShaderProgram* pShader, Texture* pTexture, color4f color, boo
     , m_pTexture( pTexture )
     , m_UVScaleOffset( uvScaleOffset )
     , m_Color( color )
-    , m_HasAlpha( hasAlpha )
 {
+    if( hasAlpha )
+        m_AlphaState = BGFX_STATE_BLEND_EQUATION_ADD | BGFX_STATE_BLEND_FUNC( BGFX_STATE_BLEND_SRC_ALPHA, BGFX_STATE_BLEND_INV_SRC_ALPHA );
+    else
+        m_AlphaState = 0;
 }
 
 Material::Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha)

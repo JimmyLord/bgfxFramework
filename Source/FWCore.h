@@ -39,6 +39,8 @@ public:
 
     void SetEscapeKeyWillQuit(bool value) { m_EscapeKeyWillQuit = value; }
 
+    uint32_t GetFrameCount() { return m_FrameCount; }
+
 protected:
     void ResizeWindow(int width, int height);
     bool CreateRenderWindow(char* title, int width, int height, unsigned char colorBits, bool fullscreenflag);
@@ -64,6 +66,8 @@ protected:
     bool m_OldMouseButtonStates[3] = {};
     bool m_WindowIsActive = false;
     bool m_FullscreenMode = false;
+
+    int m_FrameCount = 0;
 };
 
 } // namespace fw

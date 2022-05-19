@@ -103,7 +103,7 @@ int FWCore::Run(GameCore& game)
             game.Draw();
 
             // Swap buffers.
-            bgfx::frame();
+            m_FrameCount = bgfx::frame();
 
             // Backup the state of the keyboard and mouse.
             for( int i=0; i<256; i++ )

@@ -117,6 +117,7 @@ public:
     inline vec3 MultiplyComponents(const vec3& o) const { return vec3(this->x * o.x, this->y * o.y, this->z * o.z); }
     inline vec3 DivideComponents(const vec3& o) const { return vec3(this->x / o.x, this->y / o.y, this->z / o.z); }
     //inline vec3 MultiplyComponents(const ivec3& o) const { return vec3(this->x * o.x, this->y * o.y, this->z * o.z); }
+    inline vec3 Saturate() { x=x<0?0:x>1?1:x; y=y<0?0:y>1?1:y; z=z<0?0:z>1?1:z; return *this; }
 
     inline vec3 WithX(float x) const { return vec3(x, this->y, this->z); }
     inline vec3 WithY(float y) const { return vec3(this->x, y, this->z); }

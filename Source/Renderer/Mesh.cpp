@@ -19,7 +19,7 @@
 
 namespace fw {
 
-Mesh::Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32_t vertsSize, const void* indices, uint32_t indicesSize)
+Mesh::Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize)
 {
     Create( vertexFormat, verts, vertsSize, indices, indicesSize );
 }
@@ -30,7 +30,7 @@ Mesh::~Mesh()
     bgfx::destroy( m_IBO );
 }
 
-void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32_t vertsSize, const void* indices, uint32_t indicesSize)
+void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize)
 {
     m_VBO = bgfx::createVertexBuffer( bgfx::makeRef(verts, vertsSize), vertexFormat );
     m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
@@ -46,16 +46,7 @@ void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* 
     pMaterial->Enable( pUniforms );
 
     // Set render states.
-    uint64_t state = 0
-        | BGFX_STATE_WRITE_RGB
-        | BGFX_STATE_WRITE_A
-        | BGFX_STATE_WRITE_Z
-        | BGFX_STATE_DEPTH_TEST_LESS
-        | BGFX_STATE_CULL_CCW
-        | BGFX_STATE_MSAA
-        | pMaterial->GetAlphaState()
-        ;
-
+    uint64_t state = pMaterial->GetBGFXRenderState() | BGFX_STATE_MSAA;
     bgfx::setState( state );
 
     if( worldMat )

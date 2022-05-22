@@ -24,7 +24,7 @@ namespace fw {
 
 // Public methods
 
-FWCore::FWCore(int width, int height, bgfx::RendererType::Enum renderType)
+FWCore::FWCore(uint32 width, uint32 height, bgfx::RendererType::Enum renderType)
 {
     Init( width, height );
 
@@ -53,7 +53,7 @@ FWCore::~FWCore()
     bgfx::shutdown();
 }
 
-bool FWCore::Init(int width, int height)
+bool FWCore::Init(uint32 width, uint32 height)
 {
     m_WindowClientWidth = width;
     m_WindowClientHeight = height;
@@ -68,7 +68,7 @@ bool FWCore::Init(int width, int height)
     return true;
 }
 
-int FWCore::Run(GameCore& game)
+uint32 FWCore::Run(GameCore& game)
 {
     m_pGame = &game;
 
@@ -115,7 +115,7 @@ int FWCore::Run(GameCore& game)
     }
 
     // Truncate wParam in 64-bit mode to an int.
-    return static_cast<int>( message.wParam );
+    return static_cast<uint32>( message.wParam );
 }
 
 void FWCore::Shutdown()
@@ -125,12 +125,12 @@ void FWCore::Shutdown()
     PostQuitMessage(0);
 }
 
-void FWCore::SetWindowSize(int width, int height)
+void FWCore::SetWindowSize(uint32 width, uint32 height)
 {
     SetWindowPositionAndSize( 0, 0, width, height, false );
 }
 
-void FWCore::SetWindowPositionAndSize(int x, int y, int width, int height, bool maximized)
+void FWCore::SetWindowPositionAndSize(int32 x, int32 y, uint32 width, uint32 height, bool maximized)
 {
     SetWindowPos( m_hWnd, nullptr, x, y, width, height, 0 );
     if( maximized )
@@ -142,22 +142,22 @@ void FWCore::SetWindowPositionAndSize(int x, int y, int width, int height, bool 
     ResizeWindow( clientRect.right - clientRect.left, clientRect.bottom - clientRect.top );
 }
 
-void FWCore::SetClientPositionAndSize(int x, int y, int width, int height, bool maximized)
+void FWCore::SetClientPositionAndSize(int32 x, int32 y, uint32 width, uint32 height, bool maximized)
 {
-    int maxWidth = GetSystemMetrics( SM_CXFULLSCREEN );
-    int maxHeight = GetSystemMetrics( SM_CYFULLSCREEN );
+    uint32 maxWidth = GetSystemMetrics( SM_CXFULLSCREEN );
+    uint32 maxHeight = GetSystemMetrics( SM_CYFULLSCREEN );
 
     float aspect = static_cast<float>( width ) / height;
 
     if( width > maxWidth )
     {
         width = maxWidth;
-        height = static_cast<int>(maxWidth / aspect);
+        height = static_cast<uint32>(maxWidth / aspect);
     }
 
     if( height > maxHeight )
     {
-        width = static_cast<int>(maxHeight * aspect);
+        width = static_cast<uint32>(maxHeight * aspect);
         height = maxHeight;
     }
 
@@ -166,7 +166,7 @@ void FWCore::SetClientPositionAndSize(int x, int y, int width, int height, bool 
     HMENU menu = GetMenu( m_hWnd );
 
     // Calculate the full size of the window needed to match our client area of width/height.
-    RECT WindowRect = { 0, 0, width, height };
+    RECT WindowRect = { 0, 0, (int32)width, (int32)height };
     AdjustWindowRectEx( &WindowRect, dwStyle, menu ? TRUE : FALSE, dwExStyle );
 
     int windowWidth = WindowRect.right - WindowRect.left;
@@ -180,19 +180,19 @@ void FWCore::SetClientPositionAndSize(int x, int y, int width, int height, bool 
     ResizeWindow( width, height );
 }
 
-bool FWCore::IsKeyDown(int value)
+bool FWCore::IsKeyDown(uint32 value)
 {
-    assert( value >= 0 && value < 256 );
+    assert( value < 256 );
     return m_KeyStates[value];
 }
 
-bool FWCore::IsMouseButtonDown(int id)
+bool FWCore::IsMouseButtonDown(uint32 id)
 {
-    assert( id >= 0 && id < 3 );
+    assert( id < 3 );
     return m_MouseButtonStates[id];
 }
 
-void FWCore::GetMouseCoordinates(int* mx, int* my)
+void FWCore::GetMouseCoordinates(int32* mx, int32* my)
 {
     POINT p;
     if( GetCursorPos( &p ) )
@@ -207,7 +207,7 @@ void FWCore::GetMouseCoordinates(int* mx, int* my)
 
 // Protected methods.
 
-void FWCore::ResizeWindow(int width, int height)
+void FWCore::ResizeWindow(uint32 width, uint32 height)
 {
     if( height <= 0 ) height = 1;
     if( width <= 0 ) width = 1;
@@ -225,7 +225,7 @@ void FWCore::ResizeWindow(int width, int height)
     }
 }
 
-bool FWCore::CreateRenderWindow(char* title, int width, int height, unsigned char colorBits, bool fullscreenflag)
+bool FWCore::CreateRenderWindow(char* title, uint32 width, uint32 height, uint8 colorBits, bool fullscreenflag)
 {
     DWORD dwExStyle;
     DWORD dwStyle;
@@ -436,7 +436,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
     case WM_CHAR:
         {
             // Send a char event to the event manager.
-            OnCharEvent* pEvent = new OnCharEvent( (unsigned int)wParam );
+            OnCharEvent* pEvent = new OnCharEvent( (uint32)wParam );
             pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
         }
         return 0;
@@ -456,7 +456,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 InputEvent* pEvent = new InputEvent(
                     InputEvent::DeviceType::Keyboard,
                     InputEvent::DeviceState::Pressed,
-                    (unsigned int)wParam );
+                    (uint32)wParam );
 
                 pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
             }
@@ -471,7 +471,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             InputEvent* pEvent = new InputEvent(
                 InputEvent::DeviceType::Keyboard,
                 InputEvent::DeviceState::Released,
-                (unsigned int)wParam );
+                (uint32)wParam );
 
             pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
         }

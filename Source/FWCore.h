@@ -18,32 +18,32 @@ class GameCore;
 class FWCore
 {
 public:
-    FWCore(int width, int height, bgfx::RendererType::Enum renderType);
+    FWCore(uint32 width, uint32 height, bgfx::RendererType::Enum renderType);
     virtual ~FWCore();
 
-    bool Init(int width, int height);
-    int Run(GameCore& game);
+    bool Init(uint32 width, uint32 height);
+    uint32 Run(GameCore& game);
     void Shutdown();
 
-    void SetWindowSize(int width, int height);
-    void SetClientPositionAndSize(int x, int y, int width, int height, bool maximized);
-    void SetWindowPositionAndSize(int x, int y, int width, int height, bool maximized);
+    void SetWindowSize(uint32 width, uint32 height);
+    void SetClientPositionAndSize(int32 x, int32 y, uint32 width, uint32 height, bool maximized);
+    void SetWindowPositionAndSize(int32 x, int32 y, uint32 width, uint32 height, bool maximized);
 
-    bool IsKeyDown(int value);
-    bool IsMouseButtonDown(int id);
-    void GetMouseCoordinates(int* mx, int* my);
+    bool IsKeyDown(uint32 value);
+    bool IsMouseButtonDown(uint32 id);
+    void GetMouseCoordinates(int32* mx, int32* my);
 
     HWND GetWindowHandle() { return m_hWnd; }
-    unsigned int GetWindowClientWidth() { return m_WindowClientWidth; }
-    unsigned int GetWindowClientHeight() { return m_WindowClientHeight; }
+    uint32 GetWindowClientWidth() { return m_WindowClientWidth; }
+    uint32 GetWindowClientHeight() { return m_WindowClientHeight; }
 
     void SetEscapeKeyWillQuit(bool value) { m_EscapeKeyWillQuit = value; }
 
-    uint32_t GetFrameCount() { return m_FrameCount; }
+    uint32 GetFrameCount() { return m_FrameCount; }
 
 protected:
-    void ResizeWindow(int width, int height);
-    bool CreateRenderWindow(char* title, int width, int height, unsigned char colorBits, bool fullscreenflag);
+    void ResizeWindow(uint32 width, uint32 height);
+    bool CreateRenderWindow(char* title, uint32 width, uint32 height, uint8 colorBits, bool fullscreenflag);
     bool FailAndCleanup(const char* pMessage);
     void DestroyRenderWindow(bool destroyInstance);
 
@@ -54,8 +54,8 @@ protected:
 
     bool m_EscapeKeyWillQuit = true;
 
-    int m_WindowClientWidth = -1;
-    int m_WindowClientHeight = -1;
+    uint32 m_WindowClientWidth = 0;
+    uint32 m_WindowClientHeight = 0;
 
     HWND m_hWnd = nullptr;
     HINSTANCE m_hInstance = nullptr;
@@ -67,7 +67,7 @@ protected:
     bool m_WindowIsActive = false;
     bool m_FullscreenMode = false;
 
-    int m_FrameCount = 0;
+    int32 m_FrameCount = 0;
 };
 
 } // namespace fw

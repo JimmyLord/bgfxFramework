@@ -23,18 +23,16 @@ class Uniforms;
 class Mesh
 {
 public:
-    Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32_t vertsSize, const void* indices, uint32_t indicesSize);
+    Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
     virtual ~Mesh();
 
-    void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32_t vertsSize, const void* indices, uint32_t indicesSize);
+    void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
 
     void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat);
 
 protected:
     bgfx::VertexBufferHandle m_VBO;
     bgfx::IndexBufferHandle m_IBO;
-    int m_NumVerts = 0;
-    int m_NumIndices = 0;
 };
 
 } // namespace fw

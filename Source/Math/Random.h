@@ -7,24 +7,24 @@ namespace fw {
 namespace Random {
 
 // Get values from a global generator.
-void SetSeed(unsigned int seed);
-int Int(int min, int max);
-int Int(int max);
-float Float(float min, float max);
-float Float(float max);
+void SetSeed(uint32 seed);
+int32 Int(int32 min, int32 max);
+int32 Int(int32 max);
+float32 Float(float32 min, float32 max);
+float32 Float(float32 max);
 
 class Generator
 {
 public:
     Generator();
-    Generator(unsigned int seed);
+    Generator(uint32 seed);
 
-    void SetSeed(unsigned int seed);
+    void SetSeed(uint32 seed);
 
-    int Int(int min, int max);
-    int Int(int max);
-    float Float(float min, float max);
-    float Float(float max);
+    int32 Int(int32 min, int32 max);
+    int32 Int(int32 max);
+    float32 Float(float32 min, float32 max);
+    float32 Float(float32 max);
 
 protected:
     pcg32 m_RNGEngine;

@@ -31,7 +31,7 @@ Texture::Texture()
 Texture::Texture(const char* filename)
 {
     // Load the file contents.
-    long length;
+    uint32 length;
     char* fileContents = LoadCompleteFile( filename, &length );
 
     // Have stb_image decompress png from memory into a raw color array.
@@ -54,7 +54,7 @@ Texture::~Texture()
     bgfx::destroy( m_TextureHandle );
 }
 
-void Texture::Rebuild(int width, int height, Format format, void* pixels)
+void Texture::Rebuild(uint32 width, uint32 height, Format format, void* pixels)
 {
     if( bgfx::isValid( m_TextureHandle ) )
     {
@@ -82,9 +82,7 @@ void Texture::Rebuild(int width, int height, Format format, void* pixels)
 
     assert( bgfxFormat != bgfx::TextureFormat::Unknown );
 
-    m_TextureHandle = bgfx::createTexture2D(
-        width, height, false, 1, bgfxFormat,
-        0, bgfx::copy(pixels, bufferSize));
+    m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfxFormat, 0, bgfx::copy(pixels, bufferSize) );
 }
 
 } // namespace fw

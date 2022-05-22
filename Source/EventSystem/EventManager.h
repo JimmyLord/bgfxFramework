@@ -20,8 +20,8 @@ public:
     EventManager();
     ~EventManager();
 
-    void AddEvent(Event* pEvent, float delayBeforeSending = 0.0f);
-    void DispatchAllEvents(float deltaTime, GameCore* pGameCore);
+    void AddEvent(Event* pEvent, float32 delayBeforeSending = 0.0f);
+    void DispatchAllEvents(float32 deltaTime, GameCore* pGameCore);
 
 protected:
     std::queue<Event*> m_EventQueue;

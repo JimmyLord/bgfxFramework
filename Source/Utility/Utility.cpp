@@ -24,7 +24,7 @@ void OutputMessage(const char* message, ...)
     OutputDebugString( szBuff );
 }
 
-char* LoadCompleteFile(const char* filename, long* length)
+char* LoadCompleteFile(const char* filename, uint32* length)
 {
     char* filecontents = 0;
 
@@ -34,7 +34,7 @@ char* LoadCompleteFile(const char* filename, long* length)
     if( filehandle )
     {
         fseek( filehandle, 0, SEEK_END );
-        long size = ftell( filehandle );
+        uint32 size = ftell( filehandle );
         rewind( filehandle );
 
         filecontents = new char[size+1];
@@ -52,8 +52,8 @@ char* LoadCompleteFile(const char* filename, long* length)
 
 double GetSystemTime()
 {
-    unsigned __int64 freq;
-    unsigned __int64 time;
+    uint64 freq;
+    uint64 time;
 
     QueryPerformanceFrequency( (LARGE_INTEGER*)&freq );
     QueryPerformanceCounter( (LARGE_INTEGER*)&time );

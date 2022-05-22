@@ -9,7 +9,7 @@ class Material;
 
 struct NameData
 {
-    static const int c_MaxNameLength = 32;
+    static const int8 c_MaxNameLength = 32;
     char m_Name[c_MaxNameLength];
 
     NameData(const char* name)

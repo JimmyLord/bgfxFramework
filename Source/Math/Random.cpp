@@ -10,54 +10,54 @@ namespace Random {
 
 static Generator g_RNGObject;
 
-void SetSeed(unsigned int seed)     { g_RNGObject.SetSeed( seed ); }
-int Int(int min, int max)           { return g_RNGObject.Int( min, max ); }
-int Int(int max)                    { return g_RNGObject.Int( max ); }
-float Float(float min, float max)   { return g_RNGObject.Float( min, max ); }
-float Float(float max)              { return g_RNGObject.Float( max ); }
+void SetSeed(uint32 seed)               { g_RNGObject.SetSeed( seed ); }
+int32 Int(int32 min, int32 max)         { return g_RNGObject.Int( min, max ); }
+int32 Int(int32 max)                    { return g_RNGObject.Int( max ); }
+float32 Float(float32 min, float32 max) { return g_RNGObject.Float( min, max ); }
+float32 Float(float32 max)              { return g_RNGObject.Float( max ); }
 
 Generator::Generator()
     : m_RNGEngine( pcg_extras::seed_seq_from<std::random_device>() )
 {
 }
 
-Generator::Generator(unsigned int seed)
+Generator::Generator(uint32 seed)
     : m_RNGEngine( seed )
 {
 }
 
-void Generator::SetSeed(unsigned int seed)
+void Generator::SetSeed(uint32 seed)
 {
     m_RNGEngine.seed( seed );
 }
 
 // Min and max are inclusive.
-int Generator::Int(int min, int max)
+int32 Generator::Int(int32 min, int32 max)
 {
     assert( min < max );
     return min + m_RNGEngine( max-min+1 );
 }
 
 // Max is inclusive.
-int Generator::Int(int max)
+int32 Generator::Int(int32 max)
 {
     return m_RNGEngine( max+1 );
 }
 
 // Min is inclusive, max is inclusive.
-float Generator::Float(float min, float max)
+float32 Generator::Float(float32 min, float32 max)
 {
     assert( min < max );
 
-    double rand01 = m_RNGEngine()/(double)pcg32::max();
-    return (float)(min + rand01 * (max-min));
+    float64 rand01 = m_RNGEngine()/(float64)pcg32::max();
+    return (float32)(min + rand01 * (max-min));
 }
 
 // Max is inclusive.
-float Generator::Float(float max)
+float32 Generator::Float(float32 max)
 {
-    double rand01 = m_RNGEngine()/(double)pcg32::max();
-    return (float)(rand01 * max);
+    float64 rand01 = m_RNGEngine()/(float64)pcg32::max();
+    return (float32)(rand01 * max);
 }
 
 } // namespace Random

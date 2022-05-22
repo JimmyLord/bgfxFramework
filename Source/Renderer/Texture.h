@@ -29,7 +29,7 @@ public:
     virtual ~Texture();
 
     bgfx::TextureHandle GetHandle() { return m_TextureHandle; }
-    void Rebuild(int width, int height, Format format, void* pixels);
+    void Rebuild(uint32 width, uint32 height, Format format, void* pixels);
 
 protected:
     bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;

@@ -32,8 +32,8 @@ protected:
 protected:
     char* m_VertShaderString = nullptr;
     char* m_FragShaderString = nullptr;
-    long m_VertShaderStringLength = 0;
-    long m_FragShaderStringLength = 0;
+    uint32 m_VertShaderStringLength = 0;
+    uint32 m_FragShaderStringLength = 0;
 
     bgfx::ShaderHandle m_VertShader = BGFX_INVALID_HANDLE;
     bgfx::ShaderHandle m_FragShader = BGFX_INVALID_HANDLE;

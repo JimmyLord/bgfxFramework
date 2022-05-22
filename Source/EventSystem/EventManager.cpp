@@ -28,13 +28,13 @@ EventManager::~EventManager()
     }
 }
 
-void EventManager::AddEvent(Event* pEvent, float delayBeforeSending)
+void EventManager::AddEvent(Event* pEvent, float32 delayBeforeSending)
 {
     pEvent->SetDelay( delayBeforeSending );
     m_EventQueue.push( pEvent );
 }
 
-void EventManager::DispatchAllEvents(float deltaTime, GameCore* pGameCore)
+void EventManager::DispatchAllEvents(float32 deltaTime, GameCore* pGameCore)
 {
     if( m_EventQueue.empty() )
         return;

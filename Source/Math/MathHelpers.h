@@ -15,22 +15,22 @@ namespace fw {
 
 const float FEQUALEPSILON = 0.00001f;
 
-inline bool fequal(const float a, const float b, const float epsilon = FEQUALEPSILON)
+inline bool fequal(const float32 a, const float32 b, const float32 epsilon = FEQUALEPSILON)
 {
     return fabs(a - b) <= epsilon;
 }
 
-inline bool fnotequal(const float a, const float b, const float epsilon = FEQUALEPSILON)
+inline bool fnotequal(const float32 a, const float32 b, const float32 epsilon = FEQUALEPSILON)
 {
     return fabs(a - b) > epsilon;
 }
 
-inline float degreesToRads(const float number)
+inline float degreesToRads(const float32 number)
 {
     return number * PI / 180.0f;
 }
 
-inline float radsToDegrees(const float number)
+inline float radsToDegrees(const float32 number)
 {
     return number * 180.0f / PI;
 }

@@ -27,7 +27,7 @@ public:
 protected:
     void SetDelay(float delay) { m_Delay = delay; }
 
-    float m_Delay = 0.0f;
+    float32 m_Delay = 0.0f;
 };
 
 //==========================
@@ -47,7 +47,7 @@ public:
         Released,
     };
 
-    InputEvent(DeviceType deviceType, DeviceState deviceState, unsigned int keyCode)
+    InputEvent(DeviceType deviceType, DeviceState deviceState, uint32 keyCode)
     {
         m_DeviceType = deviceType;
         m_DeviceState = deviceState;
@@ -65,7 +65,7 @@ public:
 protected:
     DeviceType m_DeviceType;
     DeviceState m_DeviceState;
-    unsigned int m_KeyCode;
+    uint32 m_KeyCode;
 };
 
 //==========================
@@ -83,10 +83,10 @@ public:
     static const char* GetStaticEventType() { return "OnCharEvent"; }
     virtual const char* GetType() override { return GetStaticEventType(); }
 
-    unsigned int GetValue() { return m_Value; }
+    uint32 GetValue() { return m_Value; }
 
 protected:
-    unsigned int m_Value;
+    uint32 m_Value;
 };
 
 //==========================
@@ -105,12 +105,12 @@ public:
     static const char* GetStaticEventType() { return "WindowResizeEvent"; }
     virtual const char* GetType() override { return GetStaticEventType(); }
 
-    int GetWidth() { return m_Width; }
-    int GetHeight() { return m_Height; }
+    uint16 GetWidth() { return m_Width; }
+    uint16 GetHeight() { return m_Height; }
 
 protected:
-    int m_Width;
-    int m_Height;
+    uint16 m_Width;
+    uint16 m_Height;
 };
 
 } // namespace fw

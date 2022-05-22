@@ -26,7 +26,7 @@ Camera::~Camera()
 {
 }
 
-void Camera::Update(float deltaTime)
+void Camera::Update(float32 deltaTime)
 {
     if( m_pObjectWeAreLookingAt )
     {

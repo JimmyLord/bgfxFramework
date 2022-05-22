@@ -9,29 +9,17 @@
 
 #pragma once
 
-// This file includes many static headers.
-// Any changes to any of these headers will likely cause a full rebuild of the
-//   Framework project, which isn't desirable.
+namespace fw {
 
-// Platform headers.
-#define WIN32_LEAN_AND_MEAN
-#define NOMINMAX
-#include <Windows.h>
-#include <windowsx.h>
+typedef int8_t              int8;
+typedef int16_t             int16;
+typedef int32_t             int32;
+typedef int64_t             int64;
+typedef uint8_t             uint8;
+typedef uint16_t            uint16;
+typedef uint32_t            uint32;
+typedef uint64_t            uint64;
+typedef float               float32;
+typedef double              float64;
 
-// Core c++ headers.
-#include <assert.h>
-#include <malloc.h>
-#include <math.h>
-#include <memory.h>
-#include <stdio.h>
-#include <stdlib.h>
-
-#include <map>
-#include <unordered_map>
-#include <vector>
-#include <queue>
-#include <string>
-
-// Framework headers.
-#include "DataTypes.h"
+} // namespace fw

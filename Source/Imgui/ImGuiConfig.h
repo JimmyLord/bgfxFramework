@@ -7,8 +7,7 @@
 // 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
 // 3. This notice may not be removed or altered from any source distribution.
 
-#ifndef __ImGuiConfig_H__
-#define __ImGuiConfig_H__
+#pragma once
 
 //---- Define constructor and implicit cast operators to convert back<>forth from your math types and ImVec2/ImVec4.
 // This will be inlined as part of ImVec2 and ImVec4 class declarations.
@@ -21,5 +20,3 @@
 #define IM_VEC4_CLASS_EXTRA                                                 \
         ImVec4(const fw::vec4& f) { x = f.x; y = f.y; z = f.z; w = f.w; }    \
         operator fw::vec4() const { return fw::vec4(x,y,z,w); }
-
-#endif //__ImGuiConfig_H__

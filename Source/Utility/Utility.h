@@ -12,7 +12,7 @@
 namespace fw {
 
 void OutputMessage(const char* message, ...);
-char* LoadCompleteFile(const char* filename, long* length);
+char* LoadCompleteFile(const char* filename, uint32* length);
 double GetSystemTime();
 double GetSystemTimeSinceGameStart();
 

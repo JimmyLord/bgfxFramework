@@ -228,6 +228,15 @@ public:
     inline vec4 operator +(const vec4& o) const { return vec4(this->x + o.x, this->y + o.y, this->z + o.z, this->w + o.w); }
     inline vec4 operator -(const vec4& o) const { return vec4(this->x - o.x, this->y - o.y, this->z - o.z, this->w - o.w); }
 
+    inline vec4 operator *=(const float o) { this->x *= o; this->y *= o; this->z *= o; this->w *= o; return *this; }
+    inline vec4 operator /=(const float o) { this->x /= o; this->y /= o; this->z /= o; this->w /= o; return *this; }
+    inline vec4 operator +=(const float o) { this->x += o; this->y += o; this->z += o; this->w += o; return *this; }
+    inline vec4 operator -=(const float o) { this->x -= o; this->y -= o; this->z -= o; this->w -= o; return *this; }
+    inline vec4 operator *=(const vec4& o) { this->x *= o.x; this->y *= o.y; this->z *= o.z; this->w *= o.w; return *this; }
+    inline vec4 operator /=(const vec4& o) { this->x /= o.x; this->y /= o.y; this->z /= o.z; this->w /= o.w; return *this; }
+    inline vec4 operator +=(const vec4& o) { this->x += o.x; this->y += o.y; this->z += o.z; this->w += o.w; return *this; }
+    inline vec4 operator -=(const vec4& o) { this->x -= o.x; this->y -= o.y; this->z -= o.z; this->w -= o.w; return *this; }
+
     float& operator[] (int i) { assert(i >= 0 && i < 4); return *(&x + i); }
 
 public:
@@ -256,6 +265,10 @@ public:
     inline float DistanceFrom(const ivec2 o) const { return sqrtf(((float)x - o.x) * (x - o.x) + (y - o.y) * (y - o.y)); }
 
     //inline ivec2 Normalize() const { float len = Length(); if( fequal(len,0) ) return ivec2(x,y); len = 1.0f/len; return ivec2(x*len, y*len); }
+
+    inline void ClampX(int min, int max) { x=x<min?min:x>max?max:x; }
+    inline void ClampY(int min, int max) { y=y<min?min:y>max?max:y; }
+    inline void ClampXY(int min, int max) { x=x<min?min:x>max?max:x; y=y<min?min:y>max?max:y; }
 
     inline ivec2 WithX(int x) const { return ivec2(x, this->y); }
     inline ivec2 WithY(int y) const { return ivec2(this->x, y); }
@@ -486,6 +499,10 @@ class color4f
 public:
     color4f() {}
     color4f(float nr, float ng, float nb, float na) { r = nr; g = ng; b = nb; a = na; }
+    color4f(unsigned char nr, unsigned char ng, unsigned char nb, unsigned char na) { r = nr/255.0f; g = ng/255.0f; b = nb/255.0f; a = na/255.0f; }
+
+    inline bool operator ==(const color4f& o) const { return fequal(this->r, o.r) && fequal(this->g, o.g) && fequal(this->b, o.b) && fequal(this->a, o.a); }
+    inline bool operator !=(const color4f& o) const { return !fequal(this->r, o.r) || !fequal(this->g, o.g) || !fequal(this->b, o.b) || !fequal(this->a, o.a); }
 
     // Primary.
     static const color4f Red()              { return color4f(1.0f, 0.0f, 0.0f, 1.0f); }

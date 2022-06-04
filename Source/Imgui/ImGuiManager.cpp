@@ -87,6 +87,8 @@ void ImGuiManager::ClearInput()
         io.MouseDown[i] = false;
     }
 
+    io.MouseWheel = 0;
+
     for( int i=0; i<512; i++ )
     {
         io.KeysDown[i] = false;
@@ -122,6 +124,7 @@ void ImGuiManager::StartFrame(float deltaTime)
     io.MouseDown[0] = m_pFramework->IsMouseButtonDown( 0 );
     io.MouseDown[1] = m_pFramework->IsMouseButtonDown( 1 );
     io.MouseDown[2] = m_pFramework->IsMouseButtonDown( 2 );
+    io.MouseWheel = m_pFramework->GetMouseWheel();
 
     for( int i=0; i<256; i++ )
     {

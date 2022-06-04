@@ -11,6 +11,7 @@
 
 #include "bimg/bimg.h"
 #include "bgfx/platform.h"
+#include "Math/Vector.h"
 
 namespace fw {
 
@@ -33,6 +34,13 @@ public:
 
 protected:
     bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;
+
+    bool m_Mutable = false;
+    bgfx::TextureFormat::Enum m_Format = bgfx::TextureFormat::Unknown;
+    ivec2 m_Size = ivec2(0,0);
+    bool m_HasMips = false;
+    uint16 m_NumLayers = 1;
+    uint64 m_Flags = 0;
 };
 
 } // namespace fw

@@ -32,6 +32,7 @@ public:
     bool IsKeyDown(uint32 value);
     bool IsMouseButtonDown(uint32 id);
     void GetMouseCoordinates(int32* mx, int32* my);
+    float GetMouseWheel();
 
     HWND GetWindowHandle() { return m_hWnd; }
     uint32 GetWindowClientWidth() { return m_WindowClientWidth; }
@@ -62,6 +63,7 @@ protected:
 
     bool m_KeyStates[256] = {};
     bool m_MouseButtonStates[3] = {};
+    float m_MouseWheel = 0;
     bool m_OldKeyStates[256] = {};
     bool m_OldMouseButtonStates[3] = {};
     bool m_WindowIsActive = false;

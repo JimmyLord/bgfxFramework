@@ -111,6 +111,8 @@ uint32 FWCore::Run(GameCore& game)
 
             for( int i=0; i<3; i++ )
                 m_OldMouseButtonStates[i] = m_MouseButtonStates[i];
+
+            m_MouseWheel = 0;
         }
     }
 
@@ -203,6 +205,11 @@ void FWCore::GetMouseCoordinates(int32* mx, int32* my)
             *my = p.y;
         }
     }
+}
+
+float FWCore::GetMouseWheel()
+{
+    return m_MouseWheel;
 }
 
 // Protected methods.
@@ -535,6 +542,12 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             ReleaseCapture();
 
             pFWCore->m_MouseButtonStates[2] = false;
+        }
+        return 0;
+
+    case WM_MOUSEWHEEL:
+        {
+            pFWCore->m_MouseWheel = GET_WHEEL_DELTA_WPARAM(wParam) / 120.0f;
         }
         return 0;
 

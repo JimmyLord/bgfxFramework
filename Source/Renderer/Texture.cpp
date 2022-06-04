@@ -56,11 +56,6 @@ Texture::~Texture()
 
 void Texture::Rebuild(uint32 width, uint32 height, Format format, void* pixels)
 {
-    if( bgfx::isValid( m_TextureHandle ) )
-    {
-        bgfx::destroy( m_TextureHandle );
-    }
-
     bgfx::TextureFormat::Enum bgfxFormat = bgfx::TextureFormat::Unknown;
     unsigned int bufferSize = 0;
 
@@ -82,7 +77,37 @@ void Texture::Rebuild(uint32 width, uint32 height, Format format, void* pixels)
 
     assert( bgfxFormat != bgfx::TextureFormat::Unknown );
 
-    m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfxFormat, 0, bgfx::copy(pixels, bufferSize) );
+    if( bgfx::isValid( m_TextureHandle ) )
+    {
+        if( m_Format != bgfxFormat )
+        {
+            bgfx::destroy( m_TextureHandle );
+        }
+    }
+
+    if( m_Mutable && bgfx::isValid( m_TextureHandle ) )
+    {
+        bgfx::updateTexture2D( m_TextureHandle, 0, 0, 0, 0, width, height, bgfx::copy(pixels, bufferSize) );
+    }
+    else
+    {
+        if( pixels == 0 )
+        {
+            m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfxFormat, 0, nullptr );
+            m_Mutable = true;
+        }
+        else
+        {
+            m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfxFormat, 0, bgfx::copy(pixels, bufferSize) );
+            m_Mutable = false;
+        }
+    }
+
+    m_Format = bgfxFormat;
+    m_Size.Set( width, height );
+    m_HasMips = false;
+    m_NumLayers = 1;
+    m_Flags = 0;
 }
 
 } // namespace fw

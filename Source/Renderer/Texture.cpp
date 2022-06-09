@@ -91,6 +91,9 @@ void Texture::Rebuild(uint32 width, uint32 height, Format format, void* pixels)
     }
     else
     {
+        if( bgfx::isValid( m_TextureHandle ) )
+            bgfx::destroy( m_TextureHandle );
+
         if( pixels == 0 )
         {
             m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfxFormat, 0, nullptr );

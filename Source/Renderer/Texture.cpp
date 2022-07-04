@@ -87,6 +87,12 @@ void Texture::Rebuild(uint32 width, uint32 height, Format format, void* pixels)
 
     if( m_Mutable && bgfx::isValid( m_TextureHandle ) )
     {
+        if( m_Size != vec2(width,height) )
+        {
+            bgfx::destroy( m_TextureHandle );
+            m_TextureHandle = bgfx::createTexture2D( width, height, false, 1, bgfxFormat, 0, nullptr );
+        }
+
         bgfx::updateTexture2D( m_TextureHandle, 0, 0, 0, 0, width, height, bgfx::copy(pixels, bufferSize) );
     }
     else

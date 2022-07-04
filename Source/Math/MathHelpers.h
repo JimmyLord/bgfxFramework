@@ -79,4 +79,10 @@ template <class MyType> void DecreaseIfLower(MyType& value, MyType newValue, boo
         value = newValue;
 }
 
+static inline bool IsPowerOfTwo(uint64 x)
+{
+    // If positive and the following bitwise compare: 1000 & 0111 == 0
+    return (x>0) && ((x&(x-1)) == 0);
+}
+
 } // namespace fw

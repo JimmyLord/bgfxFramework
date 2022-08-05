@@ -34,7 +34,6 @@ void Generator::SetSeed(uint32 seed)
 // Min and max are inclusive.
 int32 Generator::Int(int32 min, int32 max)
 {
-    assert( min <= max );
     return min + m_RNGEngine( max-min+1 );
 }
 
@@ -47,8 +46,6 @@ int32 Generator::Int(int32 max)
 // Min is inclusive, max is inclusive.
 float32 Generator::Float(float32 min, float32 max)
 {
-    assert( min <= max );
-
     float64 rand01 = m_RNGEngine()/(float64)pcg32::max();
     return (float32)(min + rand01 * (max-min));
 }

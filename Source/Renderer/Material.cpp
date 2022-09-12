@@ -61,25 +61,18 @@ uint64_t c_BlendEquationConversions[6] =
     BGFX_STATE_BLEND_EQUATION_MAX,
 };
 
-uint64_t c_ColorBlendFuncConversions[7] =
+uint64_t c_BlendFuncConversions[11] =
 {
     BGFX_STATE_BLEND_ZERO,
     BGFX_STATE_BLEND_ONE,
     BGFX_STATE_BLEND_SRC_COLOR,
     BGFX_STATE_BLEND_INV_SRC_COLOR,
-    BGFX_STATE_BLEND_DST_COLOR,
-    BGFX_STATE_BLEND_INV_DST_COLOR,
-    BGFX_STATE_BLEND_SRC_ALPHA_SAT,
-};
-
-uint64_t c_AlphaBlendFuncConversions[7] =
-{
-    BGFX_STATE_BLEND_ZERO,
-    BGFX_STATE_BLEND_ONE,
     BGFX_STATE_BLEND_SRC_ALPHA,
     BGFX_STATE_BLEND_INV_SRC_ALPHA,
     BGFX_STATE_BLEND_DST_ALPHA,
     BGFX_STATE_BLEND_INV_DST_ALPHA,
+    BGFX_STATE_BLEND_DST_COLOR,
+    BGFX_STATE_BLEND_INV_DST_COLOR,
     BGFX_STATE_BLEND_SRC_ALPHA_SAT,
 };
 
@@ -113,8 +106,8 @@ uint64_t Material::GetBGFXAlphaState() const
         assert( m_ColorBlendEquation < BlendEquation::SameAsColor );
 
         uint64_t colorBlendEquation = c_BlendEquationConversions[(int)m_ColorBlendEquation];
-        uint64_t srcColorBlendFunc = c_ColorBlendFuncConversions[(int)m_SrcColorBlendFunc];
-        uint64_t dstColorBlendFunc = c_ColorBlendFuncConversions[(int)m_DstColorBlendFunc];
+        uint64_t srcColorBlendFunc = c_BlendFuncConversions[(int)m_SrcColorBlendFunc];
+        uint64_t dstColorBlendFunc = c_BlendFuncConversions[(int)m_DstColorBlendFunc];
 
         bgfxBlendState = BGFX_STATE_BLEND_EQUATION( colorBlendEquation ) | BGFX_STATE_BLEND_FUNC( srcColorBlendFunc, dstColorBlendFunc );
     }
@@ -122,15 +115,13 @@ uint64_t Material::GetBGFXAlphaState() const
     {
         assert( m_ColorBlendEquation < BlendEquation::SameAsColor );
         assert( m_AlphaBlendEquation < BlendEquation::SameAsColor );
-        assert( m_SrcColorBlendFunc != BlendFunc::SrcAlphaSaturate );
-        assert( m_DstColorBlendFunc != BlendFunc::SrcAlphaSaturate );
 
         uint64_t colorBlendEquation = c_BlendEquationConversions[(int)m_ColorBlendEquation];
         uint64_t alphaBlendEquation = c_BlendEquationConversions[(int)m_AlphaBlendEquation];
-        uint64_t srcColorBlendFunc = c_ColorBlendFuncConversions[(int)m_SrcColorBlendFunc];
-        uint64_t dstColorBlendFunc = c_ColorBlendFuncConversions[(int)m_DstColorBlendFunc];
-        uint64_t srcAlphaBlendFunc = c_AlphaBlendFuncConversions[(int)m_SrcAlphaBlendFunc];
-        uint64_t dstAlphaBlendFunc = c_AlphaBlendFuncConversions[(int)m_DstAlphaBlendFunc];
+        uint64_t srcColorBlendFunc = c_BlendFuncConversions[(int)m_SrcColorBlendFunc];
+        uint64_t dstColorBlendFunc = c_BlendFuncConversions[(int)m_DstColorBlendFunc];
+        uint64_t srcAlphaBlendFunc = c_BlendFuncConversions[(int)m_SrcAlphaBlendFunc];
+        uint64_t dstAlphaBlendFunc = c_BlendFuncConversions[(int)m_DstAlphaBlendFunc];
 
         bgfxBlendState = BGFX_STATE_BLEND_EQUATION_SEPARATE( colorBlendEquation, alphaBlendEquation )
             | BGFX_STATE_BLEND_FUNC_SEPARATE( srcColorBlendFunc, srcAlphaBlendFunc, dstColorBlendFunc, dstAlphaBlendFunc );

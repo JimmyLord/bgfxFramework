@@ -35,10 +35,14 @@ public:
     {
         Zero,
         One,
-        SrcValue,
-        InvSrcValue,
-        DstValue,
-        InvDstValue,
+        SrcColor,
+        InvSrcColor,
+        SrcAlpha,
+        InvSrcAlpha,
+        DstAlpha,
+        InvDstAlpha,
+        DstColor,
+        InvDstColor,
         SrcAlphaSaturate,
         SameAsColor, // Needs to stay at end of list.
     };
@@ -101,8 +105,8 @@ protected:
 
     BlendEquation m_ColorBlendEquation = BlendEquation::Add;
     BlendEquation m_AlphaBlendEquation = BlendEquation::SameAsColor;
-    BlendFunc m_SrcColorBlendFunc = BlendFunc::SrcValue;
-    BlendFunc m_DstColorBlendFunc = BlendFunc::InvSrcValue;
+    BlendFunc m_SrcColorBlendFunc = BlendFunc::SrcAlpha;
+    BlendFunc m_DstColorBlendFunc = BlendFunc::InvSrcAlpha;
     BlendFunc m_SrcAlphaBlendFunc = BlendFunc::SameAsColor;
     BlendFunc m_DstAlphaBlendFunc = BlendFunc::SameAsColor;
 

@@ -30,6 +30,7 @@
 #include "EventSystem/EventManager.h"
 #include "Imgui/ImGuiManager.h"
 #include "Math/MathHelpers.h"
+#include "Math/MathOps.h"
 #include "Math/Matrix.h"
 #include "Math/Random.h"
 #include "Objects/Camera.h"

@@ -22,7 +22,7 @@ public:
 
     virtual void Update(float32 deltaTime) override;
 
-    void Enable();
+    void Enable(int viewID);
 
     // Getters.
     mat4& GetViewMatrix() { return m_ViewMatrix; }

@@ -40,10 +40,10 @@ void Camera::Update(float32 deltaTime)
     m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, m_AspectRatio, 0.01f, 100.0f );
 }
 
-void Camera::Enable()
+void Camera::Enable(int viewID)
 {
     // Setup view and projection matrices and uniforms.
-    bgfx::setViewTransform( 0, &m_ViewMatrix.m11, &m_ProjectionMatrix.m11 );
+    bgfx::setViewTransform( viewID, &m_ViewMatrix.m11, &m_ProjectionMatrix.m11 );
 }
 
 } // namespace fw

@@ -36,7 +36,7 @@ void Mesh::Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uin
     m_IBO = bgfx::createIndexBuffer( bgfx::makeRef(indices, indicesSize) );
 }
 
-void Mesh::Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)
+void Mesh::Draw(int viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat)
 {
     // Set vertex and index buffer.
     bgfx::setVertexBuffer( 0, m_VBO );

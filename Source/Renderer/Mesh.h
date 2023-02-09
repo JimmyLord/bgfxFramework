@@ -28,7 +28,7 @@ public:
 
     void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
 
-    void Draw(bgfx::ViewId viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat);
+    void Draw(int viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat);
 
 protected:
     bgfx::VertexBufferHandle m_VBO;

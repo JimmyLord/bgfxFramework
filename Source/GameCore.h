@@ -27,7 +27,8 @@ public:
     virtual void StartFrame(float deltaTime) = 0;
     virtual void OnEvent(Event* pEvent) = 0;
     virtual void Update(float deltaTime) = 0;
-    virtual void Draw();
+    virtual void Draw() = 0;
+    virtual void DrawIntoView(int viewID);
     virtual void OnShutdown() = 0;
 
     // Getters.

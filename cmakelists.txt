@@ -9,8 +9,7 @@ file( GLOB_RECURSE bimgSourceFiles
 	Libraries/bimg/src/*.cpp
 	Libraries/bimg/src/*.h
 	Libraries/bimg/include/bimg/*.h
-	Libraries/bimg/3rdparty/src/decoder/*.cc
-	Libraries/bimg/3rdparty/src/include/*.h
+	Libraries/bimg/3rdparty/astc-encoder/source/*.cpp
 )
 file( GLOB bimgSourceFilesNonRecursive
 	Libraries/bimg/3rdparty/astc-codec/src/decoder/*.cc
@@ -28,12 +27,15 @@ target_include_directories( bimg PUBLIC
 	Libraries/bimg/3rdparty
 	Libraries/bimg/3rdparty/astc-codec/include
 	Libraries/bimg/3rdparty/astc-codec
-	Libraries/bimg/3rdparty/tinyexr/deps/miniz
+	Libraries/bimg/3rdparty/astc-encoder/include
 	Libraries/bimg/3rdparty/iqa/include
+	Libraries/bimg/3rdparty/tinyexr/deps/miniz
 	Libraries/bx/include
 	Libraries/bx/include/compat/msvc
 )
 
+target_compile_features( bimg PRIVATE cxx_std_17 )
+target_compile_options( bimg PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( bimg PUBLIC "BX_CONFIG_DEBUG=1" )
 
 # PCH Files
@@ -64,6 +66,8 @@ target_include_directories( bx PUBLIC
 	Libraries/bx/3rdparty
 )
 
+target_compile_features( bx PRIVATE cxx_std_17 )
+target_compile_options( bx PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( bx PUBLIC "BX_CONFIG_DEBUG=1" )
 target_compile_definitions( bx PUBLIC "__STDC_FORMAT_MACROS" )
 target_compile_definitions( bx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
@@ -97,7 +101,7 @@ set_target_properties( bgfx PROPERTIES FOLDER "bgfx" )
 target_include_directories( bgfx PUBLIC
 	Libraries/bgfx/include
 	Libraries/bgfx/3rdParty
-	Libraries/bgfx/3rdParty/dxsdk/include
+	Libraries/bgfx/3rdparty/directx-headers/include/directx
 	Libraries/bgfx/3rdParty/khronos
 	Libraries/bx/include
 	Libraries/bx/include/compat/msvc
@@ -105,6 +109,8 @@ target_include_directories( bgfx PUBLIC
 	Libraries/bimg/3rdParty
 )
 
+target_compile_features( bgfx PRIVATE cxx_std_17 )
+target_compile_options( bgfx PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( bgfx PUBLIC "BX_CONFIG_DEBUG=1" )
 target_compile_definitions( bgfx PUBLIC "__STDC_FORMAT_MACROS" )
 target_compile_definitions( bgfx PUBLIC "_CRT_SECURE_NO_WARNINGS" )
@@ -154,6 +160,7 @@ target_include_directories( Framework PUBLIC
 )
 
 target_compile_features( Framework PRIVATE cxx_std_17 )
+target_compile_options( Framework PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( Framework PUBLIC "BX_CONFIG_DEBUG=1" )
 
 # PCH Files

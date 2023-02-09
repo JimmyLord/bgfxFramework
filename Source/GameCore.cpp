@@ -17,7 +17,7 @@
 
 namespace fw {
 
-void GameCore::Draw()
+void GameCore::DrawIntoView(int viewID)
 {
     auto group = m_ECSRegistry.group<fw::TransformData>( entt::get<fw::MeshData> );
     for( auto entity : group )
@@ -26,7 +26,6 @@ void GameCore::Draw()
 
         mat4 worldMat;
         worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
-		bgfx::ViewId viewID = 0; // TODO: unhardcode this.
         meshData.pMesh->Draw( viewID, m_pUniforms, meshData.pMaterial, &worldMat );
     }
 }

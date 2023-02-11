@@ -2,7 +2,7 @@
 #include "SpriteSheet.h"
 #include "Utility/Utility.h"
 
-#include "../Libraries/rapidjson/include/rapidjson/document.h"
+#include "nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
 
@@ -10,26 +10,25 @@ SpriteSheet::SpriteSheet(const char* filename, Texture* pTexture)
 	: m_pTexture( pTexture )
 {
     const char* jsonString = fw::LoadCompleteFile( filename, nullptr );
-    rapidjson::Document document;
-    document.Parse( jsonString );
+    nlohmann::json jSpriteSheet = nlohmann::json::parse( jsonString );
     delete[] jsonString;
 
-    int sheetWidth = document["Width"].GetInt();
-    int sheetHeight = document["Height"].GetInt();
+    int sheetWidth = jSpriteSheet["Width"];
+    int sheetHeight = jSpriteSheet["Height"];
 
-    rapidjson::Value& spriteArray = document["Sprites"];
-    for( rapidjson::SizeType i=0; i<spriteArray.Size(); i++ )
+    nlohmann::json& jSpriteArray = jSpriteSheet["Sprites"];
+    for( int i=0; i<jSpriteArray.size(); i++ )
     {
-        rapidjson::Value& sprite = spriteArray[i];
+        nlohmann::json& jSprite = jSpriteArray[i];
 
-        float x = sprite["X"].GetFloat() + 0.5f;
-        float y = sprite["Y"].GetFloat() + 0.5f;
-        float w = sprite["W"].GetFloat() - 1.0f;
-        float h = sprite["H"].GetFloat() - 1.0f;
+        float x = jSprite["X"] + 0.5f;
+        float y = jSprite["Y"] + 0.5f;
+        float w = jSprite["W"] - 1.0f;
+        float h = jSprite["H"] - 1.0f;
         
-        const char* name = sprite["Name"].GetString();
+        std::string name = jSprite["Name"];
 
-        m_Sprites[name] = { vec2(w/sheetWidth, h/sheetHeight), vec2(x/sheetWidth, y/sheetHeight) };
+        m_Sprites[name.c_str()] = { vec2(w/sheetWidth, h/sheetHeight), vec2(x/sheetWidth, y/sheetHeight) };
     }
 }
 

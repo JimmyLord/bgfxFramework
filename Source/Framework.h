@@ -20,6 +20,7 @@
 #include "Imgui/ImGuiConfig.h"
 #include "../Libraries/imgui/imgui.h"
 #include "../Libraries/entt/src/entt/entt.hpp"
+#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 #include "bgfx/platform.h"
 

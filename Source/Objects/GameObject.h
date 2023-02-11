@@ -11,6 +11,7 @@
 
 #include "Math/Vector.h"
 #include "../Libraries/entt/src/entt/entt.hpp"
+#include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
 
 namespace fw {
 
@@ -33,6 +34,10 @@ public:
 
     // Getters.
     entt::entity GetEntityID() { return m_EntityID; }
+
+    // Save/Load.
+    virtual void SaveToJSON(nlohmann::json& jGameObject);
+    virtual void LoadFromJSON(nlohmann::json& jGameObject);
 
 protected:
     Scene* m_pScene = nullptr;

@@ -26,28 +26,40 @@ void OutputMessage(const char* message, ...)
 
 char* LoadCompleteFile(const char* filename, uint32* length)
 {
-    char* filecontents = 0;
+    char* fileContents = 0;
 
-    FILE* filehandle;
-    errno_t error = fopen_s( &filehandle, filename, "rb" );
+    FILE* fileHandle;
+    errno_t error = fopen_s( &fileHandle, filename, "rb" );
 
-    if( filehandle )
+    if( fileHandle )
     {
-        fseek( filehandle, 0, SEEK_END );
-        uint32 size = ftell( filehandle );
-        rewind( filehandle );
+        fseek( fileHandle, 0, SEEK_END );
+        uint32 size = ftell( fileHandle );
+        rewind( fileHandle );
 
-        filecontents = new char[size+1];
-        fread( filecontents, size, 1, filehandle );
-        filecontents[size] = 0;
+        fileContents = new char[size+1];
+        fread( fileContents, size, 1, fileHandle );
+        fileContents[size] = 0;
 
         if( length )
             *length = size;
 
-        fclose( filehandle );
+        fclose( fileHandle );
     }
 
-    return filecontents;
+    return fileContents;
+}
+
+void SaveCompleteFile(const char* filename, const char* fileContents, uint32 length)
+{
+    FILE* fileHandle;
+    errno_t error = fopen_s( &fileHandle, filename, "wb" );
+
+    if( fileHandle )
+    {
+        fwrite( fileContents, length, 1, fileHandle );
+        fclose( fileHandle );
+    }
 }
 
 double GetSystemTime()

@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
+
 namespace fw {
 
 class GameCore;
@@ -29,7 +31,12 @@ public:
     virtual void Draw(int viewID);
 
     void DrawIntoView(int viewID);
+    
+    // Save/Load.
+    virtual void SaveToJSON(nlohmann::json& jScene);
+    virtual void LoadFromJSON(nlohmann::json& jScene);
 
+    // Editor.
     void Editor_DisplayObjectList();
         
     // ECS.

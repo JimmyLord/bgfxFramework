@@ -13,12 +13,12 @@
 [submodule "Framework/Libraries/imgui"]
 	path = Libraries/imgui
 	url = https://github.com/ocornut/imgui.git
-[submodule "Framework/Libraries/rapidjson"]
-	path = Libraries/rapidjson
-	url = https://github.com/Tencent/rapidjson.git
 [submodule "Framework/Libraries/pcg-cpp"]
 	path = Libraries/pcg-cpp
 	url = https://github.com/imneme/pcg-cpp.git
 [submodule "Framework/Libraries/entt"]
 	path = Libraries/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "Libraries/nlohmann-json"]
+	path = Libraries/nlohmann-json
+	url = https://github.com/nlohmann/json.git

@@ -17,6 +17,7 @@
 #include "Objects/GameObject.h"
 #include "Renderer/Mesh.h"
 #include "../Libraries/imgui/imgui.h"
+#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
 
@@ -85,6 +86,23 @@ void Scene::DrawIntoView(int viewID)
         worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
         meshData.pMesh->Draw( viewID, pUniforms, meshData.pMaterial, &worldMat );
     }
+}
+
+void Scene::SaveToJSON(nlohmann::json& jScene)
+{
+    nlohmann::json jGameObjectArray = nlohmann::json::array();
+
+    for( GameObject* pObject : m_Objects )
+    {
+        nlohmann::json jGameObject;
+        pObject->SaveToJSON( jGameObject );
+        jGameObjectArray.push_back( jGameObject );
+    }
+    jScene["Objects"] = jGameObjectArray;
+}
+
+void Scene::LoadFromJSON(nlohmann::json& jScene)
+{
 }
 
 entt::entity Scene::CreateEntity()

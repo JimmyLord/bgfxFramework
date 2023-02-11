@@ -41,39 +41,10 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::SaveToJSON(nlohmann::json& jGameObject)
 {
-    nlohmann::json jComponentArray = nlohmann::json::array();
-    jGameObject["Components"] = jComponentArray;
+    //nlohmann::json jComponentArray = nlohmann::json::array();
+    //jGameObject["Components"] = jComponentArray;
 
-    const NameData& nameData = m_pScene->GetECSRegistry().get<NameData>( m_EntityID );
-    const TransformData& transformData = m_pScene->GetECSRegistry().get<TransformData>( m_EntityID );
-    const MeshData& meshData = m_pScene->GetECSRegistry().get<MeshData>( m_EntityID );
-    
-    jGameObject["Name"] = nameData.m_Name;
-    
-    jGameObject["Position"] = nlohmann::json::array();
-    jGameObject["Position"].push_back( transformData.position.x );
-    jGameObject["Position"].push_back( transformData.position.y );
-    jGameObject["Position"].push_back( transformData.position.z );
-    
-    jGameObject["Rotation"] = nlohmann::json::array();
-    jGameObject["Rotation"].push_back( transformData.rotation.x );
-    jGameObject["Rotation"].push_back( transformData.rotation.y );
-    jGameObject["Rotation"].push_back( transformData.rotation.z );
-
-    jGameObject["Scale"] = nlohmann::json::array();
-    jGameObject["Scale"].push_back( transformData.scale.x );
-    jGameObject["Scale"].push_back( transformData.scale.y );
-    jGameObject["Scale"].push_back( transformData.scale.z );
-
-    //jGameObject["Mesh"] = (int)meshData.pMesh;
-    //jGameObject["Material"] = (int)meshData.pMaterial;
-    
-    //for( auto& pComponent :  )
-    //{
-    //    nlohmann::json jComponent;
-    //    pComponent->SaveToJSON( jComponent );
-    //    jComponentArray.push_back( jComponent );
-    //}
+    m_pScene->GetComponentManager()->SaveGameObjectComponentsToJSON( this, jGameObject );
 }
 
 void GameObject::LoadFromJSON(nlohmann::json& jGameObject)

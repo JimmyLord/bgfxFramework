@@ -33,6 +33,7 @@ public:
     virtual void Update(float deltaTime);
 
     // Getters.
+    Scene* GetScene() { return m_pScene; }
     entt::entity GetEntityID() { return m_EntityID; }
 
     // Save/Load.

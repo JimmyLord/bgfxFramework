@@ -9,13 +9,15 @@
 
 #pragma once
 
+#include "../Libraries/entt/src/entt/entt.hpp"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
 
 namespace fw {
 
+class ComponentManager;
+class Event;
 class GameCore;
 class GameObject;
-class Event;
 
 class Scene
 {
@@ -40,12 +42,14 @@ public:
     void Editor_DisplayObjectList();
         
     // ECS.
+    ComponentManager* GetComponentManager() { return m_pComponentManager; }
     entt::registry& GetECSRegistry() { return m_ECSRegistry; }
     entt::entity CreateEntity();
 
 protected:
     // Members.
     GameCore* m_pGameCore = nullptr;
+    ComponentManager* m_pComponentManager = nullptr;
 
     // ECS.
     entt::registry m_ECSRegistry;

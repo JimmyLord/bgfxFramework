@@ -17,22 +17,4 @@
 
 namespace fw {
 
-void GameCore::DrawIntoView(int viewID)
-{
-    auto group = m_ECSRegistry.group<fw::TransformData>( entt::get<fw::MeshData> );
-    for( auto entity : group )
-    {
-        auto& [transformData, meshData] = group.get<fw::TransformData, fw::MeshData>( entity );
-
-        mat4 worldMat;
-        worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
-        meshData.pMesh->Draw( viewID, m_pUniforms, meshData.pMaterial, &worldMat );
-    }
-}
-
-entt::entity GameCore::CreateEntity()
-{
-    return m_ECSRegistry.create();
-}
-
 } // namespace fw

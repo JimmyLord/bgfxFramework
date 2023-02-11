@@ -41,4 +41,5 @@
 #include "Renderer/ShaderProgram.h"
 #include "Renderer/Texture.h"
 #include "Renderer/Uniforms.h"
+#include "Scenes/Scene.h"
 #include "Utility/Utility.h"

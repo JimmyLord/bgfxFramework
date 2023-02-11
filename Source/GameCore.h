@@ -28,17 +28,12 @@ public:
     virtual void OnEvent(Event* pEvent) = 0;
     virtual void Update(float deltaTime) = 0;
     virtual void Draw() = 0;
-    virtual void DrawIntoView(int viewID);
     virtual void OnShutdown() = 0;
 
     // Getters.
     FWCore* GetFramework() { return &m_FWCore; }
     EventManager* GetEventManager() { return m_pEventManager; }
-    entt::registry& GetECSRegistry() { return m_ECSRegistry; }
     Uniforms* GetUniforms() { return m_pUniforms; }
-
-    // ECS.
-    entt::entity CreateEntity();
 
 protected:
     FWCore& m_FWCore;
@@ -48,9 +43,6 @@ protected:
 
     // Events.
     EventManager* m_pEventManager = nullptr;
-
-    // ECS.
-    entt::registry m_ECSRegistry;
 };
 
 } // namespace fw

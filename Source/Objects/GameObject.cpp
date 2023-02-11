@@ -13,24 +13,25 @@
 #include "GameObject.h"
 #include "Components/CoreComponents.h"
 #include "Renderer/Mesh.h"
+#include "Scenes/Scene.h"
 
 namespace fw {
 
-GameObject::GameObject(GameCore* pGameCore, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
-    : m_pGameCore( pGameCore )
+GameObject::GameObject(Scene* pScene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
+    : m_pScene( pScene )
 {
-    m_EntityID = pGameCore->GetECSRegistry().create();
-    pGameCore->GetECSRegistry().emplace<TransformData>( m_EntityID, pos, vec3(0), vec3(1) );
-    pGameCore->GetECSRegistry().emplace<NameData>( m_EntityID, name.c_str() );
+    m_EntityID = m_pScene->GetECSRegistry().create();
+    m_pScene->GetECSRegistry().emplace<TransformData>( m_EntityID, pos, vec3(0), vec3(1) );
+    m_pScene->GetECSRegistry().emplace<NameData>( m_EntityID, name.c_str() );
     if( pMesh != nullptr )
     {
-        pGameCore->GetECSRegistry().emplace<MeshData>( m_EntityID, pMesh, pMaterial );
+        m_pScene->GetECSRegistry().emplace<MeshData>( m_EntityID, pMesh, pMaterial );
     }
 }
 
 GameObject::~GameObject()
 {
-    m_pGameCore->GetECSRegistry().destroy( m_EntityID );
+    m_pScene->GetECSRegistry().destroy( m_EntityID );
 }
 
 void GameObject::Update(float deltaTime)

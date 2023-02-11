@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Jimmy Lord
+// Copyright (c) 2022-2023 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 // Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
@@ -9,35 +9,42 @@
 
 #pragma once
 
-#include "Math/Vector.h"
-#include "../Libraries/entt/src/entt/entt.hpp"
-
 namespace fw {
 
-class Camera;
 class GameCore;
-class Material;
-class Mesh;
-class Scene;
-class ShaderProgram;
-class Texture;
-class Uniforms;
+class GameObject;
+class Event;
 
-class GameObject
+class Scene
 {
 public:
-    GameObject(Scene* pScene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial);
-    virtual ~GameObject();
+    Scene(GameCore* pGameCore);
+    virtual ~Scene();
 
+    virtual void Init();
+    virtual void OnShutdown();
+    virtual void StartFrame(float deltaTime);
+    virtual void OnEvent(Event* pEvent);
     virtual void Update(float deltaTime);
+    virtual void Draw(int viewID);
 
-    // Getters.
-    entt::entity GetEntityID() { return m_EntityID; }
+    void DrawIntoView(int viewID);
+
+    void Editor_DisplayObjectList();
+        
+    // ECS.
+    entt::registry& GetECSRegistry() { return m_ECSRegistry; }
+    entt::entity CreateEntity();
 
 protected:
-    Scene* m_pScene = nullptr;
+    // Members.
+    GameCore* m_pGameCore = nullptr;
 
-    entt::entity m_EntityID = entt::null;
+    // ECS.
+    entt::registry m_ECSRegistry;
+
+    // GameObjects.
+    std::vector<GameObject*> m_Objects;
 };
 
 } // namespace fw

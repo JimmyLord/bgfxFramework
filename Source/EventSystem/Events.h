@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Jimmy Lord
+// Copyright (c) 2022-2023 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 // Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
@@ -10,6 +10,8 @@
 #pragma once
 
 namespace fw {
+
+class GameObject;
 
 //==========================
 // Base event class
@@ -111,6 +113,27 @@ public:
 protected:
     uint16 m_Width;
     uint16 m_Height;
+};
+
+//==========================
+// RemoveFromGame event class
+//==========================
+class RemoveFromGameEvent : public Event
+{
+public:
+    RemoveFromGameEvent(GameObject* pObject)
+    {
+        m_pObject = pObject;
+    }
+    virtual ~RemoveFromGameEvent() {}
+
+    static const char* GetStaticEventType() { return "RemoveFromGameEvent"; }
+    virtual const char* GetType() override { return GetStaticEventType(); }
+
+    GameObject* GetGameObject() { return m_pObject; }
+
+protected:
+    GameObject* m_pObject;
 };
 
 } // namespace fw

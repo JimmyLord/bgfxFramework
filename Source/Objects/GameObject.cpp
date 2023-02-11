@@ -11,12 +11,18 @@
 
 #include "GameCore.h"
 #include "GameObject.h"
+#include "Components/CoreComponentManager.h"
 #include "Components/CoreComponents.h"
-#include "Renderer/Mesh.h"
+#include "Resources/Mesh.h"
 #include "Scenes/Scene.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
+
+GameObject::GameObject(Scene* pScene)
+    : m_pScene( pScene )
+{
+    m_EntityID = m_pScene->GetECSRegistry().create();
+}
 
 GameObject::GameObject(Scene* pScene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
     : m_pScene( pScene )
@@ -41,14 +47,12 @@ void GameObject::Update(float deltaTime)
 
 void GameObject::SaveToJSON(nlohmann::json& jGameObject)
 {
-    //nlohmann::json jComponentArray = nlohmann::json::array();
-    //jGameObject["Components"] = jComponentArray;
-
     m_pScene->GetComponentManager()->SaveGameObjectComponentsToJSON( this, jGameObject );
 }
 
 void GameObject::LoadFromJSON(nlohmann::json& jGameObject)
 {
+    m_pScene->GetComponentManager()->LoadGameObjectComponentsFromJSON( this, jGameObject );
 }
 
 } // namespace fw

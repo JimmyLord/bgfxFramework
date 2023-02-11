@@ -6,8 +6,9 @@
 
 namespace fw {
 
-SpriteSheet::SpriteSheet(const char* filename, Texture* pTexture)
-	: m_pTexture( pTexture )
+SpriteSheet::SpriteSheet(const char* name, const char* filename, Texture* pTexture)
+    : Resource( name )
+    , m_pTexture( pTexture )
 {
     const char* jsonString = fw::LoadCompleteFile( filename, nullptr );
     nlohmann::json jSpriteSheet = nlohmann::json::parse( jsonString );

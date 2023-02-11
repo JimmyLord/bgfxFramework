@@ -8,13 +8,21 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include "CoreHeaders.h"
-#include "GameCore.h"
-#include "Components/CoreComponents.h"
-#include "Math/Vector.h"
-#include "Math/Matrix.h"
-#include "Resources/Material.h"
-#include "Resources/Mesh.h"
+
+#include "bimg/bimg.h"
+#include "bgfx/platform.h"
+
+#include "Resources/Resource.h"
 
 namespace fw {
+
+Resource::Resource(const char* name)
+    : m_Name( name )
+{
+}
+
+Resource::~Resource()
+{
+}
 
 } // namespace fw

@@ -15,7 +15,7 @@
 #include "EventSystem/Events.h"
 #include "Math/Matrix.h"
 #include "Objects/GameObject.h"
-#include "Renderer/Mesh.h"
+#include "Resources/Mesh.h"
 #include "../Libraries/imgui/imgui.h"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
@@ -103,6 +103,14 @@ void Scene::SaveToJSON(nlohmann::json& jScene)
 
 void Scene::LoadFromJSON(nlohmann::json& jScene)
 {
+    nlohmann::json jGameObjectArray = jScene["Objects"];
+
+    for( nlohmann::json jGameObject : jGameObjectArray )
+    {
+        GameObject* pObject = new GameObject( this );
+        pObject->LoadFromJSON( jGameObject );
+        m_Objects.push_back( pObject );
+    }
 }
 
 entt::entity Scene::CreateEntity()

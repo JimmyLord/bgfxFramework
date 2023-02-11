@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Math/Vector.h"
+#include "Resources/Resource.h"
 
 namespace fw {
 
@@ -17,7 +18,7 @@ class ShaderProgram;
 class Texture;
 class Uniforms;
 
-class Material
+class Material : public Resource
 {
 public:
     enum class BlendEquation // Change c_BlendEquationConversions if new values added.
@@ -73,8 +74,8 @@ public:
     };
 
 public:
-    Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha);
-    Material(ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha, vec4 uvScaleOffset);
+    Material(const char* name, ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha);
+    Material(const char* name, ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha, vec4 uvScaleOffset);
     virtual ~Material();
 
     void Enable(const Uniforms* pUniforms) const;

@@ -16,11 +16,13 @@
 
 namespace fw {
 
-ShaderProgram::ShaderProgram()
+ShaderProgram::ShaderProgram(const char* name)
+    : Resource( name )
 {
 }
 
-ShaderProgram::ShaderProgram(const char* shaderFolder, const char* vertFilename, const char* fragFilename)
+ShaderProgram::ShaderProgram(const char* name, const char* shaderFolder, const char* vertFilename, const char* fragFilename)
+    : Resource( name )
 {
     Init( shaderFolder, vertFilename, fragFilename );
 }

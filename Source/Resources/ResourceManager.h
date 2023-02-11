@@ -9,43 +9,41 @@
 
 #pragma once
 
-#include "entt/src/entt/entt.hpp"
+#include <map>
+#include <string>
 
 namespace fw {
 
-class Event;
-class EventManager;
-class FWCore;
-class ResourceManager;
-class Uniforms;
+class Mesh;
+class Material;
+class ShaderProgram;
+class SpriteSheet;
+class Texture;
 
-class GameCore
+class ResourceManager
 {
 public:
-    GameCore(FWCore& fwCore) : m_FWCore( fwCore ) {}
-    virtual ~GameCore() = 0 {}
+    ResourceManager();
+    ~ResourceManager();
 
-    virtual void StartFrame(float deltaTime) = 0;
-    virtual void OnEvent(Event* pEvent) = 0;
-    virtual void Update(float deltaTime) = 0;
-    virtual void Draw() = 0;
-    virtual void OnShutdown() = 0;
+    void AddMesh(Mesh* pMesh);
+    void AddShader(ShaderProgram* pShader);
+    void AddTexture(Texture* pTexture);
+    void AddMaterial(Material* pMaterial);
+    void AddSpriteSheet(SpriteSheet* pSpriteSheet);
 
-    // Getters.
-    FWCore* GetFramework() { return &m_FWCore; }
-    ResourceManager* GetResourceManager() { return m_pResources; }
-    Uniforms* GetUniforms() { return m_pUniforms; }
-    EventManager* GetEventManager() { return m_pEventManager; }
+    Mesh* GetMesh(std::string name);
+    ShaderProgram* GetShader(std::string name);
+    Texture* GetTexture(std::string name);
+    Material* GetMaterial(std::string name);
+    SpriteSheet* GetSpriteSheet(std::string name);
 
 protected:
-    FWCore& m_FWCore;
-
-    // Resources.
-    Uniforms* m_pUniforms = nullptr;
-    ResourceManager* m_pResources = nullptr;
-
-    // Events.
-    EventManager* m_pEventManager = nullptr;
+    std::map<std::string, fw::Mesh*> m_Meshes;
+    std::map<std::string, fw::ShaderProgram*> m_Shaders;
+    std::map<std::string, fw::Texture*> m_Textures;
+    std::map<std::string, fw::Material*> m_Materials;
+    std::map<std::string, fw::SpriteSheet*> m_SpriteSheets;
 };
 
 } // namespace fw

@@ -27,6 +27,7 @@ class Uniforms;
 class GameObject
 {
 public:
+    GameObject(Scene* pScene);
     GameObject(Scene* pScene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial);
     virtual ~GameObject();
 

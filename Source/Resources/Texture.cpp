@@ -24,11 +24,14 @@
 
 namespace fw {
 
-Texture::Texture()
+Texture::Texture(const char* name)
+    : Resource( name )
 {
+    assert( false );
 }
 
-Texture::Texture(const char* filename)
+Texture::Texture(const char* name, const char* filename)
+    : Resource( name )
 {
     // Load the file contents.
     uint32 length;

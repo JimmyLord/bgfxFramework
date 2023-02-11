@@ -14,12 +14,13 @@
 #include "Mesh.h"
 #include "ShaderProgram.h"
 #include "Math/Matrix.h"
-#include "Renderer/Material.h"
+#include "Resources/Material.h"
 #include "Utility/Utility.h"
 
 namespace fw {
 
-Mesh::Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize)
+Mesh::Mesh(const char* name, const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize)
+    : Resource( name )
 {
     Create( vertexFormat, verts, vertsSize, indices, indicesSize );
 }

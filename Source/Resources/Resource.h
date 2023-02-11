@@ -9,43 +9,22 @@
 
 #pragma once
 
-#include "entt/src/entt/entt.hpp"
+#include "bimg/bimg.h"
+#include "bgfx/platform.h"
+#include "Math/Vector.h"
 
 namespace fw {
 
-class Event;
-class EventManager;
-class FWCore;
-class ResourceManager;
-class Uniforms;
-
-class GameCore
+class Resource
 {
 public:
-    GameCore(FWCore& fwCore) : m_FWCore( fwCore ) {}
-    virtual ~GameCore() = 0 {}
+    Resource(const char* name);
+    virtual ~Resource();
 
-    virtual void StartFrame(float deltaTime) = 0;
-    virtual void OnEvent(Event* pEvent) = 0;
-    virtual void Update(float deltaTime) = 0;
-    virtual void Draw() = 0;
-    virtual void OnShutdown() = 0;
-
-    // Getters.
-    FWCore* GetFramework() { return &m_FWCore; }
-    ResourceManager* GetResourceManager() { return m_pResources; }
-    Uniforms* GetUniforms() { return m_pUniforms; }
-    EventManager* GetEventManager() { return m_pEventManager; }
+    const char* GetName() { return m_Name; }
 
 protected:
-    FWCore& m_FWCore;
-
-    // Resources.
-    Uniforms* m_pUniforms = nullptr;
-    ResourceManager* m_pResources = nullptr;
-
-    // Events.
-    EventManager* m_pEventManager = nullptr;
+    const char* m_Name;
 };
 
 } // namespace fw

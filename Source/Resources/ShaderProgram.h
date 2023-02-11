@@ -10,14 +10,15 @@
 #pragma once
 
 #include "bgfx/platform.h"
+#include "Resources/Resource.h"
 
 namespace fw {
 
-class ShaderProgram
+class ShaderProgram : public Resource
 {
 public:
-    ShaderProgram();
-    ShaderProgram(const char* shaderFolder, const char* vertFilename, const char* fragFilename);
+    ShaderProgram(const char* name);
+    ShaderProgram(const char* name, const char* shaderFolder, const char* vertFilename, const char* fragFilename);
     virtual ~ShaderProgram();
 
     // Getters.

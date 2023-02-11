@@ -1,12 +1,13 @@
 #pragma once
 
 #include "Math/Vector.h"
+#include "Resources/Resource.h"
 
 namespace fw {
 
 class Texture;
 
-class SpriteSheet
+class SpriteSheet : public Resource
 {
 public:
     struct SpriteInfo
@@ -19,7 +20,7 @@ public:
     };
 
 public:
-    SpriteSheet(const char* filename, Texture* pTexture);
+    SpriteSheet(const char* name, const char* filename, Texture* pTexture);
     virtual ~SpriteSheet();
 
     // Getters.

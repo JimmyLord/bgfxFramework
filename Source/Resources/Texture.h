@@ -9,30 +9,39 @@
 
 #pragma once
 
+#include "bimg/bimg.h"
 #include "bgfx/platform.h"
-
 #include "Math/Vector.h"
-#include "Math/Matrix.h"
+#include "Resources/Resource.h"
 
 namespace fw {
 
-class Material;
-class ShaderProgram;
-class Uniforms;
-
-class Mesh
+class Texture : public Resource
 {
 public:
-    Mesh(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
-    virtual ~Mesh();
+    enum class Format
+    {
+        RGB8,
+        RGBA8,
+    };
 
-    void Create(const bgfx::VertexLayout& vertexFormat, const void* verts, uint32 vertsSize, const void* indices, uint32 indicesSize);
+public:
+    Texture(const char* name);
+    Texture(const char* name, const char* filename);
+    virtual ~Texture();
 
-    void Draw(int viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat);
+    bgfx::TextureHandle GetHandle() { return m_TextureHandle; }
+    void Rebuild(uint32 width, uint32 height, Format format, void* pixels);
 
 protected:
-    bgfx::VertexBufferHandle m_VBO;
-    bgfx::IndexBufferHandle m_IBO;
+    bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;
+
+    bool m_Mutable = false;
+    bgfx::TextureFormat::Enum m_Format = bgfx::TextureFormat::Unknown;
+    ivec2 m_Size = ivec2(0,0);
+    bool m_HasMips = false;
+    uint16 m_NumLayers = 1;
+    uint64 m_Flags = 0;
 };
 
 } // namespace fw

@@ -33,6 +33,9 @@ public:
     virtual void Draw(int viewID);
 
     void DrawIntoView(int viewID);
+
+    // Getters.
+    GameCore* GetGameCore() { return m_pGameCore; }
     
     // Save/Load.
     virtual void SaveToJSON(nlohmann::json& jScene);

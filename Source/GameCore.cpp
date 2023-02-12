@@ -21,6 +21,7 @@
 #include "Scenes/Scene.h"
 #include "Utility/Utility.h"
 #include "../Libraries/imgui/imgui.h"
+#include "../Libraries/ImGuizmo/ImGuizmo.h"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
@@ -71,6 +72,7 @@ GameCore::~GameCore()
 void GameCore::StartFrame(float deltaTime)
 {
     m_pImGuiManager->StartFrame( deltaTime );
+    ImGuizmo::BeginFrame();
 
     Editor_CreateMainFrame();
     Editor_DisplayMainMenu();
@@ -82,6 +84,19 @@ void GameCore::Update(float deltaTime)
     Editor_ShowInspector();
 
     m_pActiveScene->Update( deltaTime );
+
+    if( m_FWCore.IsKeyDown('1') )
+    {
+        m_Editor_GizmoMode = ImGuizmo::OPERATION::TRANSLATE;
+    }
+    if( m_FWCore.IsKeyDown('2') )
+    {
+        m_Editor_GizmoMode = ImGuizmo::OPERATION::ROTATE;
+    }
+    if( m_FWCore.IsKeyDown('3') )
+    {
+        m_Editor_GizmoMode = ImGuizmo::OPERATION::SCALE;
+    }
 }
 
 void GameCore::Draw()
@@ -188,9 +203,9 @@ void GameCore::Editor_ShowInspector()
 {
     if( ImGui::Begin( "Inspector" ) )
     {
-        if( m_pSelectedObject )
+        if( m_pEditor_SelectedObject )
         {
-            m_pActiveScene->GetComponentManager()->Editor_DisplayComponentsForGameObject( m_pSelectedObject );
+            m_pActiveScene->GetComponentManager()->Editor_DisplayComponentsForGameObject( m_pEditor_SelectedObject );
         }
     }
     ImGui::End();
@@ -228,6 +243,9 @@ void GameCore::Editor_DrawEditorView(int viewID)
     bgfx::setViewRect( viewID, 0, 0, m_Editor_WindowSize.x, m_Editor_WindowSize.y );
     bgfx::setViewClear( viewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x001000ff, 1.0f, 0 );
 
+    mat4 worldMat;
+    mat4 deltaMat;
+
     // Draw our main view in a window.
     if( ImGui::Begin("Editor view") )
     {
@@ -242,8 +260,43 @@ void GameCore::Editor_DrawEditorView(int viewID)
 
         ImVec2 uvMax = ImVec2( (float)m_Editor_WindowSize.x / m_Editor_TextureSize.x, (float)m_Editor_WindowSize.y / m_Editor_TextureSize.y );
         ImGui::Image( fw::imguiTexture(m_Editor_FBOTexture), ImVec2( (float)m_Editor_WindowSize.x, (float)m_Editor_WindowSize.y ), ImVec2(0,0), uvMax );
+
+        if( m_pEditor_SelectedObject )
+        {
+            ImVec2 pos = ImGui::GetWindowPos();
+            
+            Camera* pCamera = m_pActiveScene->GetCamera();
+            mat4& view = pCamera->GetViewMatrix();
+            mat4& proj = pCamera->GetProjectionMatrix();
+
+            ImGuizmo::SetOrthographic( false );
+            ImGuizmo::SetDrawlist();
+            ImGuizmo::SetRect( pos.x + contentMin.x, pos.y + contentMin.y, size.x, size.y );
+
+            TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
+            worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
+            
+            if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
+            {
+                transform.position = worldMat.GetTranslation();
+                transform.scale = worldMat.GetScale();
+
+                // This isn't working well.
+                transform.rotation = worldMat.GetEulerAngles();
+            }
+        }
     }
     ImGui::End();
+
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", worldMat.m11, worldMat.m12, worldMat.m13, worldMat.m14 );
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", worldMat.m21, worldMat.m22, worldMat.m23, worldMat.m24 );
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", worldMat.m31, worldMat.m32, worldMat.m33, worldMat.m34 );
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", worldMat.m41, worldMat.m42, worldMat.m43, worldMat.m44 );
+
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m11, deltaMat.m12, deltaMat.m13, deltaMat.m14 );
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m21, deltaMat.m22, deltaMat.m23, deltaMat.m24 );
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m31, deltaMat.m32, deltaMat.m33, deltaMat.m34 );
+    //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m41, deltaMat.m42, deltaMat.m43, deltaMat.m44 );
 }
 
 } // namespace fw

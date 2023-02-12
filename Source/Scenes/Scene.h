@@ -39,6 +39,7 @@ public:
 
     // Getters.
     GameCore* GetGameCore() { return m_pGameCore; }
+    virtual Camera* GetCamera() { return nullptr; }
     
     // Save/Load.
     virtual void SaveToJSON(nlohmann::json& jScene);

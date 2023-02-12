@@ -22,3 +22,6 @@
 [submodule "Libraries/nlohmann-json"]
 	path = Libraries/nlohmann-json
 	url = https://github.com/nlohmann/json.git
+[submodule "Libraries/ImGuizmo"]
+	path = Libraries/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo

@@ -138,6 +138,8 @@ file( GLOB_RECURSE FrameworkSourceFiles
 file( GLOB FrameworkSourceFilesNonRecursive
 	Libraries/imgui/*.cpp
 	Libraries/imgui/*.h
+	Libraries/ImGuizmo/*.cpp
+	Libraries/ImGuizmo/*.h
 )
 list( APPEND FrameworkSourceFiles ${FrameworkSourceFilesNonRecursive} )
 source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${FrameworkSourceFiles} )
@@ -156,6 +158,7 @@ target_include_directories( Framework PUBLIC
 	Libraries/bx/include/compat/msvc
 	Libraries/bimg/include
 	Libraries/bimg/3rdParty
+	Libraries/imgui
 )
 
 target_compile_features( Framework PRIVATE cxx_std_17 )

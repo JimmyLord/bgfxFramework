@@ -12,6 +12,8 @@
 #include "entt/src/entt/entt.hpp"
 #include "Math/Vector.h"
 #include "../Libraries/bgfx/include/bgfx/bgfx.h"
+#include "../Libraries/imgui/imgui.h"
+#include "../Libraries/ImGuizmo/ImGuizmo.h"
 
 namespace fw {
 
@@ -49,13 +51,15 @@ public:
     void Editor_DisplayMainMenu();
     void Editor_DisplayObjectList();
     void Editor_ShowInspector();
-    void Editor_SetSelectedObject(GameObject* pObject) { m_pSelectedObject = pObject; }
+    void Editor_SetSelectedObject(GameObject* pObject) { m_pEditor_SelectedObject = pObject; }
     void Editor_DrawGameView(int viewID);
     void Editor_DrawEditorView(int viewID);
-    GameObject* Editor_GetSelectedObject() { return m_pSelectedObject; }
+    GameObject* Editor_GetSelectedObject() { return m_pEditor_SelectedObject; }
 
     ivec2 GetGameWindowSize() { return m_Game_WindowSize; }
     ivec2 GetEditorWindowSize() { return m_Editor_WindowSize; }
+
+    ImGuizmo::OPERATION m_Editor_GizmoMode = ImGuizmo::TRANSLATE;
 
 protected:
     FWCore& m_FWCore;
@@ -77,8 +81,8 @@ protected:
     bool m_ShowDebugStats = false;
 
     // Editor variables.
-    GameObject* m_pSelectedObject = nullptr;
-    Camera* m_pEditorCam;
+    GameObject* m_pEditor_SelectedObject = nullptr;
+    Camera* m_pEditor_Cam;
 
     // Render to Texture
     ivec2 m_Game_WindowSize = vec2( 512, 512 );

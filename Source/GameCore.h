@@ -10,25 +10,30 @@
 #pragma once
 
 #include "entt/src/entt/entt.hpp"
+#include "Math/Vector.h"
 
 namespace fw {
 
 class Event;
 class EventManager;
 class FWCore;
+class GameObject;
+class ImGuiManager;
 class ResourceManager;
+class Scene;
 class Uniforms;
 
 class GameCore
 {
 public:
-    GameCore(FWCore& fwCore) : m_FWCore( fwCore ) {}
-    virtual ~GameCore() = 0 {}
+    GameCore(FWCore& fwCore);
+    virtual ~GameCore();
 
-    virtual void StartFrame(float deltaTime) = 0;
+    virtual void StartFrame(float deltaTime);
     virtual void OnEvent(Event* pEvent) = 0;
-    virtual void Update(float deltaTime) = 0;
+    virtual void Update(float deltaTime);
     virtual void Draw() = 0;
+    virtual void EndFrame();
     virtual void OnShutdown() = 0;
 
     // Getters.
@@ -37,8 +42,19 @@ public:
     Uniforms* GetUniforms() { return m_pUniforms; }
     EventManager* GetEventManager() { return m_pEventManager; }
 
+    // Editor.
+    void Editor_CreateMainFrame();
+    void Editor_DisplayMainMenu();
+    void Editor_DisplayObjectList();
+    void Editor_ShowInspector();
+    void Editor_SetSelectedObject(GameObject* pObject) { m_pSelectedObject = pObject; }
+    GameObject* Editor_GetSelectedObject() { return m_pSelectedObject; }
+
 protected:
     FWCore& m_FWCore;
+
+    // Interface.
+    ImGuiManager* m_pImGuiManager = nullptr;
 
     // Resources.
     Uniforms* m_pUniforms = nullptr;
@@ -46,6 +62,17 @@ protected:
 
     // Events.
     EventManager* m_pEventManager = nullptr;
+
+    // Scene.
+    Scene* m_pActiveScene = nullptr;
+
+    // Other.
+    bool m_ShowDebugStats = false;
+
+    // Editor variables.
+    ivec2 m_GameWindowSize = vec2( 512, 512 );
+    ivec2 m_GameTextureSize = vec2( 2048, 2048 );
+    GameObject* m_pSelectedObject = nullptr;
 };
 
 } // namespace fw

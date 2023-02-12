@@ -26,7 +26,7 @@
 
 #include "FWCore.h"
 #include "GameCore.h"
-#include "Components/CoreComponentManager.h"
+#include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"

@@ -101,6 +101,7 @@ uint32 FWCore::Run(GameCore& game)
             game.StartFrame( deltaTime );
             game.Update( deltaTime );
             game.Draw();
+            game.EndFrame();
 
             // Swap buffers.
             m_FrameCount = bgfx::frame();

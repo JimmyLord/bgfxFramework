@@ -11,7 +11,7 @@
 
 #include "GameCore.h"
 #include "GameObject.h"
-#include "Components/CoreComponentManager.h"
+#include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
 #include "Resources/Mesh.h"
 #include "Scenes/Scene.h"

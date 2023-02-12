@@ -1,5 +1,5 @@
 #include "CoreHeaders.h"
-#include "CoreComponentManager.h"
+#include "ComponentManager.h"
 #include "CoreComponents.h"
 #include "GameCore.h"
 #include "Objects/GameObject.h"
@@ -8,6 +8,7 @@
 #include "Resources/Mesh.h"
 #include "Resources/ResourceManager.h"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
+#include "../Libraries/imgui/imgui.h"
 
 namespace fw {
 
@@ -108,6 +109,46 @@ void ComponentManager::LoadGameObjectComponentsFromJSON(GameObject* pGameObject,
 
 void ComponentManager::Editor_DisplayComponentsForGameObject(GameObject* pGameObject)
 {
+    entt::registry& registry = pGameObject->GetScene()->GetECSRegistry();
+    entt::entity id = pGameObject->GetEntityID();
+
+    NameData* pNameData = registry.try_get<NameData>( id );
+    if( pNameData )
+    {
+        if( ImGui::CollapsingHeader( "Name", ImGuiTreeNodeFlags_DefaultOpen ) )
+        {
+            ImGui::Text( pNameData->m_Name );
+        }
+    }
+
+    ImGui::Separator();
+
+    TransformData* pTransformData = registry.try_get<TransformData>( id );
+    if( pTransformData )
+    {
+        if( ImGui::CollapsingHeader( "Transform", ImGuiTreeNodeFlags_DefaultOpen ) )
+        {
+            ImGui::DragFloat3( "Position", &pTransformData->position.x, 0.1f );
+            ImGui::DragFloat3( "Rotation", &pTransformData->rotation.x, 0.1f );
+            ImGui::DragFloat3( "Scale", &pTransformData->scale.x, 0.1f );
+        }
+    }
+
+    ImGui::Separator();
+
+    MeshData* pMeshData = registry.try_get<MeshData>( id );
+    if( pMeshData )
+    {
+        if( ImGui::CollapsingHeader( "Mesh", ImGuiTreeNodeFlags_DefaultOpen ) )
+        {
+            ImGui::Text( "Mesh: " );
+            ImGui::SameLine();
+            ImGui::Text( pMeshData->pMesh->GetName() );
+            ImGui::Text( "Material: " );
+            ImGui::SameLine();
+            ImGui::Text( pMeshData->pMaterial->GetName() );
+        }
+    }
 }
 
 } // namespace fw

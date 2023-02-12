@@ -11,6 +11,7 @@
 #include "FWCore.h"
 #include "GameCore.h"
 #include "Scene.h"
+#include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
 #include "EventSystem/Events.h"
 #include "Math/Matrix.h"
@@ -32,6 +33,11 @@ Scene::~Scene()
     {
         delete pObject;
     }
+}
+
+void Scene::CreateComponentManager()
+{
+    m_pComponentManager = new fw::ComponentManager();
 }
 
 void Scene::Init()
@@ -120,12 +126,18 @@ entt::entity Scene::CreateEntity()
 
 void Scene::Editor_DisplayObjectList()
 {
-    auto view = m_ECSRegistry.view<fw::NameData>();
-    for( auto entity : view )
+    for( GameObject* pGameObject : m_Objects )
     {
-        auto& nameData = view.get<fw::NameData>( entity );
+        auto& nameData = m_ECSRegistry.get<fw::NameData>( pGameObject->GetEntityID() );
 
-        ImGui::Text( "%s", nameData.m_Name );
+        bool selected = false;
+        if( m_pGameCore->Editor_GetSelectedObject() == pGameObject )
+            selected = true;
+        
+        if( ImGui::Selectable( nameData.m_Name, &selected ) )
+        {
+            m_pGameCore->Editor_SetSelectedObject( pGameObject );
+        }
     }
 }
 

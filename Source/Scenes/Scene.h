@@ -25,6 +25,9 @@ public:
     Scene(GameCore* pGameCore);
     virtual ~Scene();
 
+    // Customization.
+    virtual void CreateComponentManager();
+
     virtual void Init();
     virtual void OnShutdown();
     virtual void StartFrame(float deltaTime);

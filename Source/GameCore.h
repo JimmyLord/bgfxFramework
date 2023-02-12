@@ -11,9 +11,11 @@
 
 #include "entt/src/entt/entt.hpp"
 #include "Math/Vector.h"
+#include "../Libraries/bgfx/include/bgfx/bgfx.h"
 
 namespace fw {
 
+class Camera;
 class Event;
 class EventManager;
 class FWCore;
@@ -32,7 +34,7 @@ public:
     virtual void StartFrame(float deltaTime);
     virtual void OnEvent(Event* pEvent) = 0;
     virtual void Update(float deltaTime);
-    virtual void Draw() = 0;
+    virtual void Draw();
     virtual void EndFrame();
     virtual void OnShutdown() = 0;
 
@@ -48,7 +50,12 @@ public:
     void Editor_DisplayObjectList();
     void Editor_ShowInspector();
     void Editor_SetSelectedObject(GameObject* pObject) { m_pSelectedObject = pObject; }
+    void Editor_DrawGameView(int viewID);
+    void Editor_DrawEditorView(int viewID);
     GameObject* Editor_GetSelectedObject() { return m_pSelectedObject; }
+
+    ivec2 GetGameWindowSize() { return m_Game_WindowSize; }
+    ivec2 GetEditorWindowSize() { return m_Editor_WindowSize; }
 
 protected:
     FWCore& m_FWCore;
@@ -70,9 +77,19 @@ protected:
     bool m_ShowDebugStats = false;
 
     // Editor variables.
-    ivec2 m_GameWindowSize = vec2( 512, 512 );
-    ivec2 m_GameTextureSize = vec2( 2048, 2048 );
     GameObject* m_pSelectedObject = nullptr;
+    Camera* m_pEditorCam;
+
+    // Render to Texture
+    ivec2 m_Game_WindowSize = vec2( 512, 512 );
+    ivec2 m_Game_TextureSize = vec2( 2048, 2048 );
+    bgfx::TextureHandle m_Game_FBOTexture = BGFX_INVALID_HANDLE;
+    bgfx::FrameBufferHandle m_Game_FBO = BGFX_INVALID_HANDLE;
+
+    ivec2 m_Editor_WindowSize = vec2( 512, 512 );
+    ivec2 m_Editor_TextureSize = vec2( 2048, 2048 );
+    bgfx::TextureHandle m_Editor_FBOTexture = BGFX_INVALID_HANDLE;
+    bgfx::FrameBufferHandle m_Editor_FBO = BGFX_INVALID_HANDLE;
 };
 
 } // namespace fw

@@ -27,13 +27,6 @@ class ResourceManager;
 class Scene;
 class Uniforms;
 
-enum Views
-{
-    View_Game,
-    View_Editor,
-    View_ImGui,
-};
-
 class GameCore
 {
 public:
@@ -46,28 +39,13 @@ public:
     void HandleKeyboardShortcuts();
     virtual void Draw();
     virtual void EndFrame();
-    virtual void OnShutdown() = 0;
+    virtual void OnShutdown();
 
     // Getters.
     FWCore* GetFramework() { return &m_FWCore; }
     ResourceManager* GetResourceManager() { return m_pResources; }
     Uniforms* GetUniforms() { return m_pUniforms; }
     EventManager* GetEventManager() { return m_pEventManager; }
-
-    // Editor.
-    void Editor_CreateMainFrame();
-    void Editor_DisplayMainMenu();
-    void Editor_DisplayObjectList();
-    void Editor_ShowInspector();
-    void Editor_SetSelectedObject(GameObject* pObject) { m_pEditor_SelectedObject = pObject; }
-    void Editor_DrawGameView(int viewID);
-    void Editor_DrawEditorView(int viewID);
-    GameObject* Editor_GetSelectedObject() { return m_pEditor_SelectedObject; }
-
-    ivec2 GetGameWindowSize() { return m_Game_WindowSize; }
-    ivec2 GetEditorWindowSize() { return m_Editor_WindowSize; }
-
-    ImGuizmo::OPERATION m_Editor_GizmoMode = ImGuizmo::TRANSLATE;
 
 protected:
     FWCore& m_FWCore;
@@ -87,21 +65,6 @@ protected:
 
     // Other.
     bool m_ShowDebugStats = false;
-
-    // Editor variables.
-    GameObject* m_pEditor_SelectedObject = nullptr;
-    Camera* m_pEditor_Cam;
-
-    // Render to Texture
-    ivec2 m_Game_WindowSize = vec2( 512, 512 );
-    ivec2 m_Game_TextureSize = vec2( 2048, 2048 );
-    bgfx::TextureHandle m_Game_FBOTexture = BGFX_INVALID_HANDLE;
-    bgfx::FrameBufferHandle m_Game_FBO = BGFX_INVALID_HANDLE;
-
-    ivec2 m_Editor_WindowSize = vec2( 512, 512 );
-    ivec2 m_Editor_TextureSize = vec2( 2048, 2048 );
-    bgfx::TextureHandle m_Editor_FBOTexture = BGFX_INVALID_HANDLE;
-    bgfx::FrameBufferHandle m_Editor_FBO = BGFX_INVALID_HANDLE;
 };
 
 } // namespace fw

@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
+#include "Editor/EditorCore.h"
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
 #include "Math/Matrix.h"
@@ -138,71 +139,75 @@ entt::entity Scene::CreateEntity()
 
 void Scene::Editor_DisplayObjectList()
 {
-    for( GameObject* pGameObject : m_Objects )
+    EditorCore* pEditorCore = dynamic_cast<EditorCore*>( m_pGameCore );
+    if( pEditorCore )
     {
-        const char* name = "No Name";
+        for( GameObject* pGameObject : m_Objects )
+        {
+            const char* name = "No Name";
         
-        bool hasName = m_pComponentManager->GetECSRegistry().try_get<fw::NameData>( pGameObject->GetEntityID() );
-        if( hasName )
-        {
-            auto& nameData = m_pComponentManager->GetECSRegistry().get<fw::NameData>( pGameObject->GetEntityID() );
-            if( nameData.m_Name[0] != '\0' )
+            bool hasName = m_pComponentManager->GetECSRegistry().try_get<fw::NameData>( pGameObject->GetEntityID() );
+            if( hasName )
             {
-                name = nameData.m_Name;
-            }
-        }
-
-        bool selected = false;
-        if( m_pGameCore->Editor_GetSelectedObject() == pGameObject )
-            selected = true;
-        
-        if( ImGui::Selectable( name, &selected ) )
-        {
-            m_pGameCore->Editor_SetSelectedObject( pGameObject );
-        }
-
-        if( ImGui::BeginPopupContextItem() )
-        {
-            if( ImGui::MenuItem( "Delete" ) )
-            {
-                if( m_pGameCore->Editor_GetSelectedObject() == pGameObject )
+                auto& nameData = m_pComponentManager->GetECSRegistry().get<fw::NameData>( pGameObject->GetEntityID() );
+                if( nameData.m_Name[0] != '\0' )
                 {
-                    m_pGameCore->Editor_SetSelectedObject( nullptr );
+                    name = nameData.m_Name;
                 }
-                m_pGameCore->GetEventManager()->AddEvent( new RemoveFromGameEvent( pGameObject ) );
             }
-            
-            //if( ImGui::MenuItem( "Duplicate" ) )
-            //{
-            //    GameObject* pNewObject = new GameObject( this );
-            //    //pNewObject->CopyFrom( pGameObject );
-            //    m_Objects.push_back( pNewObject );
-            //}
 
-            //if( ImGui::MenuItem( "Rename" ) )
-            //{
-            //    ImGui::OpenPopup( "Rename" );
-            //}
-
-            //if( ImGui::BeginPopup("Rename ")
-            //{
-            //    static char name[128] = "";
-            //        ImGui::InputText("Name", name, 128);
-            //        if( ImGui::Button("OK") )
-            //        {
-            //            nameData.m_Name = name;
-            //                ImGui::CloseCurrentPopup();
-            //        }
-            //    ImGui::EndPopup();
-            //}
-
-            if( ImGui::BeginMenu( "Add Component.." ) )
+            bool selected = false;
+            if( pEditorCore->Editor_GetSelectedObject() == pGameObject )
+                selected = true;
+        
+            if( ImGui::Selectable( name, &selected ) )
             {
-                m_pComponentManager->Editor_AddComponentToGameObject( pGameObject );
-                ImGui::EndMenu();
+                pEditorCore->Editor_SetSelectedObject( pGameObject );
             }
 
-            ImGui::EndPopup();
+            if( ImGui::BeginPopupContextItem() )
+            {
+                if( ImGui::MenuItem( "Delete" ) )
+                {
+                    if( pEditorCore->Editor_GetSelectedObject() == pGameObject )
+                    {
+                        pEditorCore->Editor_SetSelectedObject( nullptr );
+                    }
+                    pEditorCore->GetEventManager()->AddEvent( new RemoveFromGameEvent( pGameObject ) );
+                }
+            
+                //if( ImGui::MenuItem( "Duplicate" ) )
+                //{
+                //    GameObject* pNewObject = new GameObject( this );
+                //    //pNewObject->CopyFrom( pGameObject );
+                //    m_Objects.push_back( pNewObject );
+                //}
+
+                //if( ImGui::MenuItem( "Rename" ) )
+                //{
+                //    ImGui::OpenPopup( "Rename" );
+                //}
+
+                //if( ImGui::BeginPopup("Rename ")
+                //{
+                //    static char name[128] = "";
+                //        ImGui::InputText("Name", name, 128);
+                //        if( ImGui::Button("OK") )
+                //        {
+                //            nameData.m_Name = name;
+                //                ImGui::CloseCurrentPopup();
+                //        }
+                //    ImGui::EndPopup();
+                //}
+
+                if( ImGui::BeginMenu( "Add Component.." ) )
+                {
+                    m_pComponentManager->Editor_AddComponentToGameObject( pGameObject );
+                    ImGui::EndMenu();
+                }
+
+                ImGui::EndPopup();
+            }
         }
     }
 }

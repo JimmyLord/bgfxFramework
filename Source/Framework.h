@@ -28,6 +28,7 @@
 #include "GameCore.h"
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
+#include "Editor/EditorCore.h"
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
 #include "Imgui/ImGuiManager.h"

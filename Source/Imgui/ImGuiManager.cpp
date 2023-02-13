@@ -72,6 +72,24 @@ void ImGuiManager::Shutdown()
     ImGui::DestroyContext();
 }
 
+bool ImGuiManager::WantsMouse()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    return io.WantCaptureMouse;
+}
+
+bool ImGuiManager::WantsKeyboard()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    return io.WantCaptureKeyboard;
+}
+
+bool ImGuiManager::WantsTextInput()
+{
+    ImGuiIO& io = ImGui::GetIO();
+    return io.WantTextInput;
+}
+
 void ImGuiManager::AddInputCharacter(unsigned int value)
 {
     ImGuiIO& io = ImGui::GetIO();

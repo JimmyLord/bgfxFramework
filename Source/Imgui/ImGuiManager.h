@@ -43,6 +43,10 @@ public:
     void Init(int viewID);
     void Shutdown();
 
+    bool WantsMouse();
+    bool WantsKeyboard();
+    bool WantsTextInput();
+
     void AddInputCharacter(unsigned int value);
 
     void OnFocusLost();

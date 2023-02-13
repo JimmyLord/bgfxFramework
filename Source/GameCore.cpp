@@ -80,9 +80,27 @@ void GameCore::StartFrame(float deltaTime)
     Editor_DisplayMainMenu();
 }
 
-void GameCore::OnEvent(Event* pEvent)
+bool GameCore::OnEvent(Event* pEvent)
 {
     m_pActiveScene->OnEvent( pEvent );
+
+    if( pEvent->GetType() == OnCharEvent::GetStaticEventType() )
+    {
+        OnCharEvent* pCharEvent = static_cast<OnCharEvent*>( pEvent );
+        
+        m_pImGuiManager->AddInputCharacter( pCharEvent->GetValue() );
+    }
+
+    if( m_pImGuiManager->WantsKeyboard() )
+    {
+        if( pEvent->GetType() == OnCharEvent::GetStaticEventType() )
+            return true;
+
+        if( pEvent->GetType() == InputEvent::GetStaticEventType() )
+            return true;
+    }
+
+    return false;
 }
 
 void GameCore::Update(float deltaTime)
@@ -92,6 +110,14 @@ void GameCore::Update(float deltaTime)
 
     m_pActiveScene->Update( deltaTime );
 
+    if( m_pImGuiManager->WantsKeyboard() == false )
+    {
+        HandleKeyboardShortcuts();
+    }
+}
+
+void GameCore::HandleKeyboardShortcuts()
+{
     if( m_FWCore.IsKeyDown('1') )
     {
         m_Editor_GizmoMode = ImGuizmo::OPERATION::TRANSLATE;

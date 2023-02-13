@@ -224,7 +224,7 @@ void FWCore::ResizeWindow(uint32 width, uint32 height)
     m_WindowClientHeight = height;
 
     bgfx::reset( width, height, BGFX_RESET_VSYNC );
-    bgfx::setViewRect( 0, 0, 0, width, height );
+    //bgfx::setViewRect( 0, 0, 0, width, height );
 
     if( m_pGame )
     {

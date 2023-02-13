@@ -55,7 +55,7 @@ void Mesh::Draw(int viewID, const Uniforms* pUniforms, const Material* pMaterial
         bgfx::setTransform( &worldMat->m11 );
     }
 
-    // Submit primitive for rendering to view 0.
+    // Submit primitive for rendering to the current view.
     bgfx::submit( viewID, pMaterial->GetShader()->GetProgram() );
 }
 

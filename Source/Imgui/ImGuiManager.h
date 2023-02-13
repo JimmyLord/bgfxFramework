@@ -31,7 +31,7 @@ inline ImTextureID imguiTexture(bgfx::TextureHandle handle, uint8_t flags = 0, u
 
 inline ImTextureID imguiTexture(fw::Texture* pTexture, uint8_t flags = 0, uint8_t mip = 0)
 {
-    imguiTexture( pTexture->GetHandle(), flags, mip );
+    return imguiTexture( pTexture->GetHandle(), flags, mip );
 }
 
 class ImGuiManager

@@ -29,20 +29,32 @@ namespace fw {
 GameCore::GameCore(FWCore& fwCore)
     : m_FWCore( fwCore )
 {
-    m_pImGuiManager = new ImGuiManager( &m_FWCore, 255 );
+    m_pImGuiManager = new ImGuiManager( &m_FWCore, Views::View_ImGui );
 
-    bool isValid = bgfx::isTextureValid( 0, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_SAMPLER_COMPARE_LEQUAL );
+    bool isValid = bgfx::isTextureValid( 0, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL );
     assert( isValid );
     
     // Create an FBO along with a texture to render to.
     // TODO: Don't limit this to a 2048x2048 texture. Have it resize if the window is resized to a larger size.
-    m_Game_FBOTexture = bgfx::createTexture2D( m_Game_TextureSize.x, m_Game_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_SAMPLER_COMPARE_LEQUAL );
+    m_Game_FBOTexture = bgfx::createTexture2D( m_Game_TextureSize.x, m_Game_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL );
     bgfx::TextureHandle gameTextures[] = { m_Game_FBOTexture };
     m_Game_FBO = bgfx::createFrameBuffer( 1, gameTextures, true );
 
-    m_Editor_FBOTexture = bgfx::createTexture2D( m_Editor_TextureSize.x, m_Editor_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_SAMPLER_COMPARE_LEQUAL );
+    m_Editor_FBOTexture = bgfx::createTexture2D( m_Editor_TextureSize.x, m_Editor_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL );
     bgfx::TextureHandle editorTextures[] = { m_Editor_FBOTexture };
     m_Editor_FBO = bgfx::createFrameBuffer( 1, editorTextures, true );
+
+    // View 0: Render the game scene into an FBO.
+    bgfx::setViewFrameBuffer( Views::View_Game, m_Game_FBO );
+    bgfx::setViewClear( Views::View_Game, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ff00ff, 1.0f, 0 );
+
+    // View 1: Render the editor scene into an FBO.
+    bgfx::setViewFrameBuffer( Views::View_Editor, m_Editor_FBO );
+    bgfx::setViewClear( Views::View_Editor, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xff0000ff, 1.0f, 0 );
+
+    // View 2: Render the imgui hud.
+    bgfx::setViewRect( Views::View_ImGui, 0, 0, m_Editor_WindowSize.x, m_Editor_WindowSize.y );
+    bgfx::setViewClear( Views::View_ImGui, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff, 1.0f, 0 );
 }
 
 GameCore::~GameCore()
@@ -139,23 +151,35 @@ void GameCore::HandleKeyboardShortcuts()
 
 void GameCore::Draw()
 {
-    int gameViewID = 0;
-
     if( true )
     {
-        int editorViewID = 1;
-        
-        Editor_DrawGameView( gameViewID );
-        Editor_DrawEditorView( editorViewID );
+        //mat4 world;
+        //mat4 view;
+        //mat4 proj;
+        //world.SetIdentity();
+        //view.CreateLookAtView( vec3(0,0,-5), vec3(0,1,0), vec3(0,0,0) );
+        //proj.CreatePerspectiveVFoV( 45, 1, 0.01f, 100.0f );
+
+        //bgfx::setViewRect( Views::View_Game, 0, 0, 1280, 720 );
+        //bgfx::setViewTransform( Views::View_Game, &view, &proj );
+        //m_pResources->GetMesh("Square")->Draw( Views::View_Game, m_pUniforms, m_pResources->GetMaterial("Red"), &world );
+
+        //ImVec2 uvMin = ImVec2(0,0);
+        //ImVec2 uvMax = ImVec2(1,1);
+        ////ImGui::Image( fw::imguiTexture(m_pResources->GetTexture("Sokoban")), ImVec2(256,256), uvMin, uvMax );
+        //ImGui::Image( fw::imguiTexture(m_Game_FBOTexture), ImVec2(256,256), uvMin, uvMax );
+
+        Editor_DrawGameView( Views::View_Game );
+        Editor_DrawEditorView( Views::View_Editor );
     }
     else
     {
         // Draw only the game view. Needs to disable the "Main Dock" window, it covers this render.
         m_Game_WindowSize.x = m_FWCore.GetWindowClientWidth();
         m_Game_WindowSize.y = m_FWCore.GetWindowClientHeight();
-        bgfx::setViewRect( gameViewID, 0, 0, m_Game_WindowSize.x, m_Game_WindowSize.y );
-        bgfx::setViewClear( gameViewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000ff, 1.0f, 0 );
-        m_pActiveScene->Draw( gameViewID );
+        bgfx::setViewRect( Views::View_Game, 0, 0, m_Game_WindowSize.x, m_Game_WindowSize.y );
+        bgfx::setViewClear( Views::View_Game, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000ff, 1.0f, 0 );
+        m_pActiveScene->Draw( Views::View_Game );
     }
 }
 
@@ -183,7 +207,7 @@ void GameCore::Editor_CreateMainFrame()
     {
         ImGuiID dockspaceID = ImGui::GetID( "My Dockspace" );
         ImGui::DockSpace( dockspaceID );
-    }
+	}
     ImGui::End();
 }
 
@@ -252,11 +276,6 @@ void GameCore::Editor_ShowInspector()
 
 void GameCore::Editor_DrawGameView(int viewID)
 {
-    // Render the scene into an FBO.
-    bgfx::setViewFrameBuffer( viewID, m_Game_FBO );
-    bgfx::setViewRect( viewID, 0, 0, m_Game_WindowSize.x, m_Game_WindowSize.y );
-    bgfx::setViewClear( viewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000000ff, 1.0f, 0 );
-
     // Draw our main view in a window.
     if( ImGui::Begin("Game view") )
     {
@@ -266,22 +285,25 @@ void GameCore::Editor_DrawGameView(int viewID)
         m_Game_WindowSize = ivec2( (int)size.x, (int)size.y );
         if( m_Game_WindowSize.x > m_Game_TextureSize.x ) { m_Game_WindowSize.x = m_Game_TextureSize.x; }
         if( m_Game_WindowSize.y > m_Game_TextureSize.y ) { m_Game_WindowSize.y = m_Game_TextureSize.y; }
+        bgfx::setViewRect( Views::View_Game, 0, 0, m_Game_WindowSize.x, m_Game_WindowSize.y );
 
         m_pActiveScene->Draw( viewID );
 
+        ImVec2 uvMin = ImVec2(0,0);
         ImVec2 uvMax = ImVec2( (float)m_Game_WindowSize.x / m_Game_TextureSize.x, (float)m_Game_WindowSize.y / m_Game_TextureSize.y );
-        ImGui::Image( fw::imguiTexture(m_Game_FBOTexture), ImVec2( (float)m_Game_WindowSize.x, (float)m_Game_WindowSize.y ), ImVec2(0,0), uvMax );
+        if( bgfx::getRendererType() == bgfx::RendererType::OpenGL )
+        {
+            uvMin.y = 1.0f;
+            uvMax.y = 1.0f - uvMax.y;
+        }
+        
+        ImGui::Image( fw::imguiTexture(m_Game_FBOTexture), ImVec2( (float)m_Game_WindowSize.x, (float)m_Game_WindowSize.y ), uvMin, uvMax );
     }
     ImGui::End();
 }
 
 void GameCore::Editor_DrawEditorView(int viewID)
 {
-    // Render the scene into an FBO.
-    bgfx::setViewFrameBuffer( viewID, m_Editor_FBO );
-    bgfx::setViewRect( viewID, 0, 0, m_Editor_WindowSize.x, m_Editor_WindowSize.y );
-    bgfx::setViewClear( viewID, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x001000ff, 1.0f, 0 );
-
     mat4 worldMat;
     mat4 deltaMat;
 
@@ -294,11 +316,19 @@ void GameCore::Editor_DrawEditorView(int viewID)
         m_Editor_WindowSize = ivec2( (int)size.x, (int)size.y );
         if( m_Editor_WindowSize.x > m_Editor_TextureSize.x ) { m_Editor_WindowSize.x = m_Editor_TextureSize.x; }
         if( m_Editor_WindowSize.y > m_Editor_TextureSize.y ) { m_Editor_WindowSize.y = m_Editor_TextureSize.y; }
+        bgfx::setViewRect( Views::View_Editor, 0, 0, m_Editor_WindowSize.x, m_Editor_WindowSize.y );
 
         m_pActiveScene->Draw( viewID );
 
+        ImVec2 uvMin = ImVec2(0,0);
         ImVec2 uvMax = ImVec2( (float)m_Editor_WindowSize.x / m_Editor_TextureSize.x, (float)m_Editor_WindowSize.y / m_Editor_TextureSize.y );
-        ImGui::Image( fw::imguiTexture(m_Editor_FBOTexture), ImVec2( (float)m_Editor_WindowSize.x, (float)m_Editor_WindowSize.y ), ImVec2(0,0), uvMax );
+        if( bgfx::getRendererType() == bgfx::RendererType::OpenGL )
+        {
+            uvMin.y = 1.0f;
+            uvMax.y = 1.0f - uvMax.y;
+        }
+
+        ImGui::Image( fw::imguiTexture(m_Editor_FBOTexture), ImVec2( (float)m_Editor_WindowSize.x, (float)m_Editor_WindowSize.y ), uvMin, uvMax );
 
         if( m_pEditor_SelectedObject )
         {

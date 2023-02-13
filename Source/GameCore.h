@@ -27,6 +27,13 @@ class ResourceManager;
 class Scene;
 class Uniforms;
 
+enum Views
+{
+    View_Game,
+    View_Editor,
+    View_ImGui,
+};
+
 class GameCore
 {
 public:

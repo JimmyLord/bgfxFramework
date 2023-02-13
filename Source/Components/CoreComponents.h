@@ -13,6 +13,10 @@ struct NameData
     static const int8 c_MaxNameLength = 32;
     char m_Name[c_MaxNameLength];
 
+    NameData()
+    {
+        m_Name[0] = '\0';
+    }
     NameData(const char* name)
     {
         strncpy_s( m_Name, c_MaxNameLength, name, c_MaxNameLength );

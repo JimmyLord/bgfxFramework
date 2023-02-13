@@ -34,7 +34,7 @@ public:
     virtual ~GameCore();
 
     virtual void StartFrame(float deltaTime);
-    virtual void OnEvent(Event* pEvent) = 0;
+    virtual void OnEvent(Event* pEvent);
     virtual void Update(float deltaTime);
     virtual void Draw();
     virtual void EndFrame();

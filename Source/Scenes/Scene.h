@@ -50,16 +50,15 @@ public:
         
     // ECS.
     ComponentManager* GetComponentManager() { return m_pComponentManager; }
-    entt::registry& GetECSRegistry() { return m_ECSRegistry; }
+    entt::registry& GetECSRegistry();
     entt::entity CreateEntity();
 
 protected:
     // Members.
     GameCore* m_pGameCore = nullptr;
-    ComponentManager* m_pComponentManager = nullptr;
-
+    
     // ECS.
-    entt::registry m_ECSRegistry;
+    ComponentManager* m_pComponentManager = nullptr;
 
     // GameObjects.
     std::vector<GameObject*> m_Objects;

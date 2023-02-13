@@ -20,6 +20,22 @@ ComponentManager::~ComponentManager()
 {
 }
 
+void ComponentManager::Editor_AddComponentToGameObject(GameObject* pObject)
+{
+    bool hasIt;
+    
+    // Grey out the components the object already has.
+    
+    hasIt = m_ECSRegistry.try_get<NameData>( pObject->GetEntityID() ) != nullptr;
+    if( ImGui::MenuItem( "Name", "", nullptr, !hasIt ) ) { m_ECSRegistry.emplace<NameData>( pObject->GetEntityID() ); }
+    
+    hasIt = m_ECSRegistry.try_get<TransformData>( pObject->GetEntityID() ) != nullptr;
+    if( ImGui::MenuItem( "Transform", "", false, !hasIt ) ) { m_ECSRegistry.emplace<TransformData>( pObject->GetEntityID() ); }
+
+    hasIt = m_ECSRegistry.try_get<MeshData>( pObject->GetEntityID() ) != nullptr;
+    if( ImGui::MenuItem( "Mesh", "", nullptr, !hasIt ) ) { m_ECSRegistry.emplace<MeshData>( pObject->GetEntityID() ); }
+}
+
 void ComponentManager::SaveGameObjectComponentsToJSON(GameObject* pGameObject, nlohmann::json& jGameObject)
 {
     entt::registry& registry = pGameObject->GetScene()->GetECSRegistry();
@@ -143,10 +159,24 @@ void ComponentManager::Editor_DisplayComponentsForGameObject(GameObject* pGameOb
         {
             ImGui::Text( "Mesh: " );
             ImGui::SameLine();
-            ImGui::Text( pMeshData->pMesh->GetName() );
+            if( pMeshData->pMesh )
+            {
+                ImGui::Text( pMeshData->pMesh->GetName() );
+            }
+            else
+            {
+                ImGui::Text( "None" );
+            }
             ImGui::Text( "Material: " );
             ImGui::SameLine();
-            ImGui::Text( pMeshData->pMaterial->GetName() );
+            if( pMeshData->pMaterial )
+            {
+                ImGui::Text( pMeshData->pMaterial->GetName() );
+            }
+            else
+            {
+                ImGui::Text( "None" );
+            }
         }
     }
 }

@@ -74,8 +74,15 @@ void GameCore::StartFrame(float deltaTime)
     m_pImGuiManager->StartFrame( deltaTime );
     ImGuizmo::BeginFrame();
 
+    //ImGui::ShowDemoWindow();
+
     Editor_CreateMainFrame();
     Editor_DisplayMainMenu();
+}
+
+void GameCore::OnEvent(Event* pEvent)
+{
+    m_pActiveScene->OnEvent( pEvent );
 }
 
 void GameCore::Update(float deltaTime)
@@ -273,16 +280,19 @@ void GameCore::Editor_DrawEditorView(int viewID)
             ImGuizmo::SetDrawlist();
             ImGuizmo::SetRect( pos.x + contentMin.x, pos.y + contentMin.y, size.x, size.y );
 
-            TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
-            worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
-            
-            if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
+            if( m_pActiveScene->GetECSRegistry().try_get<TransformData>( m_pEditor_SelectedObject->GetEntityID() ) )
             {
-                transform.position = worldMat.GetTranslation();
-                transform.scale = worldMat.GetScale();
+                TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
+                worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
+            
+                if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
+                {
+                    transform.position = worldMat.GetTranslation();
+                    transform.scale = worldMat.GetScale();
 
-                // This isn't working well.
-                transform.rotation = worldMat.GetEulerAngles();
+                    // This isn't working well.
+                    transform.rotation = worldMat.GetEulerAngles();
+                }
             }
         }
     }

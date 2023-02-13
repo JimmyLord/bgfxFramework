@@ -14,6 +14,7 @@
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
 #include "EventSystem/Events.h"
+#include "EventSystem/EventManager.h"
 #include "Math/Matrix.h"
 #include "Objects/GameObject.h"
 #include "Resources/Mesh.h"
@@ -83,14 +84,17 @@ void Scene::DrawIntoView(int viewID)
 {
     Uniforms* pUniforms = m_pGameCore->GetUniforms();
     
-    auto group = m_ECSRegistry.group<TransformData>( entt::get<MeshData> );
+    auto group = m_pComponentManager->GetECSRegistry().group<TransformData>( entt::get<MeshData> );
     for( auto entity : group )
     {
         auto& [transformData, meshData] = group.get<TransformData, MeshData>( entity );
 
         mat4 worldMat;
         worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
-        meshData.pMesh->Draw( viewID, pUniforms, meshData.pMaterial, &worldMat );
+        if( meshData.pMesh )
+        {
+            meshData.pMesh->Draw( viewID, pUniforms, meshData.pMaterial, &worldMat );
+        }
     }
 }
 
@@ -119,24 +123,83 @@ void Scene::LoadFromJSON(nlohmann::json& jScene)
     }
 }
 
+entt::registry& Scene::GetECSRegistry()
+{
+    return m_pComponentManager->GetECSRegistry();
+}
+
 entt::entity Scene::CreateEntity()
 {
-    return m_ECSRegistry.create();
+    return m_pComponentManager->GetECSRegistry().create();
 }
 
 void Scene::Editor_DisplayObjectList()
 {
     for( GameObject* pGameObject : m_Objects )
     {
-        auto& nameData = m_ECSRegistry.get<fw::NameData>( pGameObject->GetEntityID() );
+        const char* name = "No Name";
+        
+        bool hasName = m_pComponentManager->GetECSRegistry().try_get<fw::NameData>( pGameObject->GetEntityID() );
+        if( hasName )
+        {
+            auto& nameData = m_pComponentManager->GetECSRegistry().get<fw::NameData>( pGameObject->GetEntityID() );
+            if( nameData.m_Name[0] != '\0' )
+            {
+                name = nameData.m_Name;
+            }
+        }
 
         bool selected = false;
         if( m_pGameCore->Editor_GetSelectedObject() == pGameObject )
             selected = true;
         
-        if( ImGui::Selectable( nameData.m_Name, &selected ) )
+        if( ImGui::Selectable( name, &selected ) )
         {
             m_pGameCore->Editor_SetSelectedObject( pGameObject );
+        }
+
+        if( ImGui::BeginPopupContextItem() )
+        {
+            if( ImGui::MenuItem( "Delete" ) )
+            {
+                if( m_pGameCore->Editor_GetSelectedObject() == pGameObject )
+                {
+                    m_pGameCore->Editor_SetSelectedObject( nullptr );
+                }
+                m_pGameCore->GetEventManager()->AddEvent( new RemoveFromGameEvent( pGameObject ) );
+            }
+            
+            //if( ImGui::MenuItem( "Duplicate" ) )
+            //{
+            //    GameObject* pNewObject = new GameObject( this );
+            //    //pNewObject->CopyFrom( pGameObject );
+            //    m_Objects.push_back( pNewObject );
+            //}
+
+            //if( ImGui::MenuItem( "Rename" ) )
+            //{
+            //    ImGui::OpenPopup( "Rename" );
+            //}
+
+            //if( ImGui::BeginPopup("Rename ")
+            //{
+            //    static char name[128] = "";
+            //        ImGui::InputText("Name", name, 128);
+            //        if( ImGui::Button("OK") )
+            //        {
+            //            nameData.m_Name = name;
+            //                ImGui::CloseCurrentPopup();
+            //        }
+            //    ImGui::EndPopup();
+            //}
+
+            if( ImGui::BeginMenu( "Add Component.." ) )
+            {
+                m_pComponentManager->Editor_AddComponentToGameObject( pGameObject );
+                ImGui::EndMenu();
+            }
+
+            ImGui::EndPopup();
         }
     }
 }

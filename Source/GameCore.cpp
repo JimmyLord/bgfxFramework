@@ -31,13 +31,16 @@ GameCore::GameCore(FWCore& fwCore)
 {
     m_pImGuiManager = new ImGuiManager( &m_FWCore, 255 );
 
+    bool isValid = bgfx::isTextureValid( 0, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_SAMPLER_COMPARE_LEQUAL );
+    assert( isValid );
+    
     // Create an FBO along with a texture to render to.
     // TODO: Don't limit this to a 2048x2048 texture. Have it resize if the window is resized to a larger size.
-    m_Game_FBOTexture = bgfx::createTexture2D( m_Game_TextureSize.x, m_Game_TextureSize.y, false, 1, bgfx::TextureFormat::RGBA8, BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL );
+    m_Game_FBOTexture = bgfx::createTexture2D( m_Game_TextureSize.x, m_Game_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_SAMPLER_COMPARE_LEQUAL );
     bgfx::TextureHandle gameTextures[] = { m_Game_FBOTexture };
     m_Game_FBO = bgfx::createFrameBuffer( 1, gameTextures, true );
 
-    m_Editor_FBOTexture = bgfx::createTexture2D( m_Editor_TextureSize.x, m_Editor_TextureSize.y, false, 1, bgfx::TextureFormat::RGBA8, BGFX_TEXTURE_RT | BGFX_SAMPLER_COMPARE_LEQUAL );
+    m_Editor_FBOTexture = bgfx::createTexture2D( m_Editor_TextureSize.x, m_Editor_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT | BGFX_TEXTURE_RT_WRITE_ONLY | BGFX_SAMPLER_COMPARE_LEQUAL );
     bgfx::TextureHandle editorTextures[] = { m_Editor_FBOTexture };
     m_Editor_FBO = bgfx::createFrameBuffer( 1, editorTextures, true );
 }
@@ -67,6 +70,8 @@ GameCore::~GameCore()
     }
 
     delete m_pEventManager;
+
+    delete m_pUniforms;
 }
 
 void GameCore::StartFrame(float deltaTime)

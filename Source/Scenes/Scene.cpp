@@ -35,6 +35,8 @@ Scene::~Scene()
     {
         delete pObject;
     }
+
+    delete m_pComponentManager;
 }
 
 void Scene::CreateComponentManager()

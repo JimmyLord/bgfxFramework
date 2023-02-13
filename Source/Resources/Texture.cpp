@@ -27,7 +27,6 @@ namespace fw {
 Texture::Texture(const char* name)
     : Resource( name )
 {
-    assert( false );
 }
 
 Texture::Texture(const char* name, const char* filename)

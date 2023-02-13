@@ -200,6 +200,7 @@ void GameCore::Editor_DisplayMainMenu()
 
         if( ImGui::MenuItem( "Load Scene", "" ) )
         {
+            m_pEditor_SelectedObject = nullptr;
             delete m_pActiveScene;
             m_pActiveScene = new Scene( this );
 
@@ -299,25 +300,28 @@ void GameCore::Editor_DrawEditorView(int viewID)
             ImVec2 pos = ImGui::GetWindowPos();
             
             Camera* pCamera = m_pActiveScene->GetCamera();
-            mat4& view = pCamera->GetViewMatrix();
-            mat4& proj = pCamera->GetProjectionMatrix();
-
-            ImGuizmo::SetOrthographic( false );
-            ImGuizmo::SetDrawlist();
-            ImGuizmo::SetRect( pos.x + contentMin.x, pos.y + contentMin.y, size.x, size.y );
-
-            if( m_pActiveScene->GetECSRegistry().try_get<TransformData>( m_pEditor_SelectedObject->GetEntityID() ) )
+            if( pCamera )
             {
-                TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
-                worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
-            
-                if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
-                {
-                    transform.position = worldMat.GetTranslation();
-                    transform.scale = worldMat.GetScale();
+                mat4& view = pCamera->GetViewMatrix();
+                mat4& proj = pCamera->GetProjectionMatrix();
 
-                    // This isn't working well.
-                    transform.rotation = worldMat.GetEulerAngles();
+                ImGuizmo::SetOrthographic( false );
+                ImGuizmo::SetDrawlist();
+                ImGuizmo::SetRect( pos.x + contentMin.x, pos.y + contentMin.y, size.x, size.y );
+
+                if( m_pActiveScene->GetECSRegistry().try_get<TransformData>( m_pEditor_SelectedObject->GetEntityID() ) )
+                {
+                    TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
+                    worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
+            
+                    if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
+                    {
+                        transform.position = worldMat.GetTranslation();
+                        transform.scale = worldMat.GetScale();
+
+                        // This isn't working well.
+                        transform.rotation = worldMat.GetEulerAngles();
+                    }
                 }
             }
         }

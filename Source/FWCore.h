@@ -10,6 +10,7 @@
 #pragma once
 
 #include "bgfx/platform.h"
+#include "Math/Vector.h"
 
 namespace fw {
 
@@ -33,6 +34,7 @@ public:
     bool IsMouseButtonDown(uint32 id);
     void GetMouseCoordinates(int32* mx, int32* my);
     float GetMouseWheel();
+    vec2 GetMouseDir();
 
     HWND GetWindowHandle() { return m_hWnd; }
     uint32 GetWindowClientWidth() { return m_WindowClientWidth; }
@@ -68,6 +70,9 @@ protected:
     bool m_OldMouseButtonStates[3] = {};
     bool m_WindowIsActive = false;
     bool m_FullscreenMode = false;
+
+    vec2 m_MouseDownLocation[3] = {};
+    vec2 m_MouseDir = {};
 
     int32 m_FrameCount = 0;
 };

@@ -213,6 +213,11 @@ float FWCore::GetMouseWheel()
     return m_MouseWheel;
 }
 
+vec2 FWCore::GetMouseDir()
+{
+    return m_MouseDir;
+}
+
 // Protected methods.
 
 void FWCore::ResizeWindow(uint32 width, uint32 height)
@@ -461,11 +466,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
                 pFWCore->m_KeyStates[wParam] = true;
 
                 // Send a input event to the event manager.
-                InputEvent* pEvent = new InputEvent(
-                    InputEvent::DeviceType::Keyboard,
-                    InputEvent::DeviceState::Pressed,
-                    (uint32)wParam );
-
+                InputEvent* pEvent = new InputEvent( InputEvent::DeviceType::Keyboard, InputEvent::DeviceState::Pressed, (uint32)wParam );
                 pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
             }
         }
@@ -476,11 +477,7 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             pFWCore->m_KeyStates[wParam] = false;
     
             // Send a input event to the event manager.
-            InputEvent* pEvent = new InputEvent(
-                InputEvent::DeviceType::Keyboard,
-                InputEvent::DeviceState::Released,
-                (uint32)wParam );
-
+            InputEvent* pEvent = new InputEvent( InputEvent::DeviceType::Keyboard, InputEvent::DeviceState::Released, (uint32)wParam );
             pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
         }
         return 0;
@@ -489,6 +486,19 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
         {
             int x = GET_X_LPARAM( lParam );
             int y = GET_Y_LPARAM( lParam );
+            
+            if( pFWCore->m_MouseButtonStates[1] == true )
+            {
+                POINT pt = { (int)pFWCore->m_MouseDownLocation[1].x, (int)pFWCore->m_MouseDownLocation[1].y };
+                ClientToScreen( hWnd, &pt );
+                SetCursorPos( pt.x, pt.y );
+            }
+            vec2 mouseDir = pFWCore->m_MouseDownLocation[1] - vec2( x, y );
+            pFWCore->m_MouseDir = mouseDir;
+            
+            // Send a input event to the event manager.
+            InputEvent* pEvent = new InputEvent( InputEvent::DeviceType::Mouse, InputEvent::DeviceState::Moved, -1, mouseDir );
+            pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
         }
         return 0;
 
@@ -519,6 +529,16 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             SetCapture( pFWCore->m_hWnd );
 
             pFWCore->m_MouseButtonStates[1] = true;
+
+            int x = GET_X_LPARAM( lParam );
+            int y = GET_Y_LPARAM( lParam );
+            pFWCore->m_MouseDownLocation[1].Set( x, y );
+            vec2 mouseDir( 0, 0 );
+            pFWCore->m_MouseDir = mouseDir;
+
+            // Send a input event to the event manager.
+            InputEvent* pEvent = new InputEvent( InputEvent::DeviceType::Mouse, InputEvent::DeviceState::Pressed, 1, mouseDir );
+            pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
         }
         return 0;
 
@@ -527,6 +547,13 @@ LRESULT CALLBACK FWCore::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
             ReleaseCapture();
 
             pFWCore->m_MouseButtonStates[1] = false;
+
+            vec2 mouseDir( 0, 0 );
+            pFWCore->m_MouseDir = mouseDir;
+            
+            // Send a input event to the event manager.
+            InputEvent* pEvent = new InputEvent( InputEvent::DeviceType::Mouse, InputEvent::DeviceState::Released, 1, mouseDir );
+            pFWCore->m_pGame->GetEventManager()->AddEvent( pEvent );
         }
         return 0;
 

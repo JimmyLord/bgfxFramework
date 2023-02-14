@@ -9,6 +9,8 @@
 
 #pragma once
 
+#include "Math/Vector.h"
+
 namespace fw {
 
 class GameObject;
@@ -41,12 +43,14 @@ public:
     enum class DeviceType
     {
         Keyboard,
+        Mouse,
     };
 
     enum class DeviceState
     {
         Pressed,
         Released,
+        Moved,
     };
 
     InputEvent(DeviceType deviceType, DeviceState deviceState, uint32 keyCode)
@@ -54,6 +58,13 @@ public:
         m_DeviceType = deviceType;
         m_DeviceState = deviceState;
         m_KeyCode = keyCode;
+    }
+    InputEvent(DeviceType deviceType, DeviceState deviceState, uint32 mouseButtonID, vec2 mouseDir)
+    {
+        m_DeviceType = deviceType;
+        m_DeviceState = deviceState;
+        m_KeyCode = mouseButtonID;
+        m_MouseDir = mouseDir;
     }
     virtual ~InputEvent() {}
 
@@ -68,6 +79,7 @@ protected:
     DeviceType m_DeviceType;
     DeviceState m_DeviceState;
     uint32 m_KeyCode;
+    vec2 m_MouseDir;
 };
 
 //==========================

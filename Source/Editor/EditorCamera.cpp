@@ -32,25 +32,52 @@ EditorCamera::~EditorCamera()
 
 void EditorCamera::Update(float deltaTime)
 {
+    FWCore* pFramework = m_pEditorCore->GetFramework();
+    
     float speed = 10;
+    float rotSpeed = 5;
+    
     vec3 dir(0,0,0);
 
-    if( m_pEditorCore->GetFramework()->IsKeyDown('W') )
+    if( pFramework->IsKeyDown('W') )
         dir.z += 1;
-    if( m_pEditorCore->GetFramework()->IsKeyDown('S') )
+    if( pFramework->IsKeyDown('S') )
         dir.z -= 1;
-    if( m_pEditorCore->GetFramework()->IsKeyDown('A') )
+    if( pFramework->IsKeyDown('A') )
         dir.x -= 1;
-    if( m_pEditorCore->GetFramework()->IsKeyDown('D') )
+    if( pFramework->IsKeyDown('D') )
         dir.x += 1;
-    if( m_pEditorCore->GetFramework()->IsKeyDown('Q') )
-        dir.y -= 1;
-    if( m_pEditorCore->GetFramework()->IsKeyDown('E') )
+    if( pFramework->IsKeyDown('Q') )
         dir.y += 1;
+    if( pFramework->IsKeyDown('E') )
+        dir.y -= 1;
+    if( pFramework->IsKeyDown('Z') )
+        dir.y -= 1;
 
     dir.Normalize();
 
-    m_Position += dir * deltaTime * speed;
+    bool mouseDown = pFramework->IsMouseButtonDown(1);
+    vec2 mouseDir = pFramework->GetMouseDir();
+    
+    if( mouseDown )
+    {
+        m_Rotation.x += mouseDir.y * deltaTime * rotSpeed;
+        m_Rotation.y += mouseDir.x * deltaTime * rotSpeed;
+    }
+    
+    // Rotate dir by camera rotation.
+    mat4 rot;
+    rot.SetIdentity();
+    rot.Rotate( m_Rotation.x, 1, 0, 0 ); // pitch
+    rot.Rotate( m_Rotation.y, 0, 1, 0 ); // yaw
+    
+    vec3 at = rot.GetAt();
+    vec3 up = rot.GetUp();
+    vec3 right = rot.GetRight();
+    
+    vec3 newdir = dir.x * right + dir.y * up + dir.z * at;
+
+    m_Position += newdir * deltaTime * speed;
 }
 
 void EditorCamera::UpdateTransforms()

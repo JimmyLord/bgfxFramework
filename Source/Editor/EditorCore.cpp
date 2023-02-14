@@ -12,6 +12,7 @@
 #include "EditorCore.h"
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
+#include "Editor/EditorCamera.h"
 #include "EventSystem/EventManager.h"
 #include "Imgui/ImGuiManager.h"
 #include "Math/Vector.h"
@@ -46,15 +47,17 @@ EditorCore::EditorCore(FWCore& fwCore)
 
     // View 0: Render the game scene into an FBO.
     bgfx::setViewFrameBuffer( EditorViews::EditorView_Game, m_Game_FBO );
-    bgfx::setViewClear( EditorViews::EditorView_Game, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x00ff00ff, 1.0f, 0 );
+    bgfx::setViewClear( EditorViews::EditorView_Game, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x003000ff, 1.0f, 0 );
 
     // View 1: Render the editor scene into an FBO.
     bgfx::setViewFrameBuffer( EditorViews::EditorView_Editor, m_Editor_FBO );
-    bgfx::setViewClear( EditorViews::EditorView_Editor, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0xff0000ff, 1.0f, 0 );
+    bgfx::setViewClear( EditorViews::EditorView_Editor, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x300000ff, 1.0f, 0 );
 
     // View 2: Render the imgui hud.
     bgfx::setViewRect( EditorViews::EditorView_ImGui, 0, 0, m_Editor_WindowSize.x, m_Editor_WindowSize.y );
-    bgfx::setViewClear( EditorViews::EditorView_ImGui, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x0000ffff, 1.0f, 0 );
+    bgfx::setViewClear( EditorViews::EditorView_ImGui, BGFX_CLEAR_COLOR | BGFX_CLEAR_DEPTH, 0x000030ff, 1.0f, 0 );
+
+    m_pEditorCamera = new EditorCamera( this, vec3(0,0,-10) );
 }
 
 EditorCore::~EditorCore()
@@ -108,9 +111,17 @@ void EditorCore::Update(float deltaTime)
     if( m_pImGuiManager->WantsKeyboard() == false )
     {
         HandleKeyboardShortcuts();
+
+        if( m_Editor_EditorViewInFocus )
+        {
+            m_pEditorCamera->Update( deltaTime );
+        }
     }
 
-    GameCore::Update( deltaTime );
+    if( m_Editor_GameViewInFocus )
+    {
+        GameCore::Update( deltaTime );
+    }
 }
 
 void EditorCore::HandleKeyboardShortcuts()
@@ -271,6 +282,8 @@ void EditorCore::Editor_DrawGameView(int viewID)
     // Draw our main view in a window.
     if( ImGui::Begin("Game view") )
     {
+        m_Editor_GameViewInFocus = ImGui::IsWindowFocused();
+        
         ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
         ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
         ivec2 size = ivec2(contentMax.x, contentMax.y) - ivec2(contentMin.x, contentMin.y);
@@ -302,6 +315,8 @@ void EditorCore::Editor_DrawEditorView(int viewID)
     // Draw our main view in a window.
     if( ImGui::Begin("Editor view") )
     {
+        m_Editor_EditorViewInFocus = ImGui::IsWindowFocused();
+        
         ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
         ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
         ivec2 size = ivec2(contentMax.x, contentMax.y) - ivec2(contentMin.x, contentMin.y);
@@ -309,6 +324,10 @@ void EditorCore::Editor_DrawEditorView(int viewID)
         if( m_Editor_WindowSize.x > m_Editor_TextureSize.x ) { m_Editor_WindowSize.x = m_Editor_TextureSize.x; }
         if( m_Editor_WindowSize.y > m_Editor_TextureSize.y ) { m_Editor_WindowSize.y = m_Editor_TextureSize.y; }
         bgfx::setViewRect( EditorViews::EditorView_Editor, 0, 0, m_Editor_WindowSize.x, m_Editor_WindowSize.y );
+
+        m_pEditorCamera->SetAspectRatio( (float)size.x / size.y );
+        m_pEditorCamera->UpdateTransforms();
+        m_pEditorCamera->Enable( viewID );
 
         m_pActiveScene->Draw( viewID );
 
@@ -326,7 +345,7 @@ void EditorCore::Editor_DrawEditorView(int viewID)
         {
             ImVec2 pos = ImGui::GetWindowPos();
             
-            Camera* pCamera = m_pActiveScene->GetCamera();
+            EditorCamera* pCamera = m_pEditorCamera;
             if( pCamera )
             {
                 mat4& view = pCamera->GetViewMatrix();

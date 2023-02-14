@@ -19,6 +19,7 @@
 namespace fw {
 
 class Camera;
+class EditorCamera;
 class Event;
 class EventManager;
 class FWCore;
@@ -68,7 +69,11 @@ public:
 protected:
     // Editor variables.
     GameObject* m_pEditor_SelectedObject = nullptr;
-    Camera* m_pEditor_Cam;
+    EditorCamera* m_pEditorCamera = nullptr;
+
+    // Windows/Focus.
+    bool m_Editor_GameViewInFocus = false;
+    bool m_Editor_EditorViewInFocus = false;
 
     // Render to Texture
     ivec2 m_Game_WindowSize = vec2( 512, 512 );

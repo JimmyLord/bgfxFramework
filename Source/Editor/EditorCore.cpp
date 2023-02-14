@@ -103,6 +103,7 @@ void EditorCore::Update(float deltaTime)
 {
     Editor_DisplayObjectList();
     Editor_ShowInspector();
+    Editor_ShowResources();
 
     if( m_pImGuiManager->WantsKeyboard() == false )
     {
@@ -252,6 +253,15 @@ void EditorCore::Editor_ShowInspector()
         {
             m_pActiveScene->GetComponentManager()->Editor_DisplayComponentsForGameObject( m_pEditor_SelectedObject );
         }
+    }
+    ImGui::End();
+}
+
+void EditorCore::Editor_ShowResources()
+{
+    if( ImGui::Begin( "Resources" ) )
+    {
+        m_pResources->Editor_DisplayResources();
     }
     ImGui::End();
 }

@@ -54,6 +54,7 @@ public:
     void Editor_DisplayMainMenu();
     void Editor_DisplayObjectList();
     void Editor_ShowInspector();
+    void Editor_ShowResources();
     void Editor_SetSelectedObject(GameObject* pObject) { m_pEditor_SelectedObject = pObject; }
     void Editor_DrawGameView(int viewID);
     void Editor_DrawEditorView(int viewID);

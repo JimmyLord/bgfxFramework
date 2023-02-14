@@ -15,8 +15,17 @@
 #include "Resources/ShaderProgram.h"
 #include "Resources/SpriteSheet.h"
 #include "Resources/Texture.h"
+#include "../Libraries/imgui/imgui.h"
 
 namespace fw {
+
+const char* ResourceTypeName[] = {
+    "Mesh",
+    "Shader",
+    "Texture",
+    "Material",
+    "SpriteSheet",
+};
 
 ResourceManager::ResourceManager()
 {
@@ -24,125 +33,68 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
-    for( auto& meshPair : m_Meshes )
+    for( auto& mapPair : m_Resources )
     {
-        delete meshPair.second;
-    }
-
-    for( auto& materialPair : m_Materials )
-    {
-        delete materialPair.second;
-    }
-
-    for( auto& texturePair : m_Textures )
-    {
-        delete texturePair.second;
-    }
-
-    for( auto& shaderPair : m_Shaders )
-    {
-        delete shaderPair.second;
-    }
-
-    for( auto& spriteSheetPair : m_SpriteSheets )
-    {
-        delete spriteSheetPair.second;
+        for( auto& resourcePair : mapPair.second )
+        {
+            delete resourcePair.second;
+        }
     }
 }
 
-void ResourceManager::AddMesh(Mesh* pMesh)
+void ResourceManager::AddMesh(Mesh* pMesh)                      { AddResource( ResourceType::Mesh, pMesh ); }
+void ResourceManager::AddShader(ShaderProgram* pShader)         { AddResource( ResourceType::Shader, pShader ); }
+void ResourceManager::AddTexture(Texture* pTexture)             { AddResource( ResourceType::Texture, pTexture ); }
+void ResourceManager::AddMaterial(Material* pMaterial)          { AddResource( ResourceType::Material, pMaterial ); }
+void ResourceManager::AddSpriteSheet(SpriteSheet* pSpriteSheet) { AddResource( ResourceType::SpriteSheet, pSpriteSheet ); }
+
+Mesh* ResourceManager::GetMesh(std::string name)                { return static_cast<Mesh*>( GetResource( ResourceType::Mesh, name ) ); }
+ShaderProgram* ResourceManager::GetShader(std::string name)     { return static_cast<ShaderProgram*>( GetResource( ResourceType::Shader, name ) ); }
+Texture* ResourceManager::GetTexture(std::string name)          { return static_cast<Texture*>( GetResource( ResourceType::Texture, name ) ); }
+Material* ResourceManager::GetMaterial(std::string name)        { return static_cast<Material*>( GetResource( ResourceType::Material, name ) ); }
+SpriteSheet* ResourceManager::GetSpriteSheet(std::string name)  { return static_cast<SpriteSheet*>( GetResource( ResourceType::SpriteSheet, name ) ); }
+
+void ResourceManager::AddResource(ResourceType type, Resource* pResource)
 {
-    const char* name = pMesh->GetName();
-    if( m_Meshes.find(name) == m_Meshes.end() )
+    std::map<std::string, Resource*>& list = m_Resources[type];
+
+    const char* name = pResource->GetName();
+    if( list.find(name) == list.end() )
     {
-        m_Meshes[name] = pMesh;
+        list[pResource->GetName()] = pResource;
     }
 }
 
-void ResourceManager::AddShader(ShaderProgram* pShader)
+Resource* ResourceManager::GetResource(ResourceType type, std::string name)
 {
-    const char* name = pShader->GetName();
-    if( m_Shaders.find(name) == m_Shaders.end() )
+    std::map<std::string, Resource*>& list = m_Resources[type];
+
+    if( list.find(name) != list.end() )
     {
-        m_Shaders[name] = pShader;
-    }
-}
-
-void ResourceManager::AddTexture(Texture* pTexture)
-{
-    const char* name = pTexture->GetName();
-    if( m_Textures.find(name) == m_Textures.end() )
-    {
-        m_Textures[name] = pTexture;
-    }
-}
-
-void ResourceManager::AddMaterial(Material* pMaterial)
-{
-    const char* name = pMaterial->GetName();
-    if( m_Materials.find(name) == m_Materials.end() )
-    {
-        m_Materials[name] = pMaterial;
-    }
-}
-
-void ResourceManager::AddSpriteSheet(SpriteSheet* pSpriteSheet)
-{
-    const char* name = pSpriteSheet->GetName();
-    if( m_SpriteSheets.find(name) == m_SpriteSheets.end() )
-    {
-        m_SpriteSheets[name] = pSpriteSheet;
-    }
-}
-
-Mesh* ResourceManager::GetMesh(std::string name)
-{
-    if( m_Meshes.find(name) != m_Meshes.end() )
-    {
-        return m_Meshes[name];
-    }
-
-    return nullptr;
-}
-
-ShaderProgram* ResourceManager::GetShader(std::string name)
-{
-    if(m_Shaders.find(name) != m_Shaders.end() )
-    {
-        return m_Shaders[name];
-    }
-
-    return nullptr;
-}
-
-Texture* ResourceManager::GetTexture(std::string name)
-{
-    if( m_Textures.find(name) != m_Textures.end() )
-    {
-        return m_Textures[name];
-    }
-
-    return nullptr;
-}
-
-Material* ResourceManager::GetMaterial(std::string name)
-{
-    if( m_Materials.find(name) != m_Materials.end() )
-    {
-        return m_Materials[name];
-    }
-
-    return nullptr;
-}
-
-SpriteSheet* ResourceManager::GetSpriteSheet(std::string name)
-{
-    if( m_SpriteSheets.find(name) != m_SpriteSheets.end() )
-    {
-        return m_SpriteSheets[name];
+        return list[name];
     }
 
     return nullptr;    
+}
+
+void ResourceManager::Editor_DisplayResources()
+{
+    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+    if( ImGui::BeginTabBar( "ResourceTabBar", tab_bar_flags ) )
+    {
+        for( auto& mapPair : m_Resources )
+        {
+            if( ImGui::BeginTabItem( ResourceTypeName[(int)mapPair.first] ) )
+            {
+                for( auto& resourcePair : mapPair.second )
+                {
+                    ImGui::Text( "%s", resourcePair.first.c_str() );
+                }
+                ImGui::EndTabItem();
+            }
+        }
+        ImGui::EndTabBar();
+    }
 }
 
 } // namespace fw

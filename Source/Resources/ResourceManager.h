@@ -16,9 +16,19 @@ namespace fw {
 
 class Mesh;
 class Material;
+class Resource;
 class ShaderProgram;
 class SpriteSheet;
 class Texture;
+
+enum class ResourceType
+{
+    Mesh,
+    Material,
+    Shader,
+    SpriteSheet,
+    Texture,
+};
 
 class ResourceManager
 {
@@ -38,12 +48,13 @@ public:
     Material* GetMaterial(std::string name);
     SpriteSheet* GetSpriteSheet(std::string name);
 
+    void Editor_DisplayResources();
+
 protected:
-    std::map<std::string, fw::Mesh*> m_Meshes;
-    std::map<std::string, fw::ShaderProgram*> m_Shaders;
-    std::map<std::string, fw::Texture*> m_Textures;
-    std::map<std::string, fw::Material*> m_Materials;
-    std::map<std::string, fw::SpriteSheet*> m_SpriteSheets;
+    void AddResource(ResourceType type, Resource* pResource);
+    Resource* GetResource(ResourceType type, std::string name);
+    
+    std::map<ResourceType, std::map<std::string, Resource*>> m_Resources;
 };
 
 } // namespace fw

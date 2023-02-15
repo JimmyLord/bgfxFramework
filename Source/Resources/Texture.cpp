@@ -12,7 +12,7 @@
 #include "bimg/bimg.h"
 #include "bgfx/platform.h"
 
-#define STB_IMAGE_IMPLEMENTATION
+// #define STB_IMAGE_IMPLEMENTATION // defined by ImFileDialog.cpp
 #include "stb/stb_image.h"
 
 #include "FWCore.h"

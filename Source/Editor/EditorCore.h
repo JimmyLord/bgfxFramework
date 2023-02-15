@@ -50,6 +50,9 @@ public:
     virtual void EndFrame() override;
     virtual void OnShutdown() override;
 
+    void LoadScene(const char* filename);
+    void SaveScene(const char* filename);
+    
     // Editor.
     void Editor_CreateMainFrame();
     void Editor_DisplayMainMenu();
@@ -65,6 +68,9 @@ public:
     ivec2 GetEditorWindowSize() { return m_Editor_WindowSize; }
 
     ImGuizmo::OPERATION m_Editor_GizmoMode = ImGuizmo::TRANSLATE;
+
+protected:
+    void InitImFileDialog();
 
 protected:
     // Editor variables.

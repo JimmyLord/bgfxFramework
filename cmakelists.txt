@@ -140,6 +140,8 @@ file( GLOB FrameworkSourceFilesNonRecursive
 	Libraries/imgui/*.h
 	Libraries/ImGuizmo/*.cpp
 	Libraries/ImGuizmo/*.h
+	Libraries/ImFileDialog/ImFileDialog.cpp
+	Libraries/ImFileDialog/ImFileDialog.h
 )
 list( APPEND FrameworkSourceFiles ${FrameworkSourceFilesNonRecursive} )
 source_group( TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${FrameworkSourceFiles} )
@@ -158,7 +160,14 @@ target_include_directories( Framework PUBLIC
 	Libraries/bx/include/compat/msvc
 	Libraries/bimg/include
 	Libraries/bimg/3rdParty
+	Libraries/stb
 	Libraries/imgui
+)
+
+set_source_files_properties(
+	Libraries/ImFileDialog/ImFileDialog.cpp
+	PROPERTIES
+	COMPILE_FLAGS "/wd4996" # This function or variable may be unsafe. Consider using "" instead.
 )
 
 target_compile_features( Framework PRIVATE cxx_std_17 )

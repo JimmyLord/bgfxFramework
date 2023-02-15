@@ -22,6 +22,7 @@
 #include "Scenes/Scene.h"
 #include "Utility/Utility.h"
 #include "../Libraries/imgui/imgui.h"
+#include "../Libraries/ImFileDialog/ImFileDialog.h"
 #include "../Libraries/ImGuizmo/ImGuizmo.h"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
@@ -31,6 +32,7 @@ EditorCore::EditorCore(FWCore& fwCore)
     : GameCore( fwCore )
 {
     m_pImGuiManager = new ImGuiManager( &m_FWCore, EditorViews::EditorView_ImGui );
+    InitImFileDialog();
 
     bool isValid = bgfx::isTextureValid( 0, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT );
     assert( isValid );
@@ -146,22 +148,6 @@ void EditorCore::Draw()
     
     if( true )
     {
-        //mat4 world;
-        //mat4 view;
-        //mat4 proj;
-        //world.SetIdentity();
-        //view.CreateLookAtView( vec3(0,0,-5), vec3(0,1,0), vec3(0,0,0) );
-        //proj.CreatePerspectiveVFoV( 45, 1, 0.01f, 100.0f );
-
-        //bgfx::setViewRect( EditorViews::EditorView_Game, 0, 0, 1280, 720 );
-        //bgfx::setViewTransform( EditorViews::EditorView_Game, &view, &proj );
-        //m_pResources->GetMesh("Square")->Draw( EditorViews::EditorView_Game, m_pUniforms, m_pResources->GetMaterial("Red"), &world );
-
-        //ImVec2 uvMin = ImVec2(0,0);
-        //ImVec2 uvMax = ImVec2(1,1);
-        ////ImGui::Image( fw::imguiTexture(m_pResources->GetTexture("Sokoban")), ImVec2(256,256), uvMin, uvMax );
-        //ImGui::Image( fw::imguiTexture(m_Game_FBOTexture), ImVec2(256,256), uvMin, uvMax );
-
         Editor_DrawGameView( EditorViews::EditorView_Game );
         Editor_DrawEditorView( EditorViews::EditorView_Editor );
     }
@@ -183,6 +169,7 @@ void EditorCore::EndFrame()
 
 void EditorCore::OnShutdown()
 {
+    ifd::FileDialog::Instance().Close();
     GameCore::OnShutdown();
 }
 
@@ -212,26 +199,17 @@ void EditorCore::Editor_DisplayMainMenu()
 
     if( ImGui::BeginMenu( "File" ) )
     {
-        // Show bgfx debug stats.
-        if( ImGui::MenuItem( "Save Scene", "" ) )
-        {
-            nlohmann::json jScene;
-            m_pActiveScene->SaveToJSON( jScene );
-            std::string jsonString = jScene.dump( 4 );
-            SaveCompleteFile( "Data/Scenes/TestScene.scene", jsonString.c_str(), (int32)jsonString.length() );
-        }
-
+        // Load/Save scene.
         if( ImGui::MenuItem( "Load Scene", "" ) )
         {
-            m_pEditor_SelectedObject = nullptr;
-            delete m_pActiveScene;
-            m_pActiveScene = new Scene( this );
+            m_FWCore.SetEscapeKeyWillQuit( false );
+            ifd::FileDialog::Instance().Open("FileLoadDialog", "Load a scene", "Scene file (*.scene){.scene},.*");
+        }
 
-            const char* jsonString = LoadCompleteFile( "Data/Scenes/TestScene.scene", nullptr );
-            nlohmann::json jScene = nlohmann::json::parse( jsonString );
-            delete[] jsonString;
-
-            m_pActiveScene->LoadFromJSON( jScene );
+        if( ImGui::MenuItem( "Save Scene", "" ) )
+        {
+            m_FWCore.SetEscapeKeyWillQuit( false );
+            ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*");
         }
 
         ImGui::EndMenu();
@@ -245,6 +223,49 @@ void EditorCore::Editor_DisplayMainMenu()
     }
 
     ImGui::EndMainMenuBar();
+
+    // Render save dialog.
+    if( ifd::FileDialog::Instance().IsDone("FileLoadDialog") )
+    {
+        m_FWCore.SetEscapeKeyWillQuit( true );
+        if( ifd::FileDialog::Instance().HasResult() )
+        {
+            LoadScene( ifd::FileDialog::Instance().GetResult().u8string().c_str() );
+        }
+        ifd::FileDialog::Instance().Close();
+    }
+
+    // Render load dialog.
+    if( ifd::FileDialog::Instance().IsDone("FileSaveDialog") )
+    {
+        m_FWCore.SetEscapeKeyWillQuit( true );
+        if( ifd::FileDialog::Instance().HasResult() )
+        {
+            SaveScene( ifd::FileDialog::Instance().GetResult().u8string().c_str() );
+        }
+        ifd::FileDialog::Instance().Close();
+    }
+}
+
+void EditorCore::LoadScene(const char* filename)
+{
+    m_pEditor_SelectedObject = nullptr;
+    delete m_pActiveScene;
+    m_pActiveScene = new Scene( this );
+
+    const char* jsonString = LoadCompleteFile( filename, nullptr );
+    nlohmann::json jScene = nlohmann::json::parse( jsonString );
+    delete[] jsonString;
+
+    m_pActiveScene->LoadFromJSON( jScene );
+}
+
+void EditorCore::SaveScene(const char* filename)
+{
+    nlohmann::json jScene;
+    m_pActiveScene->SaveToJSON( jScene );
+    std::string jsonString = jScene.dump( 4 );
+    SaveCompleteFile( filename, jsonString.c_str(), (int32)jsonString.length() );
 }
 
 void EditorCore::Editor_DisplayObjectList()
@@ -383,6 +404,26 @@ void EditorCore::Editor_DrawEditorView(int viewID)
     //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m21, deltaMat.m22, deltaMat.m23, deltaMat.m24 );
     //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m31, deltaMat.m32, deltaMat.m33, deltaMat.m34 );
     //ImGui::Text( "%0.1f, %0.1f, %0.1f, %0.1f", deltaMat.m41, deltaMat.m42, deltaMat.m43, deltaMat.m44 );
+}
+
+void* ImFileDialogCreateTexture(uint8_t* data, int w, int h, char fmt)
+{
+    bgfx::TextureHandle tex = bgfx::createTexture2D( w, h, false, 1, bgfx::TextureFormat::RGBA8, BGFX_TEXTURE_NONE, bgfx::copy(data, w*h*4) );
+    return (void*)fw::imguiTexture(tex);
+}
+
+void ImFileDialogDeleteTexture(void* tex)
+{
+    bgfx::TextureHandle t;
+    t.idx = (uint16_t)((intptr_t)tex & 0xffff);
+    assert( bgfx::isValid( t ) );
+    bgfx::destroy( t );
+}
+
+void EditorCore::InitImFileDialog()
+{
+    ifd::FileDialog::Instance().CreateTexture = ImFileDialogCreateTexture;
+    ifd::FileDialog::Instance().DeleteTexture = ImFileDialogDeleteTexture;
 }
 
 } // namespace fw

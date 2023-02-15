@@ -25,3 +25,6 @@
 [submodule "Libraries/ImGuizmo"]
 	path = Libraries/ImGuizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo
+[submodule "Libraries/ImFileDialog"]
+	path = Libraries/ImFileDialog
+	url = https://github.com/JimmyLord/ImFileDialog.git

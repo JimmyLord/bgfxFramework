@@ -150,6 +150,16 @@ void Scene::Editor_DisplayObjectList()
 
         if( ImGui::TreeNodeEx( name.c_str(), ImGuiTreeNodeFlags_DefaultOpen ) )
         {
+            // Context menu for Scene.
+            if( ImGui::BeginPopupContextItem() )
+            {
+                if( ImGui::MenuItem( "Add GameObject" ) )
+                {
+                    m_Objects.push_back( new GameObject( this, "New Object", fw::vec3(0,0,0), nullptr, nullptr ) );
+                }
+                ImGui::EndPopup();
+            }
+
             for( GameObject* pGameObject : m_Objects )
             {
                 const char* name = "No Name";
@@ -178,6 +188,7 @@ void Scene::Editor_DisplayObjectList()
                     pEditorCore->Editor_SetSelectedObject( pGameObject );
                 }
 
+                // Context menu for GameObject.
                 if( ImGui::BeginPopupContextItem() )
                 {
                     if( ImGui::MenuItem( "Delete" ) )
@@ -203,7 +214,6 @@ void Scene::Editor_DisplayObjectList()
             }
             ImGui::TreePop();
         }
-
     }
 }
 

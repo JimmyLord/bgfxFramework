@@ -56,6 +56,7 @@ public:
 protected:
     // Members.
     GameCore* m_pGameCore = nullptr;
+    std::string m_Name;
     
     // ECS.
     ComponentManager* m_pComponentManager = nullptr;

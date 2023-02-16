@@ -300,6 +300,8 @@ void EditorCore::Editor_ShowResources()
 
 void EditorCore::Editor_DrawGameView(int viewID)
 {
+    m_Editor_GameViewInFocus = false;
+    
     // Draw our main view in a window.
     if( ImGui::Begin("Game view") )
     {
@@ -332,6 +334,8 @@ void EditorCore::Editor_DrawEditorView(int viewID)
 {
     mat4 worldMat;
     mat4 deltaMat;
+
+    m_Editor_EditorViewInFocus = false;
 
     // Draw our main view in a window.
     if( ImGui::Begin("Editor view") )

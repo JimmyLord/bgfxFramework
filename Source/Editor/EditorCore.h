@@ -51,8 +51,8 @@ public:
     virtual void OnShutdown() override;
 
     void LoadScene(const char* filename);
-    void SaveScene(const char* filename);
-    
+    void SaveScene();
+
     // Editor.
     void Editor_CreateMainFrame();
     void Editor_DisplayMainMenu();

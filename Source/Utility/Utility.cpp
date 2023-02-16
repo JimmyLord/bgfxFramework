@@ -8,6 +8,7 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include "CoreHeaders.h"
+#include "Utility.h"
 
 namespace fw {
 
@@ -83,6 +84,17 @@ double GetSystemTimeSinceGameStart()
         starttime = GetSystemTime();
 
     return GetSystemTime() - starttime;
+}
+
+std::string GetFileNameFromPath(const char* path)
+{
+    std::string filename = path;
+
+    size_t lastSlash = filename.find_last_of( "\\/" );
+    if( lastSlash != std::string::npos )
+        filename = filename.substr( lastSlash+1 );
+
+    return filename;    
 }
 
 } // namespace fw

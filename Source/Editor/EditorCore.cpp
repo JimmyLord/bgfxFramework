@@ -36,7 +36,7 @@ EditorCore::EditorCore(FWCore& fwCore)
 
     bool isValid = bgfx::isTextureValid( 0, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT );
     assert( isValid );
-    
+
     // Create an FBO along with a texture to render to.
     // TODO: Don't limit this to a 2048x2048 texture. Have it resize if the window is resized to a larger size.
     m_Game_FBOTexture = bgfx::createTexture2D( m_Game_TextureSize.x, m_Game_TextureSize.y, false, 1, bgfx::TextureFormat::BGRA8, BGFX_TEXTURE_RT );
@@ -145,7 +145,7 @@ void EditorCore::HandleKeyboardShortcuts()
 void EditorCore::Draw()
 {
     GameCore::Draw();
-    
+
     if( true )
     {
         Editor_DrawGameView( EditorViews::EditorView_Game );
@@ -177,8 +177,8 @@ void EditorCore::Editor_CreateMainFrame()
 {
     // Setup a main window with no frame and a dockspace that covers the entire viewport.
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar
-                           | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
-                           | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+        | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove
+        | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
     ImGuiViewport* viewport = ImGui::GetMainViewport();
     ImGui::SetNextWindowPos( viewport->WorkPos );
@@ -188,7 +188,7 @@ void EditorCore::Editor_CreateMainFrame()
     {
         ImGuiID dockspaceID = ImGui::GetID( "My Dockspace" );
         ImGui::DockSpace( dockspaceID );
-	}
+    }
     ImGui::End();
 }
 
@@ -207,6 +207,19 @@ void EditorCore::Editor_DisplayMainMenu()
         }
 
         if( ImGui::MenuItem( "Save Scene", "" ) )
+        {
+            if( m_pActiveScene->Editor_GetFilename() == "" )
+            {
+                m_FWCore.SetEscapeKeyWillQuit( false );
+                ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*");
+            }
+            else
+            {
+                SaveScene();
+            }
+        }
+
+        if( ImGui::MenuItem( "Save Scene As", "" ) )
         {
             m_FWCore.SetEscapeKeyWillQuit( false );
             ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*");
@@ -230,7 +243,10 @@ void EditorCore::Editor_DisplayMainMenu()
         m_FWCore.SetEscapeKeyWillQuit( true );
         if( ifd::FileDialog::Instance().HasResult() )
         {
-            LoadScene( ifd::FileDialog::Instance().GetResult().u8string().c_str() );
+            auto filenameWithPath = ifd::FileDialog::Instance().GetResult().u8string();
+            LoadScene( filenameWithPath.c_str() );
+            std::string filename = GetFileNameFromPath( filenameWithPath.c_str() );
+            m_pActiveScene->SetName( filename.c_str() );
         }
         ifd::FileDialog::Instance().Close();
     }
@@ -241,7 +257,11 @@ void EditorCore::Editor_DisplayMainMenu()
         m_FWCore.SetEscapeKeyWillQuit( true );
         if( ifd::FileDialog::Instance().HasResult() )
         {
-            SaveScene( ifd::FileDialog::Instance().GetResult().u8string().c_str() );
+            auto filenameWithPath = ifd::FileDialog::Instance().GetResult().u8string();
+            m_pActiveScene->Editor_SetFilename( filenameWithPath.c_str() );
+            std::string filename = GetFileNameFromPath( filenameWithPath.c_str() );
+            m_pActiveScene->SetName( filename.c_str() );
+            SaveScene();
         }
         ifd::FileDialog::Instance().Close();
     }
@@ -252,6 +272,7 @@ void EditorCore::LoadScene(const char* filename)
     m_pEditor_SelectedObject = nullptr;
     delete m_pActiveScene;
     m_pActiveScene = new Scene( this );
+    m_pActiveScene->Editor_SetFilename( filename );
 
     const char* jsonString = LoadCompleteFile( filename, nullptr );
     nlohmann::json jScene = nlohmann::json::parse( jsonString );
@@ -260,12 +281,12 @@ void EditorCore::LoadScene(const char* filename)
     m_pActiveScene->LoadFromJSON( jScene );
 }
 
-void EditorCore::SaveScene(const char* filename)
+void EditorCore::SaveScene()
 {
     nlohmann::json jScene;
     m_pActiveScene->SaveToJSON( jScene );
     std::string jsonString = jScene.dump( 4 );
-    SaveCompleteFile( filename, jsonString.c_str(), (int32)jsonString.length() );
+    SaveCompleteFile( m_pActiveScene->Editor_GetFilename().c_str(), jsonString.c_str(), (int32)jsonString.length() );
 }
 
 void EditorCore::Editor_DisplayObjectList()
@@ -301,12 +322,12 @@ void EditorCore::Editor_ShowResources()
 void EditorCore::Editor_DrawGameView(int viewID)
 {
     m_Editor_GameViewInFocus = false;
-    
+
     // Draw our main view in a window.
     if( ImGui::Begin("Game view") )
     {
         m_Editor_GameViewInFocus = ImGui::IsWindowFocused();
-        
+
         ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
         ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
         ivec2 size = ivec2(contentMax.x, contentMax.y) - ivec2(contentMin.x, contentMin.y);
@@ -324,7 +345,7 @@ void EditorCore::Editor_DrawGameView(int viewID)
             uvMin.y = 1.0f;
             uvMax.y = 1.0f - uvMax.y;
         }
-        
+
         ImGui::Image( fw::imguiTexture(m_Game_FBOTexture), ImVec2( (float)m_Game_WindowSize.x, (float)m_Game_WindowSize.y ), uvMin, uvMax );
     }
     ImGui::End();
@@ -341,7 +362,7 @@ void EditorCore::Editor_DrawEditorView(int viewID)
     if( ImGui::Begin("Editor view") )
     {
         m_Editor_EditorViewInFocus = ImGui::IsWindowFocused();
-        
+
         ImVec2 contentMin = ImGui::GetWindowContentRegionMin();
         ImVec2 contentMax = ImGui::GetWindowContentRegionMax();
         ivec2 size = ivec2(contentMax.x, contentMax.y) - ivec2(contentMin.x, contentMin.y);
@@ -369,7 +390,7 @@ void EditorCore::Editor_DrawEditorView(int viewID)
         if( m_pEditor_SelectedObject )
         {
             ImVec2 pos = ImGui::GetWindowPos();
-            
+
             EditorCamera* pCamera = m_pEditorCamera;
             if( pCamera )
             {
@@ -384,7 +405,7 @@ void EditorCore::Editor_DrawEditorView(int viewID)
                 {
                     TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
                     worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
-            
+
                     if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
                     {
                         transform.position = worldMat.GetTranslation();

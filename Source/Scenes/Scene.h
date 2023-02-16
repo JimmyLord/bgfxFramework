@@ -40,29 +40,37 @@ public:
     // Getters.
     GameCore* GetGameCore() { return m_pGameCore; }
     virtual Camera* GetCamera() { return nullptr; }
-    
+
+    // Setters.
+    void SetName(std::string name) { m_Name = name; }
+
     // Save/Load.
     virtual void SaveToJSON(nlohmann::json& jScene);
     virtual void LoadFromJSON(nlohmann::json& jScene);
 
-    // Editor.
-    void Editor_DisplayObjectList();
-        
     // ECS.
     ComponentManager* GetComponentManager() { return m_pComponentManager; }
     entt::registry& GetECSRegistry();
     entt::entity CreateEntity();
 
+    // Editor.
+    void Editor_DisplayObjectList();
+    std::string Editor_GetFilename() { return m_Editor_Filename; }
+    void Editor_SetFilename(std::string filename) { m_Editor_Filename = filename; }
+
 protected:
     // Members.
     GameCore* m_pGameCore = nullptr;
     std::string m_Name;
-    
+
     // ECS.
     ComponentManager* m_pComponentManager = nullptr;
 
     // GameObjects.
     std::vector<GameObject*> m_Objects;
+
+    // Editor.
+    std::string m_Editor_Filename;
 };
 
 } // namespace fw

@@ -35,6 +35,7 @@ Texture::Texture(const char* name, const char* filename)
     // Load the file contents.
     uint32 length;
     char* fileContents = LoadCompleteFile( filename, &length );
+    assert( fileContents != nullptr );
 
     // Have stb_image decompress png from memory into a raw color array.
     int width;

@@ -10,6 +10,11 @@ namespace Random {
 
 static Generator g_RNGObject;
 
+Generator& GetGlobalGenerator()
+{
+    return g_RNGObject;
+}
+
 void SetSeed(uint32 seed)               { g_RNGObject.SetSeed( seed ); }
 int32 Int(int32 min, int32 max)         { return g_RNGObject.Int( min, max ); }
 int32 Int(int32 max)                    { return g_RNGObject.Int( max ); }

@@ -6,6 +6,9 @@
 namespace fw {
 namespace Random {
 
+class Generator;
+Generator& GetGlobalGenerator();
+
 // Get values from a global generator.
 void SetSeed(uint32 seed);
 int32 Int(int32 min, int32 max);

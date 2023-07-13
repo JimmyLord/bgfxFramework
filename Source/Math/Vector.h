@@ -67,10 +67,7 @@ public:
     inline vec2 operator +=(const vec2& o) { this->x += o.x; this->y += o.y; return *this; }
     inline vec2 operator -=(const vec2& o) { this->x -= o.x; this->y -= o.y; return *this; }
 
-    bool vec2::operator<(const vec2& o) const { return (x == o.x) ? (y < o.y) : (x < o.x); }
-    bool vec2::operator>(const vec2& o) const { return (x == o.x) ? (y > o.y) : (x > o.x); }
-
-    float& operator[] (int i) { assert(i >= 0 && i < 2); return *(&x + i); }
+    float& operator [](int i) { assert(i >= 0 && i < 2); return *(&x + i); }
 
 public:
     float x = 0;
@@ -145,7 +142,7 @@ public:
     inline vec3 operator +=(const vec3& o) { this->x += o.x; this->y += o.y; this->z += o.z; return *this; }
     inline vec3 operator -=(const vec3& o) { this->x -= o.x; this->y -= o.y; this->z -= o.z; return *this; }
 
-    float& operator[] (int i) { assert(i >= 0 && i < 3); return *(&x + i); }
+    float& operator [](int i) { assert(i >= 0 && i < 3); return *(&x + i); }
 
 public:
     float x = 0;
@@ -237,7 +234,7 @@ public:
     inline vec4 operator +=(const vec4& o) { this->x += o.x; this->y += o.y; this->z += o.z; this->w += o.w; return *this; }
     inline vec4 operator -=(const vec4& o) { this->x -= o.x; this->y -= o.y; this->z -= o.z; this->w -= o.w; return *this; }
 
-    float& operator[] (int i) { assert(i >= 0 && i < 4); return *(&x + i); }
+    float& operator [](int i) { assert(i >= 0 && i < 4); return *(&x + i); }
 
 public:
     float x = 0;
@@ -303,7 +300,7 @@ public:
     inline ivec2 operator +=(const ivec2& o) { this->x += o.x; this->y += o.y; return *this; }
     inline ivec2 operator -=(const ivec2& o) { this->x -= o.x; this->y -= o.y; return *this; }
 
-    int& operator[] (int i) { assert(i >= 0 && i < 2); return *(&x + i); }
+    int& operator [](int i) { assert(i >= 0 && i < 2); return *(&x + i); }
 
 public:
     int x = 0;
@@ -373,7 +370,7 @@ public:
     inline ivec3 operator +=(const ivec3& o) { this->x += o.x; this->y += o.y; this->z += o.z; return *this; }
     inline ivec3 operator -=(const ivec3& o) { this->x -= o.x; this->y -= o.y; this->z -= o.z; return *this; }
 
-    int& operator[] (int i) { assert(i >= 0 && i < 3); return *(&x + i); }
+    int& operator [](int i) { assert(i >= 0 && i < 3); return *(&x + i); }
 
 public:
     int x = 0;
@@ -426,7 +423,7 @@ public:
     inline ivec4 operator +(const ivec4& o) const { return ivec4(this->x + o.x, this->y + o.y, this->z + o.z, this->w + o.w); }
     inline ivec4 operator -(const ivec4& o) const { return ivec4(this->x - o.x, this->y - o.y, this->z - o.z, this->w - o.w); }
 
-    int& operator[] (int i) { assert(i >= 0 && i < 4); return *(&x + i); }
+    int& operator [](int i) { assert(i >= 0 && i < 4); return *(&x + i); }
 
 public:
     int x = 0;

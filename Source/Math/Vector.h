@@ -42,6 +42,11 @@ public:
     inline vec2 Sub(const vec2& o) const { return vec2(this->x - o.x, this->y - o.y); }
     inline vec2 Scale(const float o) const { return vec2(this->x * o, this->y * o); }
 
+    inline vec2 GetRotatedByDegrees(float d) { float r=d*PI/180.0f; return GetRotatedByRadians(r); }
+    inline vec2 GetRotatedByRadians(float r) { return vec2(x*cosf(r)-y*sinf(r), x*sinf(r)+y*cosf(r)); }
+    inline void RotateByDegrees(float d) { float r=d*PI/180.0f; RotateByRadians(r); }
+    inline void RotateByRadians(float r) { *this = vec2(x*cosf(r)-y*sinf(r), x*sinf(r)+y*cosf(r)); }
+
     inline vec2 WithX(float x) const { return vec2(x, this->y); }
     inline vec2 WithY(float y) const { return vec2(this->x, y); }
 

@@ -74,35 +74,41 @@ public:
     };
 
 public:
-    Material(const char* name, ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha);
-    Material(const char* name, ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha, vec4 uvScaleOffset);
+    Material(const char* name, ShaderProgram* pShader, Texture* pTextureColor, color4f color, bool hasAlpha);
+    Material(const char* name, ShaderProgram* pShader, Texture* pTextureColor, color4f color, bool hasAlpha, vec4 uvScaleOffset);
     virtual ~Material();
 
     void Enable(const Uniforms* pUniforms) const;
 
     // Getters.
     ShaderProgram* GetShader() const { return m_pShader; }
-    Texture* GetTexture() const { return m_pTexture; }
+    Texture* GetTextureColor() const { return m_pTextureColor; }
+    Texture* GetTextureNoise() const { return m_pTextureNoise; }
     vec4 GetUVScaleOffset() { return m_UVScaleOffset; }
     color4f GetColor() const { return m_Color; }
+    float GetControlPerc() const { return m_ControlPerc.x; }
     uint64_t GetBGFXRenderState() const;
     uint64_t GetBGFXAlphaState() const;
 
     // Setters.
     void SetShader(ShaderProgram* pShader) { m_pShader = pShader; }
-    void SetTexture(Texture* pTexture) { m_pTexture = pTexture; }
+    void SetTextureColor(Texture* pTexture) { m_pTextureColor = pTexture; }
+    void SetTextureNoise(Texture* pTexture) { m_pTextureNoise = pTexture; }
     void SetUVScaleOffset(vec2 uvScale, vec2 uvOffset) { m_UVScaleOffset.Set( uvScale, uvOffset ); }
     void SetColor(color4f color) { m_Color = color; }
+    void SetControlPerc(float perc) { m_ControlPerc.x = perc; }
     void SetColorBlend(BlendEquation eq, BlendFunc srcFunc, BlendFunc dstFunc) { m_ColorBlendEquation = eq; m_SrcColorBlendFunc = srcFunc; m_DstColorBlendFunc = dstFunc; }
     void SetAlphaBlend(BlendEquation eq = BlendEquation::SameAsColor, BlendFunc srcFunc = BlendFunc::SameAsColor, BlendFunc dstFunc = BlendFunc::SameAsColor) { m_AlphaBlendEquation = eq; m_SrcAlphaBlendFunc = srcFunc; m_DstAlphaBlendFunc = dstFunc; }
     void SetRenderStateFlags(uint32 flags) { m_RenderStateFlags = flags; }
     void SetDepthTest(DepthTest setting) { m_DepthTest = setting; }
 
 protected:
-    ShaderProgram* m_pShader;
-    Texture* m_pTexture;
+    ShaderProgram* m_pShader = nullptr;
+    Texture* m_pTextureColor = nullptr;
+    Texture* m_pTextureNoise = nullptr;
     vec4 m_UVScaleOffset;
     color4f m_Color;
+    vec4 m_ControlPerc;
 
     BlendEquation m_ColorBlendEquation = BlendEquation::Add;
     BlendEquation m_AlphaBlendEquation = BlendEquation::SameAsColor;

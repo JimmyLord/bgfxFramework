@@ -15,10 +15,10 @@
 
 namespace fw {
 
-Material::Material(const char* name, ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha, vec4 uvScaleOffset)
+Material::Material(const char* name, ShaderProgram* pShader, Texture* pTextureColor, color4f color, bool hasAlpha, vec4 uvScaleOffset)
     : Resource( name )
     , m_pShader( pShader )
-    , m_pTexture( pTexture )
+    , m_pTextureColor( pTextureColor )
     , m_UVScaleOffset( uvScaleOffset )
     , m_Color( color )
 {
@@ -28,8 +28,8 @@ Material::Material(const char* name, ShaderProgram* pShader, Texture* pTexture, 
     }
 }
 
-Material::Material(const char* name, ShaderProgram* pShader, Texture* pTexture, color4f color, bool hasAlpha)
-    : Material( name, pShader, pTexture, color, hasAlpha, vec4(1,1,0,0) )
+Material::Material(const char* name, ShaderProgram* pShader, Texture* pTextureColor, color4f color, bool hasAlpha)
+    : Material( name, pShader, pTextureColor, color, hasAlpha, vec4(1,1,0,0) )
 {
 }
 
@@ -40,9 +40,14 @@ Material::~Material()
 void Material::Enable(const Uniforms* pUniforms) const
 {
     // Textures.
-    if( m_pTexture )
+    if( m_pTextureColor )
     {
-        bgfx::setTexture( 0, pUniforms->m_Map.at("u_TextureColor"), m_pTexture->GetHandle() );
+        bgfx::setTexture( 0, pUniforms->m_Map.at("u_TextureColor"), m_pTextureColor->GetHandle() );
+    }
+
+    if( m_pTextureNoise )
+    {
+        bgfx::setTexture( 1, pUniforms->m_Map.at("u_TextureNoise"), m_pTextureNoise->GetHandle() );
     }
 
     // UV scale and offset.
@@ -50,6 +55,8 @@ void Material::Enable(const Uniforms* pUniforms) const
 
     // Vertex Colors.
     bgfx::setUniform( pUniforms->m_Map.at( "u_DiffuseColor" ), &m_Color.r );
+
+    bgfx::setUniform( pUniforms->m_Map.at( "u_ControlPerc" ), &m_ControlPerc.x );
 }
 
 uint64_t c_BlendEquationConversions[6] =

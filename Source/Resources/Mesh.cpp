@@ -10,6 +10,7 @@
 #include "CoreHeaders.h"
 
 #include "bgfx/platform.h"
+#include "imgui.h"
 
 #include "Mesh.h"
 #include "ShaderProgram.h"
@@ -57,6 +58,15 @@ void Mesh::Draw(int viewID, const Uniforms* pUniforms, const Material* pMaterial
 
     // Submit primitive for rendering to the current view.
     bgfx::submit( viewID, pMaterial->GetShader()->GetProgram() );
+}
+
+void Mesh::Editor_DisplayProperties()
+{
+    ImGui::Text( "Mesh: %s", m_Name );
+    ImGui::Separator();
+
+    ImGui::Text( "VBO: %d", m_VBO.idx );
+    ImGui::Text( "IBO: %d", m_IBO.idx );
 }
 
 } // namespace fw

@@ -30,6 +30,9 @@ public:
 
     void Draw(int viewID, const Uniforms* pUniforms, const Material* pMaterial, const mat4* worldMat);
 
+    // Editor.
+    virtual void Editor_DisplayProperties() override;
+    
 protected:
     bgfx::VertexBufferHandle m_VBO;
     bgfx::IndexBufferHandle m_IBO;

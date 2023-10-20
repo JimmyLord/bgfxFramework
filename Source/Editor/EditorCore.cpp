@@ -317,6 +317,12 @@ void EditorCore::Editor_ShowResources()
         m_pResources->Editor_DisplayResources();
     }
     ImGui::End();
+
+    if( ImGui::Begin( "Resource Editor" ) )
+    {
+        m_pResources->Editor_DisplaySelectedResource();
+    }
+    ImGui::End();
 }
 
 void EditorCore::Editor_DrawGameView(int viewID)

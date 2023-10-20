@@ -10,6 +10,7 @@
 #include "CoreHeaders.h"
 
 #include "bgfx/platform.h"
+#include "imgui.h"
 
 #include "ShaderProgram.h"
 #include "Utility/Utility.h"
@@ -30,6 +31,16 @@ ShaderProgram::ShaderProgram(const char* name, const char* shaderFolder, const c
 ShaderProgram::~ShaderProgram()
 {
     Cleanup();
+}
+
+void ShaderProgram::Editor_DisplayProperties()
+{
+    ImGui::Text( "Shader: %s", m_Name );
+    ImGui::Separator();
+
+    ImGui::Text( "Program: %d", m_Program.idx );
+    ImGui::Text( "VertShader: %d", m_VertShader.idx );
+    ImGui::Text( "FragShader: %d", m_FragShader.idx );
 }
 
 void ShaderProgram::Cleanup()

@@ -27,6 +27,9 @@ public:
     Texture* GetTexture() { return m_pTexture; }
     SpriteInfo GetSpriteByName(std::string name);    
 
+    // Editor.
+    virtual void Editor_DisplayProperties() override;
+    
 protected:
     fw::Texture* m_pTexture = nullptr;
     std::map<std::string, SpriteInfo> m_Sprites;

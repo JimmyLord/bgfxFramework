@@ -23,6 +23,9 @@ public:
 
     const char* GetName() { return m_Name; }
 
+    // Editor.
+    virtual void Editor_DisplayProperties() = 0;
+
 protected:
     const char* m_Name;
 };

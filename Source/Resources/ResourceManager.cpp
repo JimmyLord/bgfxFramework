@@ -20,11 +20,11 @@
 namespace fw {
 
 const char* ResourceTypeName[] = {
-    "Mesh",
-    "Shader",
-    "Texture",
-    "Material",
-    "SpriteSheet",
+    "Materials",
+    "Meshes",
+    "Shaders",
+    "SpriteSheets",
+    "Textures",
 };
 
 ResourceManager::ResourceManager()
@@ -88,12 +88,27 @@ void ResourceManager::Editor_DisplayResources()
             {
                 for( auto& resourcePair : mapPair.second )
                 {
-                    ImGui::Text( "%s", resourcePair.first.c_str() );
+                    if( ImGui::Selectable( resourcePair.first.c_str() ) )
+                    {
+                        m_pSelectedResource = resourcePair.second;
+                    }
                 }
                 ImGui::EndTabItem();
             }
         }
         ImGui::EndTabBar();
+    }
+}
+
+void ResourceManager::Editor_DisplaySelectedResource()
+{
+    if( m_pSelectedResource == nullptr )
+    {
+        ImGui::Text( "No resource selected." );
+    }
+    else
+    {
+        m_pSelectedResource->Editor_DisplayProperties();
     }
 }
 

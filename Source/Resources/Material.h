@@ -102,6 +102,9 @@ public:
     void SetRenderStateFlags(uint32 flags) { m_RenderStateFlags = flags; }
     void SetDepthTest(DepthTest setting) { m_DepthTest = setting; }
 
+    // Editor.
+    virtual void Editor_DisplayProperties() override;
+
 protected:
     ShaderProgram* m_pShader = nullptr;
     Texture* m_pTextureColor = nullptr;

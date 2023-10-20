@@ -11,6 +11,7 @@
 
 #include "bimg/bimg.h"
 #include "bgfx/platform.h"
+#include "imgui.h"
 
 // #define STB_IMAGE_IMPLEMENTATION // defined by ImFileDialog.cpp
 #include "stb/stb_image.h"
@@ -120,6 +121,18 @@ void Texture::Rebuild(uint32 width, uint32 height, Format format, void* pixels)
     m_HasMips = false;
     m_NumLayers = 1;
     m_Flags = 0;
+}
+
+void Texture::Editor_DisplayProperties()
+{
+    ImGui::Text( "Texture: %s", m_Name );
+    ImGui::Separator();
+
+    ImGui::Text( "Mutable: %s", m_Mutable ? "Yes" : "No " );
+    ImGui::Text( "Size: %dx%d", (int)m_Size.x, (int)m_Size.y );
+    ImGui::Text( "Mips: %s", m_HasMips ? "Yes" : "No" );
+    ImGui::Text( "Layers: %d", m_NumLayers );
+    ImGui::Text( "Flags: %d", m_Flags );
 }
 
 } // namespace fw

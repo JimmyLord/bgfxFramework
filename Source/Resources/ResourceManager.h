@@ -23,8 +23,8 @@ class Texture;
 
 enum class ResourceType
 {
-    Mesh,
     Material,
+    Mesh,
     Shader,
     SpriteSheet,
     Texture,
@@ -49,12 +49,15 @@ public:
     SpriteSheet* GetSpriteSheet(std::string name);
 
     void Editor_DisplayResources();
+    void Editor_DisplaySelectedResource();
 
 protected:
     void AddResource(ResourceType type, Resource* pResource);
     Resource* GetResource(ResourceType type, std::string name);
     
     std::map<ResourceType, std::map<std::string, Resource*>> m_Resources;
+
+    Resource* m_pSelectedResource = nullptr;
 };
 
 } // namespace fw

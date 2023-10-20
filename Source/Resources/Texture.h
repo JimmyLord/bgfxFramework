@@ -33,6 +33,9 @@ public:
     bgfx::TextureHandle GetHandle() { return m_TextureHandle; }
     void Rebuild(uint32 width, uint32 height, Format format, void* pixels);
 
+    // Editor.
+    virtual void Editor_DisplayProperties() override;
+    
 protected:
     bgfx::TextureHandle m_TextureHandle = BGFX_INVALID_HANDLE;
 

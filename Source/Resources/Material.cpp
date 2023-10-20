@@ -9,6 +9,8 @@
 
 #include "CoreHeaders.h"
 
+#include "imgui.h"
+
 #include "Material.h"
 #include "Renderer/Uniforms.h"
 #include "Resources/Texture.h"
@@ -136,6 +138,15 @@ uint64_t Material::GetBGFXAlphaState() const
     }
 
     return bgfxBlendState;
+}
+
+void Material::Editor_DisplayProperties()
+{
+    ImGui::Text( "Material: %s", m_Name );
+    ImGui::Separator();
+
+    ImGui::ColorEdit4( "Color", &m_Color.r );
+    ImGui::SliderFloat( "Control Perc", &m_ControlPerc.x, 0.0f, 1.0f );
 }
 
 } // namespace fw

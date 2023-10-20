@@ -24,6 +24,9 @@ public:
     // Getters.
     const bgfx::ProgramHandle& GetProgram() const { return m_Program; }
 
+    // Editor.
+    virtual void Editor_DisplayProperties() override;
+    
 protected:
     void Cleanup();
 

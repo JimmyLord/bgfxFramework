@@ -1,8 +1,10 @@
 #include "CoreHeaders.h"
+
+#include "imgui.h"
+#include "nlohmann-json/single_include/nlohmann/json.hpp"
+
 #include "SpriteSheet.h"
 #include "Utility/Utility.h"
-
-#include "nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
 
@@ -45,6 +47,14 @@ SpriteSheet::SpriteInfo SpriteSheet::GetSpriteByName(std::string name)
 	}
 
 	return { vec2(1,1), vec2(0,0) };
+}
+
+void SpriteSheet::Editor_DisplayProperties()
+{
+    ImGui::Text( "SpriteSheet: %s", m_Name );
+    ImGui::Separator();
+
+    ImGui::Text( "Sprites: %d", m_Sprites.size() );
 }
 
 } // namespace fw

@@ -10,7 +10,6 @@
 #pragma once
 
 #include "Math/Vector.h"
-#include "../Libraries/entt/src/entt/entt.hpp"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
 
 namespace fw {
@@ -35,7 +34,7 @@ public:
 
     // Getters.
     Scene* GetScene() { return m_pScene; }
-    entt::entity GetEntityID() { return m_EntityID; }
+    flecs::entity GetEntity() { return m_Entity; }
 
     // Save/Load.
     virtual void SaveToJSON(nlohmann::json& jGameObject);
@@ -44,7 +43,7 @@ public:
 protected:
     Scene* m_pScene = nullptr;
 
-    entt::entity m_EntityID = entt::null;
+    flecs::entity m_Entity;
 };
 
 } // namespace fw

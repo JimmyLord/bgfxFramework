@@ -125,6 +125,14 @@ add_compile_options(/w44305)
 #source_group( "CMake PCH Files" FILES ${bgfxPCHFiles} )
 
 ###################
+# Flecs
+###################
+
+option( FLECS_SHARED "" OFF )
+option( FLECS_PIC "" OFF )
+add_subdirectory( Libraries/flecs )
+
+###################
 # Framework Library
 ###################
 
@@ -162,6 +170,13 @@ target_include_directories( Framework PUBLIC
 	Libraries/bimg/3rdParty
 	Libraries/stb
 	Libraries/imgui
+)
+
+target_link_libraries( Framework PUBLIC
+	bgfx
+	bimg
+	bx
+	flecs::flecs_static
 )
 
 set_source_files_properties(

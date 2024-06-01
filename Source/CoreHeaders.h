@@ -35,3 +35,15 @@
 
 // Framework headers.
 #include "DataTypes.h"
+
+// 3rd party headers.
+#include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
+#include "../Libraries/imgui/imgui.h"
+#include "../Libraries/ImFileDialog/ImFileDialog.h"
+#include "../Libraries/ImGuizmo/ImGuizmo.h"
+#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
+
+#pragma warning( push )
+#pragma warning( disable : 4005 ) // 'flecs_STATIC': macro redefinition
+#include "../Libraries/flecs/flecs.h"
+#pragma warning( pop )

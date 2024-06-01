@@ -7,17 +7,27 @@
 #include "Resources/Material.h"
 #include "Resources/Mesh.h"
 #include "Resources/ResourceManager.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 #include "../Libraries/imgui/imgui.h"
 
 namespace fw {
 
 ComponentManager::ComponentManager()
 {
+    flecs::id_t nameID = m_FlecsWorld.component<NameData>();
+    flecs::id_t transformID = m_FlecsWorld.component<TransformData>();
+    flecs::id_t meshID = m_FlecsWorld.component<MeshData>();
+
+    m_ComponentDefinitions[nameID] = new NameComponentDefinition();
+    m_ComponentDefinitions[transformID] = new TransformComponentDefinition();
+    m_ComponentDefinitions[meshID] = new MeshComponentDefinition();
 }
 
 ComponentManager::~ComponentManager()
 {
+    for( auto& pair : m_ComponentDefinitions )
+    {
+        delete pair.second;
+    }
 }
 
 void ComponentManager::Editor_AddComponentToGameObject(GameObject* pObject)
@@ -25,110 +35,51 @@ void ComponentManager::Editor_AddComponentToGameObject(GameObject* pObject)
     bool hasIt;
     
     // Grey out the components the object already has.
-    
-    hasIt = m_ECSRegistry.try_get<NameData>( pObject->GetEntityID() ) != nullptr;
-    if( ImGui::MenuItem( "Name", "", nullptr, !hasIt ) ) { m_ECSRegistry.emplace<NameData>( pObject->GetEntityID() ); }
-    
-    hasIt = m_ECSRegistry.try_get<TransformData>( pObject->GetEntityID() ) != nullptr;
-    if( ImGui::MenuItem( "Transform", "", false, !hasIt ) ) { m_ECSRegistry.emplace<TransformData>( pObject->GetEntityID() ); }
+    hasIt = pObject->GetEntity().has<NameData>();
+    if( ImGui::MenuItem( "Name", "", nullptr, !hasIt ) ) { pObject->GetEntity().add<NameData>(); }
 
-    hasIt = m_ECSRegistry.try_get<MeshData>( pObject->GetEntityID() ) != nullptr;
-    if( ImGui::MenuItem( "Mesh", "", nullptr, !hasIt ) ) { m_ECSRegistry.emplace<MeshData>( pObject->GetEntityID() ); }
+    hasIt = pObject->GetEntity().has<TransformData>();
+    if( ImGui::MenuItem( "Transform", "", nullptr, !hasIt ) ) { pObject->GetEntity().add<TransformData>(); }
+
+    hasIt = pObject->GetEntity().has<MeshData>();
+    if( ImGui::MenuItem( "Mesh", "", nullptr, !hasIt ) ) { pObject->GetEntity().add<MeshData>(); }
 }
 
 void ComponentManager::SaveGameObjectComponentsToJSON(GameObject* pGameObject, nlohmann::json& jGameObject)
 {
-    entt::registry& registry = pGameObject->GetScene()->GetECSRegistry();
-    entt::entity id = pGameObject->GetEntityID();
-    
-    NameData* pNameData = registry.try_get<NameData>( id );
-    if( pNameData )
-    {
-        jGameObject["NameData"]["Name"] = pNameData->m_Name;
-    }
+    flecs::entity entity = pGameObject->GetEntity();
 
-    TransformData* pTransformData = registry.try_get<TransformData>( id );
-    if( pTransformData )
-    {
-        jGameObject["TransformData"]["Position"] = nlohmann::json::array();
-        jGameObject["TransformData"]["Position"].push_back( pTransformData->position.x );
-        jGameObject["TransformData"]["Position"].push_back( pTransformData->position.y );
-        jGameObject["TransformData"]["Position"].push_back( pTransformData->position.z );
-
-        jGameObject["TransformData"]["Rotation"] = nlohmann::json::array();
-        jGameObject["TransformData"]["Rotation"].push_back( pTransformData->rotation.x );
-        jGameObject["TransformData"]["Rotation"].push_back( pTransformData->rotation.y );
-        jGameObject["TransformData"]["Rotation"].push_back( pTransformData->rotation.z );
-
-        jGameObject["TransformData"]["Scale"] = nlohmann::json::array();
-        jGameObject["TransformData"]["Scale"].push_back( pTransformData->scale.x );
-        jGameObject["TransformData"]["Scale"].push_back( pTransformData->scale.y );
-        jGameObject["TransformData"]["Scale"].push_back( pTransformData->scale.z );
-    }
-
-    MeshData* pMeshData = registry.try_get<MeshData>( id );
-    if( pMeshData )
-    {
-        jGameObject["MeshData"]["Mesh"] = pMeshData->pMesh->GetName();
-        jGameObject["MeshData"]["Material"] = pMeshData->pMaterial->GetName();
-    }
+    // iterate over all components and save them to the JSON object
+    entity.each(
+        [&](const flecs::id_t componentId)
+        {
+            const void* pData = entity.get( componentId );
+            BaseComponentDefinition* pComponentDef = m_ComponentDefinitions[componentId];
+            pComponentDef->SaveToJSON( jGameObject[pComponentDef->GetName()], pData );
+        }
+    );
 }
 
 void ComponentManager::LoadGameObjectComponentsFromJSON(GameObject* pGameObject, nlohmann::json& jGameObject)
 {
     GameCore* pGameCore = pGameObject->GetScene()->GetGameCore();
     ResourceManager* pResourceManager = pGameCore->GetResourceManager();
-    entt::registry& registry = pGameObject->GetScene()->GetECSRegistry();
-    entt::entity id = pGameObject->GetEntityID();
+    flecs::entity entity = pGameObject->GetEntity();
 
-    if( jGameObject.contains("NameData") )
+    for( auto& pair : m_ComponentDefinitions )
     {
-        NameData* pNameData = registry.try_get<NameData>( id );
-        assert( pNameData == nullptr );
-
-        std::string name = jGameObject["NameData"]["Name"];
-        
-        pNameData = &registry.emplace<NameData>( id, name.c_str() );
-    }
-
-    if( jGameObject.contains("TransformData") )
-    {
-        TransformData* pTransformData = registry.try_get<TransformData>( id );
-        assert( pTransformData == nullptr );
-
-        pTransformData = &registry.emplace<TransformData>( id );
-
-        pTransformData->position.x = jGameObject["TransformData"]["Position"][0].get<float>();
-        pTransformData->position.y = jGameObject["TransformData"]["Position"][1].get<float>();
-        pTransformData->position.z = jGameObject["TransformData"]["Position"][2].get<float>();
-
-        pTransformData->rotation.x = jGameObject["TransformData"]["Rotation"][0].get<float>();
-        pTransformData->rotation.y = jGameObject["TransformData"]["Rotation"][1].get<float>();
-        pTransformData->rotation.z = jGameObject["TransformData"]["Rotation"][2].get<float>();
-
-        pTransformData->scale.x = jGameObject["TransformData"]["Scale"][0].get<float>();
-        pTransformData->scale.y = jGameObject["TransformData"]["Scale"][1].get<float>();
-        pTransformData->scale.z = jGameObject["TransformData"]["Scale"][2].get<float>();
-    }
-
-    if( jGameObject.contains("MeshData") )
-    {
-        MeshData* pMeshData = registry.try_get<MeshData>(id);
-        assert( pMeshData == nullptr );
-
-        pMeshData = &registry.emplace<MeshData>( id );
-
-        pMeshData->pMesh = pResourceManager->GetMesh( jGameObject["MeshData"]["Mesh"] );
-        pMeshData->pMaterial = pResourceManager->GetMaterial( jGameObject["MeshData"]["Material"] );
+        if( jGameObject.contains( pair.second->GetName() ) )
+        {
+            pair.second->LoadFromJSON( entity, jGameObject[pair.second->GetName()], pResourceManager );
+        }
     }
 }
 
 void ComponentManager::Editor_DisplayComponentsForGameObject(GameObject* pGameObject)
 {
-    entt::registry& registry = pGameObject->GetScene()->GetECSRegistry();
-    entt::entity id = pGameObject->GetEntityID();
+    flecs::entity entity = pGameObject->GetEntity();
 
-    NameData* pNameData = registry.try_get<NameData>( id );
+    const NameData* pNameData = entity.get<NameData>();
     if( pNameData )
     {
         if( ImGui::CollapsingHeader( "Name", ImGuiTreeNodeFlags_DefaultOpen ) )
@@ -139,7 +90,7 @@ void ComponentManager::Editor_DisplayComponentsForGameObject(GameObject* pGameOb
 
     ImGui::Separator();
 
-    TransformData* pTransformData = registry.try_get<TransformData>( id );
+    TransformData* pTransformData = &entity.ensure<TransformData>();
     if( pTransformData )
     {
         if( ImGui::CollapsingHeader( "Transform", ImGuiTreeNodeFlags_DefaultOpen ) )
@@ -147,12 +98,13 @@ void ComponentManager::Editor_DisplayComponentsForGameObject(GameObject* pGameOb
             ImGui::DragFloat3( "Position", &pTransformData->position.x, 0.1f );
             ImGui::DragFloat3( "Rotation", &pTransformData->rotation.x, 0.1f );
             ImGui::DragFloat3( "Scale", &pTransformData->scale.x, 0.1f );
+            entity.modified<TransformData>();
         }
     }
 
     ImGui::Separator();
 
-    MeshData* pMeshData = registry.try_get<MeshData>( id );
+    const MeshData* pMeshData = entity.get<MeshData>();
     if( pMeshData )
     {
         if( ImGui::CollapsingHeader( "Mesh", ImGuiTreeNodeFlags_DefaultOpen ) )

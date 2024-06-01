@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "../Libraries/entt/src/entt/entt.hpp"
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
 
 namespace fw {
@@ -50,8 +49,8 @@ public:
 
     // ECS.
     ComponentManager* GetComponentManager() { return m_pComponentManager; }
-    entt::registry& GetECSRegistry();
-    entt::entity CreateEntity();
+    flecs::world& GetFlecsWorld();
+    flecs::entity CreateEntity();
 
     // Editor.
     void Editor_DisplayObjectList();

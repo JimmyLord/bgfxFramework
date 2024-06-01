@@ -203,7 +203,7 @@ void EditorCore::Editor_DisplayMainMenu()
         if( ImGui::MenuItem( "Load Scene", "" ) )
         {
             m_FWCore.SetEscapeKeyWillQuit( false );
-            ifd::FileDialog::Instance().Open("FileLoadDialog", "Load a scene", "Scene file (*.scene){.scene},.*");
+            ifd::FileDialog::Instance().Open("FileLoadDialog", "Load a scene", "Scene file (*.scene){.scene},.*", false, "Data/Scenes");
         }
 
         if( ImGui::MenuItem( "Save Scene", "" ) )
@@ -211,7 +211,7 @@ void EditorCore::Editor_DisplayMainMenu()
             if( m_pActiveScene->Editor_GetFilename() == "" )
             {
                 m_FWCore.SetEscapeKeyWillQuit( false );
-                ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*");
+                ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*", "Data/Scenes");
             }
             else
             {
@@ -222,7 +222,7 @@ void EditorCore::Editor_DisplayMainMenu()
         if( ImGui::MenuItem( "Save Scene As", "" ) )
         {
             m_FWCore.SetEscapeKeyWillQuit( false );
-            ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*");
+            ifd::FileDialog::Instance().Save("FileSaveDialog", "Save a scene", "Scene file (*.scene){.scene},.*", "Data/Scenes");
         }
 
         ImGui::EndMenu();
@@ -407,9 +407,9 @@ void EditorCore::Editor_DrawEditorView(int viewID)
                 ImGuizmo::SetDrawlist();
                 ImGuizmo::SetRect( pos.x + contentMin.x, pos.y + contentMin.y, size.x, size.y );
 
-                if( m_pActiveScene->GetECSRegistry().try_get<TransformData>( m_pEditor_SelectedObject->GetEntityID() ) )
+                if( m_pEditor_SelectedObject->GetEntity().get<TransformData>() )
                 {
-                    TransformData& transform = m_pActiveScene->GetECSRegistry().get<TransformData>( m_pEditor_SelectedObject->GetEntityID() );
+                    TransformData& transform = m_pEditor_SelectedObject->GetEntity().ensure<TransformData>();
                     worldMat.CreateSRT( transform.scale, transform.rotation, transform.position );
 
                     if( ImGuizmo::Manipulate( &view.m11, &proj.m11, m_Editor_GizmoMode, ImGuizmo::MODE::LOCAL, &worldMat.m11, &deltaMat.m11 ) )
@@ -419,6 +419,7 @@ void EditorCore::Editor_DrawEditorView(int viewID)
 
                         // This isn't working well.
                         transform.rotation = worldMat.GetEulerAngles();
+                        m_pEditor_SelectedObject->GetEntity().modified<TransformData>();
                     }
                 }
             }

@@ -16,9 +16,6 @@
 [submodule "Framework/Libraries/pcg-cpp"]
 	path = Libraries/pcg-cpp
 	url = https://github.com/imneme/pcg-cpp.git
-[submodule "Framework/Libraries/entt"]
-	path = Libraries/entt
-	url = https://github.com/skypjack/entt.git
 [submodule "Libraries/nlohmann-json"]
 	path = Libraries/nlohmann-json
 	url = https://github.com/nlohmann/json.git
@@ -28,3 +25,6 @@
 [submodule "Libraries/ImFileDialog"]
 	path = Libraries/ImFileDialog
 	url = https://github.com/JimmyLord/ImFileDialog.git
+[submodule "Libraries/flecs"]
+	path = Libraries/flecs
+	url = https://github.com/SanderMertens/flecs.git

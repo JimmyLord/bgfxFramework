@@ -14,7 +14,6 @@
 #include "../Libraries/bgfx/include/bgfx/bgfx.h"
 #include "../Libraries/imgui/imgui.h"
 #include "../Libraries/ImGuizmo/ImGuizmo.h"
-#include "../Libraries/entt/src/entt/entt.hpp"
 
 namespace fw {
 

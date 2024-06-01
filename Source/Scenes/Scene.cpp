@@ -87,19 +87,20 @@ void Scene::Draw(int viewID)
 void Scene::DrawIntoView(int viewID)
 {
     Uniforms* pUniforms = m_pGameCore->GetUniforms();
-    
-    auto group = m_pComponentManager->GetECSRegistry().group<TransformData>( entt::get<MeshData> );
-    for( auto entity : group )
-    {
-        auto& [transformData, meshData] = group.get<TransformData, MeshData>( entity );
 
-        mat4 worldMat;
-        worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
-        if( meshData.pMesh )
+    flecs::world& world = m_pComponentManager->GetFlecsWorld();
+
+    world.each<>(
+        [viewID, pUniforms](TransformData& transformData, MeshData& meshData)
         {
-            meshData.pMesh->Draw( viewID, pUniforms, meshData.pMaterial, &worldMat );
+            mat4 worldMat;
+            worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
+            if( meshData.pMesh )
+            {
+                meshData.pMesh->Draw( viewID, pUniforms, meshData.pMaterial, &worldMat );
+            }
         }
-    }
+    );
 }
 
 void Scene::SaveToJSON(nlohmann::json& jScene)
@@ -127,14 +128,14 @@ void Scene::LoadFromJSON(nlohmann::json& jScene)
     }
 }
 
-entt::registry& Scene::GetECSRegistry()
+flecs::world& Scene::GetFlecsWorld()
 {
-    return m_pComponentManager->GetECSRegistry();
+    return m_pComponentManager->GetFlecsWorld();
 }
 
-entt::entity Scene::CreateEntity()
+flecs::entity Scene::CreateEntity()
 {
-    return m_pComponentManager->GetECSRegistry().create();
+    return m_pComponentManager->GetFlecsWorld().entity();
 }
 
 void Scene::Editor_DisplayObjectList()
@@ -164,10 +165,10 @@ void Scene::Editor_DisplayObjectList()
             {
                 const char* name = "No Name";
         
-                bool hasName = m_pComponentManager->GetECSRegistry().try_get<fw::NameData>( pGameObject->GetEntityID() );
+                bool hasName = pGameObject->GetEntity().has<NameData>();
                 if( hasName )
                 {
-                    auto& nameData = m_pComponentManager->GetECSRegistry().get<fw::NameData>( pGameObject->GetEntityID() );
+                    const NameData& nameData = *pGameObject->GetEntity().get<NameData>();
                     if( nameData.m_Name[0] != '\0' )
                     {
                         name = nameData.m_Name;

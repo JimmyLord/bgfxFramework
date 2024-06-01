@@ -9,7 +9,6 @@
 
 #pragma once
 
-#include "entt/src/entt/entt.hpp"
 #include "Math/Vector.h"
 #include "../Libraries/bgfx/include/bgfx/bgfx.h"
 #include "../Libraries/imgui/imgui.h"

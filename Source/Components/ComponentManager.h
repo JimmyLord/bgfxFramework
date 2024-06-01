@@ -1,10 +1,11 @@
 #pragma once
 
 #include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
-#include "../Libraries/entt/src/entt/entt.hpp"
+#include "../Libraries/flecs/flecs.h"
 
 namespace fw {
 
+class BaseComponentDefinition;
 class GameObject;
 
 class ComponentManager
@@ -21,10 +22,11 @@ public:
     virtual void Editor_DisplayComponentsForGameObject(GameObject* pGameObject);
 
     // Getters.
-    entt::registry& GetECSRegistry() { return m_ECSRegistry; }
+    flecs::world& GetFlecsWorld() { return m_FlecsWorld; }
 
 protected:
-    entt::registry m_ECSRegistry;
+    flecs::world m_FlecsWorld;
+    std::map<flecs::id_t, BaseComponentDefinition*> m_ComponentDefinitions;
 };
 
 } // namespace fw

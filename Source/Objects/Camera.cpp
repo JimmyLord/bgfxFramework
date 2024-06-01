@@ -31,12 +31,11 @@ void Camera::Update(float32 deltaTime)
 {
     if( m_pObjectWeAreLookingAt )
     {
-        entt::entity entityID = m_pObjectWeAreLookingAt->GetEntityID();
-        const TransformData& transformData = m_pScene->GetECSRegistry().get<TransformData>( entityID );
+        const TransformData& transformData = *m_pObjectWeAreLookingAt->GetEntity().get<TransformData>();
         m_LookAtPosition = transformData.position;
     }
 
-    const TransformData& transformData = m_pScene->GetECSRegistry().get<TransformData>( m_EntityID );
+    const TransformData& transformData = *m_Entity.get<TransformData>();
     m_ViewMatrix.CreateLookAtView( transformData.position, vec3(0,1,0), m_LookAtPosition );
     m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, m_AspectRatio, 0.01f, 100.0f );
 }

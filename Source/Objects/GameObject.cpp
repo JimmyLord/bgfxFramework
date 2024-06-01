@@ -21,24 +21,24 @@ namespace fw {
 GameObject::GameObject(Scene* pScene)
     : m_pScene( pScene )
 {
-    m_EntityID = m_pScene->GetECSRegistry().create();
+    m_Entity = m_pScene->CreateEntity();
 }
 
 GameObject::GameObject(Scene* pScene, std::string name, vec3 pos, Mesh* pMesh, Material* pMaterial)
     : m_pScene( pScene )
 {
-    m_EntityID = m_pScene->GetECSRegistry().create();
-    m_pScene->GetECSRegistry().emplace<TransformData>( m_EntityID, pos, vec3(0), vec3(1) );
-    m_pScene->GetECSRegistry().emplace<NameData>( m_EntityID, name.c_str() );
+    m_Entity = m_pScene->CreateEntity();
+    m_Entity.set<TransformData>( {pos, vec3(0), vec3(1)} );
+    m_Entity.set<NameData>( {name.c_str()} );
     if( pMesh != nullptr )
     {
-        m_pScene->GetECSRegistry().emplace<MeshData>( m_EntityID, pMesh, pMaterial );
+        m_Entity.set<MeshData>( {pMesh, pMaterial} );
     }
 }
 
 GameObject::~GameObject()
 {
-    m_pScene->GetECSRegistry().destroy( m_EntityID );
+    m_Entity.destruct();
 }
 
 void GameObject::Update(float deltaTime)

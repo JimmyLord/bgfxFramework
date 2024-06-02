@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2022-2024 Jimmy Lord
+//
+// This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
 #include "CoreComponents.h"
 #include "Resources/Mesh.h"
 #include "Resources/Material.h"
@@ -9,12 +18,12 @@ namespace fw {
 // NameComponentDefinition
 //==============================
 
-void NameComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const void* pData)
+void NameComponentDefinition::SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData)
 {
-    jComponent["Name"] = ((NameData*)pData)->m_Name;
+    jComponent["Name"] = ((NameData*)pData)->name;
 }
 
-void NameComponentDefinition::LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager)
+void NameComponentDefinition::LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager)
 {
     std::string nameStr = jComponent["Name"];
     const char* name = nameStr.c_str();
@@ -27,7 +36,7 @@ void NameComponentDefinition::Editor_AddToInspector(flecs::entity entity)
     assert( pNameData );
     if( ImGui::CollapsingHeader( "Name", ImGuiTreeNodeFlags_DefaultOpen ) )
     {
-        ImGui::Text( pNameData->m_Name );
+        ImGui::Text( pNameData->name );
     }
 }
 
@@ -35,7 +44,7 @@ void NameComponentDefinition::Editor_AddToInspector(flecs::entity entity)
 // TransformComponentDefinition
 //==============================
 
-void TransformComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const void* pData)
+void TransformComponentDefinition::SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData)
 {
     TransformData* pTransformData = (TransformData*)pData;
     jComponent["Position"] = { pTransformData->position.x, pTransformData->position.y, pTransformData->position.z };
@@ -43,7 +52,7 @@ void TransformComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const 
     jComponent["Scale"] = { pTransformData->scale.x, pTransformData->scale.y, pTransformData->scale.z };
 }
 
-void TransformComponentDefinition::LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager)
+void TransformComponentDefinition::LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager)
 {
     TransformData transformData;
     transformData.position = vec3( jComponent["Position"][0], jComponent["Position"][1], jComponent["Position"][2] );
@@ -68,14 +77,14 @@ void TransformComponentDefinition::Editor_AddToInspector(flecs::entity entity)
 // MeshComponentDefinition
 //==============================
 
-void MeshComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const void* pData)
+void MeshComponentDefinition::SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData)
 {
     MeshData* pMeshData = (MeshData*)pData;
     jComponent["Mesh"] = pMeshData->pMesh->GetName();
     jComponent["Material"] = pMeshData->pMaterial->GetName();
 }
 
-void MeshComponentDefinition::LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager)
+void MeshComponentDefinition::LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager)
 {
     MeshData meshData;
     meshData.pMesh = pResourceManager->GetMesh( jComponent["Mesh"] );

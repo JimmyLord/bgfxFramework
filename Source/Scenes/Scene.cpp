@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022-2023 Jimmy Lord
+// Copyright (c) 2022-2024 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 // Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
@@ -27,7 +27,7 @@ namespace fw {
 Scene::Scene(GameCore* pGameCore)
     : m_pGameCore( pGameCore )
 {
-    CreateComponentManager();
+    m_pComponentManager = m_pGameCore->CreateComponentManager();
 }
 
 Scene::~Scene()
@@ -38,11 +38,6 @@ Scene::~Scene()
     }
 
     delete m_pComponentManager;
-}
-
-void Scene::CreateComponentManager()
-{
-    m_pComponentManager = new fw::ComponentManager();
 }
 
 void Scene::Init()
@@ -169,9 +164,9 @@ void Scene::Editor_DisplayObjectList()
                 if( hasName )
                 {
                     const NameData& nameData = *pGameObject->GetEntity().get<NameData>();
-                    if( nameData.m_Name[0] != '\0' )
+                    if( nameData.name[0] != '\0' )
                     {
-                        name = nameData.m_Name;
+                        name = nameData.name;
                     }
                 }
 

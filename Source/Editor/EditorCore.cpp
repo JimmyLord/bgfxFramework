@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Jimmy Lord
+// Copyright (c) 2022-2024 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 // Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
@@ -271,7 +271,8 @@ void EditorCore::LoadScene(const char* filename)
 {
     m_pEditor_SelectedObject = nullptr;
     delete m_pActiveScene;
-    m_pActiveScene = new Scene( this );
+    m_pActiveScene = CreateScene();
+    m_pActiveScene->Init();
     m_pActiveScene->Editor_SetFilename( filename );
 
     const char* jsonString = LoadCompleteFile( filename, nullptr );

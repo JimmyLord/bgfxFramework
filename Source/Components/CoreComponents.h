@@ -1,3 +1,12 @@
+//
+// Copyright (c) 2022-2024 Jimmy Lord
+//
+// This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
+// Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
+// 1. The origin of this software must not be misrepresented; you must not claim that you wrote the original software. If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+// 2. Altered source versions must be plainly marked as such, and must not be misrepresented as being the original software.
+// 3. This notice may not be removed or altered from any source distribution.
+
 #pragma once
 
 #include "Math/Vector.h"
@@ -9,6 +18,7 @@ class GameObject;
 class Mesh;
 class Material;
 class ResourceManager;
+class Scene;
 
 //==============================
 // BaseComponentDefinition
@@ -18,8 +28,8 @@ class BaseComponentDefinition
 {
 public:
     virtual const char* GetName() = 0;
-    virtual void SaveToJSON(nlohmann::json& jComponent, const void* pData) = 0;
-    virtual void LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) = 0;
+    virtual void SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData) = 0;
+    virtual void LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) = 0;
     virtual void Editor_AddToInspector(flecs::entity entity) = 0;
 };
 
@@ -30,24 +40,18 @@ public:
 struct NameData
 {
     static const int8 c_MaxNameLength = 32;
-    char m_Name[c_MaxNameLength];
+    char name[c_MaxNameLength];
 
-    NameData()
-    {
-        m_Name[0] = '\0';
-    }
-    NameData(const char* name)
-    {
-        strncpy_s( m_Name, c_MaxNameLength, name, c_MaxNameLength );
-    }
+    NameData() { name[0] = '\0'; }
+    NameData(const char* newName) { strncpy_s( name, c_MaxNameLength, newName, c_MaxNameLength ); }
 };
 
 class NameComponentDefinition : public BaseComponentDefinition
 {
 public:
     virtual const char* GetName() override { return "NameData"; }
-    virtual void SaveToJSON(nlohmann::json& jComponent, const void* pData) override;
-    virtual void LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
+    virtual void SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData) override;
+    virtual void LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
     virtual void Editor_AddToInspector(flecs::entity entity) override;
 };
 
@@ -66,8 +70,8 @@ class TransformComponentDefinition : public BaseComponentDefinition
 {
 public:
     virtual const char* GetName() override { return "TransformData"; }
-    virtual void SaveToJSON(nlohmann::json& jComponent, const void* pData) override;
-    virtual void LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
+    virtual void SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData) override;
+    virtual void LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
     virtual void Editor_AddToInspector(flecs::entity entity) override;
 };
 
@@ -85,8 +89,8 @@ class MeshComponentDefinition : public BaseComponentDefinition
 {
 public:
     virtual const char* GetName() override { return "MeshData"; }
-    virtual void SaveToJSON(nlohmann::json& jComponent, const void* pData) override;
-    virtual void LoadFromJSON(flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
+    virtual void SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData) override;
+    virtual void LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
     virtual void Editor_AddToInspector(flecs::entity entity) override;
 };
 

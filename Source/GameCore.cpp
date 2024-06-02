@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Jimmy Lord
+// Copyright (c) 2022-2024 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 // Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
@@ -38,6 +38,16 @@ GameCore::~GameCore()
     delete m_pEventManager;
 
     delete m_pUniforms;
+}
+
+ComponentManager* GameCore::CreateComponentManager()
+{
+    return new ComponentManager();
+}
+
+Scene* GameCore::CreateScene()
+{
+    return new Scene( this );
 }
 
 void GameCore::StartFrame(float deltaTime)

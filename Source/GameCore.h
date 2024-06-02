@@ -1,5 +1,5 @@
 //
-// Copyright (c) 2022 Jimmy Lord
+// Copyright (c) 2022-2024 Jimmy Lord
 //
 // This software is provided 'as-is', without any express or implied warranty.  In no event will the authors be held liable for any damages arising from the use of this software.
 // Permission is granted to anyone to use this software for any purpose, including commercial applications, and to alter it and redistribute it freely, subject to the following restrictions:
@@ -17,6 +17,7 @@
 namespace fw {
 
 class Camera;
+class ComponentManager;
 class Event;
 class EventManager;
 class FWCore;
@@ -31,6 +32,9 @@ class GameCore
 public:
     GameCore(FWCore& fwCore);
     virtual ~GameCore();
+
+    virtual ComponentManager* CreateComponentManager();
+    virtual Scene* CreateScene();
 
     virtual void StartFrame(float deltaTime);
     virtual bool OnEvent(Event* pEvent);

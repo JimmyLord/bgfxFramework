@@ -11,9 +11,6 @@
 
 #include "GameCore.h"
 #include "Math/Vector.h"
-#include "../Libraries/bgfx/include/bgfx/bgfx.h"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/ImGuizmo/ImGuizmo.h"
 
 namespace fw {
 

@@ -8,21 +8,19 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include "CoreHeaders.h"
-#include "Framework.h"
 #include "GameCore.h"
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
+#include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
 #include "Imgui/ImGuiManager.h"
 #include "Math/Vector.h"
 #include "Math/Matrix.h"
+#include "Renderer/Uniforms.h"
 #include "Resources/Material.h"
 #include "Resources/Mesh.h"
 #include "Scenes/Scene.h"
 #include "Utility/Utility.h"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/ImGuizmo/ImGuizmo.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
 

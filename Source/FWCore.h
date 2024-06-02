@@ -14,8 +14,6 @@
 
 namespace fw {
 
-class GameCore;
-
 class FWCore
 {
 public:
@@ -46,7 +44,7 @@ public:
 
 protected:
     void ResizeWindow(uint32 width, uint32 height);
-    bool CreateRenderWindow(char* title, uint32 width, uint32 height, uint8 colorBits, bool fullscreenflag);
+    bool CreateRenderWindow(const char* title, uint32 width, uint32 height, uint8 colorBits, bool fullscreenflag);
     bool FailAndCleanup(const char* pMessage);
     void DestroyRenderWindow(bool destroyInstance);
 

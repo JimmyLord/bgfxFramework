@@ -63,12 +63,11 @@ bool ShaderProgram::Init(const char* shaderFolder, const char* vertFilename, con
     char vertFullPath[MAX_PATH];
     char fragFullPath[MAX_PATH];
 
-    char* rendererPath = nullptr;
+    const char* rendererPath = nullptr;
 
     switch( bgfx::getRendererType() )
     {
     case bgfx::RendererType::Noop:
-    case bgfx::RendererType::Direct3D9:  rendererPath = "dx9";   break;
     case bgfx::RendererType::Direct3D11:
     case bgfx::RendererType::Direct3D12: rendererPath = "dx11";  break;
     case bgfx::RendererType::Agc:
@@ -77,8 +76,7 @@ bool ShaderProgram::Init(const char* shaderFolder, const char* vertFilename, con
     case bgfx::RendererType::Nvn:        rendererPath = "nvn";   break;
     case bgfx::RendererType::OpenGL:     rendererPath = "glsl";  break;
     case bgfx::RendererType::OpenGLES:   rendererPath = "essl";  break;
-    case bgfx::RendererType::Vulkan:
-    case bgfx::RendererType::WebGPU:     rendererPath = "spirv"; break;
+    case bgfx::RendererType::Vulkan:     rendererPath = "spirv"; break;
     case bgfx::RendererType::Count:
         assert( false );
         break;

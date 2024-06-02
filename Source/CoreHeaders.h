@@ -35,13 +35,17 @@
 
 // Framework headers.
 #include "DataTypes.h"
+#include "ForwardDeclarations.h"
 
-// 3rd party headers.
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/ImFileDialog/ImFileDialog.h"
-#include "../Libraries/ImGuizmo/ImGuizmo.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
+// 3rd party library headers.
+#include "bgfx/bgfx.h"
+#define IMGUI_DEFINE_MATH_OPERATORS
+#include "imgui/imgui.h"
+#include "ImFileDialog/ImFileDialog.h"
+#include "ImGuizmo/ImGuizmo.h"
+#include "nlohmann-json/single_include/nlohmann/json.hpp"
+#include "nlohmann-json/single_include/nlohmann/json_fwd.hpp"
+#include "pcg-cpp/include/pcg_random.hpp"
 
 #pragma warning( push )
 #pragma warning( disable : 4005 ) // 'flecs_STATIC': macro redefinition

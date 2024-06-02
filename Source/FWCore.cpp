@@ -238,7 +238,7 @@ void FWCore::ResizeWindow(uint32 width, uint32 height)
     }
 }
 
-bool FWCore::CreateRenderWindow(char* title, uint32 width, uint32 height, uint8 colorBits, bool fullscreenflag)
+bool FWCore::CreateRenderWindow(const char* title, uint32 width, uint32 height, uint8 colorBits, bool fullscreenflag)
 {
     DWORD dwExStyle;
     DWORD dwStyle;

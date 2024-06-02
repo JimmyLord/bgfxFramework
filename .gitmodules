@@ -28,3 +28,6 @@
 [submodule "Libraries/flecs"]
 	path = Libraries/flecs
 	url = https://github.com/SanderMertens/flecs.git
+[submodule "Libraries/enkiTS"]
+	path = Libraries/enkiTS
+	url = https://github.com/dougbinks/enkiTS.git

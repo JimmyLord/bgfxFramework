@@ -15,7 +15,6 @@
 #include "Resources/ShaderProgram.h"
 #include "Resources/SpriteSheet.h"
 #include "Resources/Texture.h"
-#include "../Libraries/imgui/imgui.h"
 
 namespace fw {
 

@@ -8,8 +8,8 @@
 // 3. This notice may not be removed or altered from any source distribution.
 
 #include "CoreHeaders.h"
-#include "Framework.h"
 #include "EditorCore.h"
+#include "FWCore.h"
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
 #include "Editor/EditorCamera.h"
@@ -17,14 +17,12 @@
 #include "Imgui/ImGuiManager.h"
 #include "Math/Vector.h"
 #include "Math/Matrix.h"
+#include "Objects/GameObject.h"
+#include "Resources/ResourceManager.h"
 #include "Resources/Material.h"
 #include "Resources/Mesh.h"
 #include "Scenes/Scene.h"
 #include "Utility/Utility.h"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/ImFileDialog/ImFileDialog.h"
-#include "../Libraries/ImGuizmo/ImGuizmo.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
 
@@ -243,7 +241,7 @@ void EditorCore::Editor_DisplayMainMenu()
         m_FWCore.SetEscapeKeyWillQuit( true );
         if( ifd::FileDialog::Instance().HasResult() )
         {
-            auto filenameWithPath = ifd::FileDialog::Instance().GetResult().u8string();
+            auto filenameWithPath = ifd::FileDialog::Instance().GetResult().string();
             LoadScene( filenameWithPath.c_str() );
             std::string filename = GetFileNameFromPath( filenameWithPath.c_str() );
             m_pActiveScene->SetName( filename.c_str() );
@@ -257,7 +255,7 @@ void EditorCore::Editor_DisplayMainMenu()
         m_FWCore.SetEscapeKeyWillQuit( true );
         if( ifd::FileDialog::Instance().HasResult() )
         {
-            auto filenameWithPath = ifd::FileDialog::Instance().GetResult().u8string();
+            auto filenameWithPath = ifd::FileDialog::Instance().GetResult().string();
             m_pActiveScene->Editor_SetFilename( filenameWithPath.c_str() );
             std::string filename = GetFileNameFromPath( filenameWithPath.c_str() );
             m_pActiveScene->SetName( filename.c_str() );

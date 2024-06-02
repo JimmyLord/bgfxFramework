@@ -10,22 +10,8 @@
 #pragma once
 
 #include "Math/Vector.h"
-#include "../Libraries/bgfx/include/bgfx/bgfx.h"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/ImGuizmo/ImGuizmo.h"
 
 namespace fw {
-
-class Camera;
-class ComponentManager;
-class Event;
-class EventManager;
-class FWCore;
-class GameObject;
-class ImGuiManager;
-class ResourceManager;
-class Scene;
-class Uniforms;
 
 class GameCore
 {

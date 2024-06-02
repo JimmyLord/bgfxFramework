@@ -14,7 +14,6 @@
 #include "Objects/GameObject.h"
 #include "Scenes/Scene.h"
 #include "Resources/ResourceManager.h"
-#include "../Libraries/imgui/imgui.h"
 
 namespace fw {
 

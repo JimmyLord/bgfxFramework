@@ -18,8 +18,6 @@
 
 #include "Math/Vector.h"
 #include "Imgui/ImGuiConfig.h"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 #include "bgfx/platform.h"
 

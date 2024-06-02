@@ -9,9 +9,6 @@
 
 #pragma once
 
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json_fwd.hpp"
-#include "../Libraries/flecs/flecs.h"
-
 namespace fw {
 
 class BaseComponentDefinition;

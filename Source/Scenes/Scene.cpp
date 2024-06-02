@@ -19,8 +19,6 @@
 #include "Math/Matrix.h"
 #include "Objects/GameObject.h"
 #include "Resources/Mesh.h"
-#include "../Libraries/imgui/imgui.h"
-#include "../Libraries/nlohmann-json/single_include/nlohmann/json.hpp"
 
 namespace fw {
 

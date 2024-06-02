@@ -34,7 +34,7 @@ target_include_directories( bimg PUBLIC
 	Libraries/bx/include/compat/msvc
 )
 
-target_compile_features( bimg PRIVATE cxx_std_17 )
+target_compile_features( bimg PRIVATE cxx_std_20 )
 target_compile_options( bimg PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( bimg PUBLIC "BX_CONFIG_DEBUG=1" )
 
@@ -66,7 +66,7 @@ target_include_directories( bx PUBLIC
 	Libraries/bx/3rdparty
 )
 
-target_compile_features( bx PRIVATE cxx_std_17 )
+target_compile_features( bx PRIVATE cxx_std_20 )
 target_compile_options( bx PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( bx PUBLIC "BX_CONFIG_DEBUG=1" )
 target_compile_definitions( bx PUBLIC "__STDC_FORMAT_MACROS" )
@@ -109,7 +109,7 @@ target_include_directories( bgfx PUBLIC
 	Libraries/bimg/3rdParty
 )
 
-target_compile_features( bgfx PRIVATE cxx_std_17 )
+target_compile_features( bgfx PRIVATE cxx_std_20 )
 target_compile_options( bgfx PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( bgfx PUBLIC "BX_CONFIG_DEBUG=1" )
 target_compile_definitions( bgfx PUBLIC "__STDC_FORMAT_MACROS" )
@@ -128,8 +128,8 @@ add_compile_options(/w44305)
 # Flecs
 ###################
 
-option( FLECS_SHARED "" OFF )
-option( FLECS_PIC "" OFF )
+option( FLECS_SHARED OFF )
+option( FLECS_PIC OFF )
 add_subdirectory( Libraries/flecs )
 
 ###################
@@ -140,8 +140,11 @@ add_subdirectory( Libraries/flecs )
 file( GLOB_RECURSE FrameworkSourceFiles
 	Source/*.cpp
 	Source/*.h
-	Libraries/stb/*.h
+	Libraries/EnkiTS/LockLessMultiReadPipe.h
+	Libraries/EnkiTS/TaskScheduler.cpp
+	Libraries/EnkiTS/TaskScheduler.h
 	Libraries/pcg-cpp/include/*.hpp
+	Libraries/stb/*.h
 )
 file( GLOB FrameworkSourceFilesNonRecursive
 	Libraries/imgui/*.cpp
@@ -168,8 +171,8 @@ target_include_directories( Framework PUBLIC
 	Libraries/bx/include/compat/msvc
 	Libraries/bimg/include
 	Libraries/bimg/3rdParty
-	Libraries/stb
 	Libraries/imgui
+	Libraries/stb
 )
 
 target_link_libraries( Framework PUBLIC
@@ -185,7 +188,7 @@ set_source_files_properties(
 	COMPILE_FLAGS "/wd4996" # This function or variable may be unsafe. Consider using "" instead.
 )
 
-target_compile_features( Framework PRIVATE cxx_std_17 )
+target_compile_features( Framework PRIVATE cxx_std_20 )
 target_compile_options( Framework PUBLIC "/Zc:__cplusplus" )
 target_compile_definitions( Framework PUBLIC "BX_CONFIG_DEBUG=1" )
 

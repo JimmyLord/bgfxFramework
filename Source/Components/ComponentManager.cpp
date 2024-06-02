@@ -4,8 +4,6 @@
 #include "GameCore.h"
 #include "Objects/GameObject.h"
 #include "Scenes/Scene.h"
-#include "Resources/Material.h"
-#include "Resources/Mesh.h"
 #include "Resources/ResourceManager.h"
 #include "../Libraries/imgui/imgui.h"
 
@@ -13,13 +11,9 @@ namespace fw {
 
 ComponentManager::ComponentManager()
 {
-    flecs::id_t nameID = m_FlecsWorld.component<NameData>();
-    flecs::id_t transformID = m_FlecsWorld.component<TransformData>();
-    flecs::id_t meshID = m_FlecsWorld.component<MeshData>();
-
-    m_ComponentDefinitions[nameID] = new NameComponentDefinition();
-    m_ComponentDefinitions[transformID] = new TransformComponentDefinition();
-    m_ComponentDefinitions[meshID] = new MeshComponentDefinition();
+    RegisterComponentDefinition( m_FlecsWorld.component<NameData>(), new NameComponentDefinition() );
+    RegisterComponentDefinition( m_FlecsWorld.component<TransformData>(), new TransformComponentDefinition() );
+    RegisterComponentDefinition( m_FlecsWorld.component<MeshData>(), new MeshComponentDefinition() );
 }
 
 ComponentManager::~ComponentManager()
@@ -30,26 +24,33 @@ ComponentManager::~ComponentManager()
     }
 }
 
+void ComponentManager::RegisterComponentDefinition(flecs::id_t componentId, BaseComponentDefinition* pComponentDefinition)
+{
+    m_ComponentDefinitions[componentId] = pComponentDefinition;
+}
+
 void ComponentManager::Editor_AddComponentToGameObject(GameObject* pObject)
 {
-    bool hasIt;
+    flecs::entity entity = pObject->GetEntity();
     
+    // Display a menu item for each registered component type.
     // Grey out the components the object already has.
-    hasIt = pObject->GetEntity().has<NameData>();
-    if( ImGui::MenuItem( "Name", "", nullptr, !hasIt ) ) { pObject->GetEntity().add<NameData>(); }
+    for( auto& pair : m_ComponentDefinitions )
+    {
+        bool hasIt = entity.has( pair.first );
 
-    hasIt = pObject->GetEntity().has<TransformData>();
-    if( ImGui::MenuItem( "Transform", "", nullptr, !hasIt ) ) { pObject->GetEntity().add<TransformData>(); }
-
-    hasIt = pObject->GetEntity().has<MeshData>();
-    if( ImGui::MenuItem( "Mesh", "", nullptr, !hasIt ) ) { pObject->GetEntity().add<MeshData>(); }
+        if( ImGui::MenuItem( pair.second->GetName(), "", nullptr, !hasIt ) )
+        {
+            entity.add( pair.first );
+        }
+    }
 }
 
 void ComponentManager::SaveGameObjectComponentsToJSON(GameObject* pGameObject, nlohmann::json& jGameObject)
 {
     flecs::entity entity = pGameObject->GetEntity();
 
-    // iterate over all components and save them to the JSON object
+    // Iterate over all components and save them to the JSON object.
     entity.each(
         [&](const flecs::id_t componentId)
         {
@@ -66,6 +67,7 @@ void ComponentManager::LoadGameObjectComponentsFromJSON(GameObject* pGameObject,
     ResourceManager* pResourceManager = pGameCore->GetResourceManager();
     flecs::entity entity = pGameObject->GetEntity();
 
+    // Iterate over registered component types and load any found in the JSON object.
     for( auto& pair : m_ComponentDefinitions )
     {
         if( jGameObject.contains( pair.second->GetName() ) )
@@ -79,58 +81,14 @@ void ComponentManager::Editor_DisplayComponentsForGameObject(GameObject* pGameOb
 {
     flecs::entity entity = pGameObject->GetEntity();
 
-    const NameData* pNameData = entity.get<NameData>();
-    if( pNameData )
-    {
-        if( ImGui::CollapsingHeader( "Name", ImGuiTreeNodeFlags_DefaultOpen ) )
+    // Iterate over all components and display them in the inspector.
+    entity.each(
+        [&](const flecs::id_t componentId)
         {
-            ImGui::Text( pNameData->m_Name );
+            BaseComponentDefinition* pComponentDef = m_ComponentDefinitions[componentId];
+            pComponentDef->Editor_AddToInspector( entity );
         }
-    }
-
-    ImGui::Separator();
-
-    TransformData* pTransformData = &entity.ensure<TransformData>();
-    if( pTransformData )
-    {
-        if( ImGui::CollapsingHeader( "Transform", ImGuiTreeNodeFlags_DefaultOpen ) )
-        {
-            ImGui::DragFloat3( "Position", &pTransformData->position.x, 0.1f );
-            ImGui::DragFloat3( "Rotation", &pTransformData->rotation.x, 0.1f );
-            ImGui::DragFloat3( "Scale", &pTransformData->scale.x, 0.1f );
-            entity.modified<TransformData>();
-        }
-    }
-
-    ImGui::Separator();
-
-    const MeshData* pMeshData = entity.get<MeshData>();
-    if( pMeshData )
-    {
-        if( ImGui::CollapsingHeader( "Mesh", ImGuiTreeNodeFlags_DefaultOpen ) )
-        {
-            ImGui::Text( "Mesh: " );
-            ImGui::SameLine();
-            if( pMeshData->pMesh )
-            {
-                ImGui::Text( pMeshData->pMesh->GetName() );
-            }
-            else
-            {
-                ImGui::Text( "None" );
-            }
-            ImGui::Text( "Material: " );
-            ImGui::SameLine();
-            if( pMeshData->pMaterial )
-            {
-                ImGui::Text( pMeshData->pMaterial->GetName() );
-            }
-            else
-            {
-                ImGui::Text( "None" );
-            }
-        }
-    }
+    );
 }
 
 } // namespace fw

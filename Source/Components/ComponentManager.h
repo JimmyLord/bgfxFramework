@@ -14,6 +14,8 @@ public:
     ComponentManager();
     ~ComponentManager();
 
+    void RegisterComponentDefinition(flecs::id_t componentId, BaseComponentDefinition* pComponentDefinition);
+
     virtual void Editor_AddComponentToGameObject(GameObject* pObject);
     
     virtual void SaveGameObjectComponentsToJSON(GameObject* pGameObject, nlohmann::json& jGameObject);

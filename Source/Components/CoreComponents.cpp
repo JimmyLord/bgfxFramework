@@ -5,6 +5,10 @@
 
 namespace fw {
 
+//==============================
+// NameComponentDefinition
+//==============================
+
 void NameComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const void* pData)
 {
     jComponent["Name"] = ((NameData*)pData)->m_Name;
@@ -16,6 +20,20 @@ void NameComponentDefinition::LoadFromJSON(flecs::entity entity, nlohmann::json&
     const char* name = nameStr.c_str();
     entity.set<NameData>( {name} );
 }
+
+void NameComponentDefinition::Editor_AddToInspector(flecs::entity entity)
+{
+    const NameData* pNameData = entity.get<NameData>();
+    assert( pNameData );
+    if( ImGui::CollapsingHeader( "Name", ImGuiTreeNodeFlags_DefaultOpen ) )
+    {
+        ImGui::Text( pNameData->m_Name );
+    }
+}
+
+//==============================
+// TransformComponentDefinition
+//==============================
 
 void TransformComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const void* pData)
 {
@@ -34,6 +52,22 @@ void TransformComponentDefinition::LoadFromJSON(flecs::entity entity, nlohmann::
     entity.set<TransformData>( transformData );
 }
 
+void TransformComponentDefinition::Editor_AddToInspector(flecs::entity entity)
+{
+    TransformData& transformData = entity.ensure<TransformData>();
+    if( ImGui::CollapsingHeader( "Transform", ImGuiTreeNodeFlags_DefaultOpen ) )
+    {
+        ImGui::DragFloat3( "Position", &transformData.position.x, 0.1f );
+        ImGui::DragFloat3( "Rotation", &transformData.rotation.x, 0.1f );
+        ImGui::DragFloat3( "Scale", &transformData.scale.x, 0.1f );
+    }
+    entity.modified<TransformData>();
+}
+
+//==============================
+// MeshComponentDefinition
+//==============================
+
 void MeshComponentDefinition::SaveToJSON(nlohmann::json& jComponent, const void* pData)
 {
     MeshData* pMeshData = (MeshData*)pData;
@@ -47,6 +81,35 @@ void MeshComponentDefinition::LoadFromJSON(flecs::entity entity, nlohmann::json&
     meshData.pMesh = pResourceManager->GetMesh( jComponent["Mesh"] );
     meshData.pMaterial = pResourceManager->GetMaterial( jComponent["Material"] );
     entity.set<MeshData>( meshData );
+}
+
+void MeshComponentDefinition::Editor_AddToInspector(flecs::entity entity)
+{
+    const MeshData* pMeshData = entity.get<MeshData>();
+    assert( pMeshData );
+    if( ImGui::CollapsingHeader( "Mesh", ImGuiTreeNodeFlags_DefaultOpen ) )
+    {
+        ImGui::Text( "Mesh: " );
+        ImGui::SameLine();
+        if( pMeshData->pMesh )
+        {
+            ImGui::Text( pMeshData->pMesh->GetName() );
+        }
+        else
+        {
+            ImGui::Text( "None" );
+        }
+        ImGui::Text( "Material: " );
+        ImGui::SameLine();
+        if( pMeshData->pMaterial )
+        {
+            ImGui::Text( pMeshData->pMaterial->GetName() );
+        }
+        else
+        {
+            ImGui::Text( "None" );
+        }
+    }
 }
 
 } // namespace fw

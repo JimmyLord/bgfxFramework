@@ -31,13 +31,19 @@ void Camera::Update(float32 deltaTime)
 {
     if( m_pObjectWeAreLookingAt )
     {
-        const TransformData& transformData = *m_pObjectWeAreLookingAt->GetEntity().get<TransformData>();
-        m_LookAtPosition = transformData.position;
+        const TransformData* pTransformData = m_pObjectWeAreLookingAt->GetEntity().get<TransformData>();
+        if( pTransformData )
+        {
+            m_LookAtPosition = pTransformData->position;
+        }
     }
 
-    const TransformData& transformData = *m_Entity.get<TransformData>();
-    m_ViewMatrix.CreateLookAtView( transformData.position, vec3(0,1,0), m_LookAtPosition );
-    m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, m_AspectRatio, 0.01f, 100.0f );
+    const TransformData* pTransformData = m_Entity.get<TransformData>();
+    if( pTransformData )
+    {
+        m_ViewMatrix.CreateLookAtView( pTransformData->position, vec3(0,1,0), m_LookAtPosition );
+        m_ProjectionMatrix.CreatePerspectiveVFoV( 45.0f, m_AspectRatio, 0.01f, 100.0f );
+    }
 }
 
 void Camera::Enable(int viewID)

@@ -39,6 +39,7 @@
 
 // 3rd party library headers.
 #include "bgfx/bgfx.h"
+#include "enkiTS/src/TaskScheduler.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui/imgui.h"
 #include "ImFileDialog/ImFileDialog.h"

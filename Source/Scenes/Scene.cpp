@@ -13,6 +13,7 @@
 #include "Scene.h"
 #include "Components/ComponentManager.h"
 #include "Components/CoreComponents.h"
+#include "Components/CoreSystems.h"
 #include "Editor/EditorCore.h"
 #include "EventSystem/Events.h"
 #include "EventSystem/EventManager.h"
@@ -81,19 +82,8 @@ void Scene::DrawIntoView(int viewID)
 {
     Uniforms* pUniforms = m_pGameCore->GetUniforms();
 
-    flecs::world& world = m_pComponentManager->GetFlecsWorld();
-
-    world.each<>(
-        [viewID, pUniforms](TransformData& transformData, MeshData& meshData)
-        {
-            mat4 worldMat;
-            worldMat.CreateSRT( transformData.scale, transformData.rotation, transformData.position );
-            if( meshData.pMesh )
-            {
-                meshData.pMesh->Draw( viewID, pUniforms, meshData.pMaterial, &worldMat );
-            }
-        }
-    );
+    System_UpdateAllTransforms( m_pComponentManager );
+    System_DrawAllMeshes( m_pComponentManager, viewID, pUniforms );
 }
 
 void Scene::SaveToJSON(nlohmann::json& jScene)

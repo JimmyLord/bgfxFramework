@@ -10,6 +10,7 @@
 #pragma once
 
 #include "Math/Vector.h"
+#include "Math/Matrix.h"
 
 namespace fw {
 
@@ -72,6 +73,24 @@ public:
     virtual void SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData) override;
     virtual void LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override;
     virtual void Editor_AddToInspector(flecs::entity entity) override;
+};
+
+//====================
+// TransformMatrixData
+//====================
+
+struct TransformMatrixData
+{
+    mat4 transform;
+};
+
+class TransformMatrixComponentDefinition : public BaseComponentDefinition
+{
+public:
+    virtual const char* GetName() override { return "TransformData"; }
+    virtual void SaveToJSON(GameObject* pObject, nlohmann::json& jComponent, const void* pData) override {}
+    virtual void LoadFromJSON(GameObject* pObject, flecs::entity entity, nlohmann::json& jComponent, ResourceManager* pResourceManager) override {}
+    virtual void Editor_AddToInspector(flecs::entity entity) override {}
 };
 
 //====================

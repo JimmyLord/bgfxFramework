@@ -29,6 +29,7 @@ GameObject::GameObject(Scene* pScene, std::string name, vec3 pos, Mesh* pMesh, M
 {
     m_Entity = m_pScene->CreateEntity();
     m_Entity.set<TransformData>( {pos, vec3(0), vec3(1)} );
+    m_Entity.set<TransformMatrixData>( {} );
     m_Entity.set<NameData>( {name.c_str()} );
     if( pMesh != nullptr )
     {
